@@ -1,30 +1,33 @@
 {
   "name": "wp-music-control",
   "version": "1.0.0",
-  "description": "WP Music Gallery - plugin to ",
+  "description": "Powerful Gutenberg blog that allows adding photo galleries with music and animations.",
   "scripts": {
-    "build": "wp-scripts build src/admin.js --output-path=assets",
+    "build:free": "wp-scripts build src/free/index.js src/free/view.js --output-path=build/free",
+    "build:pro": "wp-scripts build src/pro/index.js src/free/view.js --output-path=build/pro",
+    "build": "yarn build:free && yarn build:pro",
+    "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
-    "lint:js": "wp-scripts lint-js"
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "start": "wp-scripts start --blocks-manifest"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Miro0/wp-music-gallery.git"
   },
   "keywords": [
-    "clip",
-    "control",
-    "copy",
-    "management",
-    "prepend",
-    "append",
-    "replace",
-    "block"
+    "wp", "music", "gallery", "photo", "slider", "swiper", "music", "background"
   ],
   "author": "Beed Vision",
   "license": "ISC",
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "dependencies": {
+    "@wordpress/block-editor": "^15.7.0",
+    "@wordpress/blocks": "^15.7.0",
+    "@wordpress/components": "^30.7.0",
+    "@wordpress/i18n": "^6.7.0",
     "@wordpress/scripts": "^30.27.0"
   }
 }

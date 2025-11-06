@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "beedvision/wp-music-gallery",
+	"version": "1.0.0",
+	"title": "WP Music Gallery",
+	"category": "widgets",
+	"description": "Powerful Gutenberg blog that allows adding photo galleries with music and animations.",
+	"attributes": {
+		"photos": {
+			"type": "array"
+		},
+		"music": {
+			"type": "object"
+		},
+		"theme": {
+			"type": "string",
+			"default": "default"
+		},
+		"slides_duration": {
+			"type": "number",
+			"default": 2000
+		},
+		"aspect_ratio": {
+			"type": "string"
+		},
+		"background_animation": {
+			"type": "string"
+		},
+		"background_animation_accent_color": {
+			"type": "string"
+		},
+		"overlay_animation": {
+			"type": "string"
+		},
+		"overlay_animation_accent_color": {
+			"type": "string"
+		},
+		"items_animation": {
+			"type": "string"
+		}
+	},
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"textdomain": "wpmusicgallery",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"viewScript": "file:./view.js"
+}
