@@ -1,3 +1,5 @@
-import {initWpMusicGalleries} from "../common/front/core";
+import {initWpMusicGallery} from "../common/front/core";
 
-initWpMusicGalleries();
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.wpmg-gallery').forEach(initWpMusicGallery);
+});

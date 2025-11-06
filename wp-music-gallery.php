@@ -26,5 +26,5 @@ register_block_type(
 );
 
 function wp_music_gallery_block_render( $attributes ) {
-	return '<pre class="wp-music-gallery" style="display:none;visibility:hidden;opacity:0;height:0;width:0;">' . json_encode( $attributes ) . '</pre>';
+	return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }
