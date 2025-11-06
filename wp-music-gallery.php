@@ -16,7 +16,7 @@ namespace BeedVision\WPMusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-// @TODO Register with Protected CDN with local accessibility.
+// @TODO Register with Protected CDN for production ready build.
 register_block_type(
 	__DIR__ . '/build/free'
 //	__DIR__ . '/build/pro'

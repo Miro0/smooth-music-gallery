@@ -19,7 +19,7 @@
 		},
 		"slides_duration": {
 			"type": "number",
-			"default": 2000
+			"default": 2
 		},
 		"aspect_ratio": {
 			"type": "string"
@@ -36,7 +36,7 @@
 		"overlay_animation_accent_color": {
 			"type": "string"
 		},
-		"items_animation": {
+		"image_animation": {
 			"type": "string"
 		}
 	},
