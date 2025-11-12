@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Powerful Gutenberg blog that allows adding photo galleries with music and animations.",
   "scripts": {
-    "build:free": "wp-scripts build src/free/index.js src/free/view.js src/free/themes/**/*.scss --output-path=build/free",
-    "build:pro": "wp-scripts build src/pro/index.js src/free/view.js src/pro/themes/**/*.scss --output-path=build/pro",
+    "build:free": "wp-scripts build src/free/index.js src/free/view.js src/free/themes/*.scss --output-path=build/free",
+    "build:pro": "wp-scripts build src/pro/index.js src/free/view.js src/pro/themes/*.scss --output-path=build/pro",
     "build": "yarn build:free && yarn build:pro",
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
@@ -18,7 +18,14 @@
     "url": "git+https://github.com/Miro0/wp-music-gallery.git"
   },
   "keywords": [
-    "wp", "music", "gallery", "photo", "slider", "swiper", "music", "background"
+    "wp",
+    "music",
+    "gallery",
+    "photo",
+    "slider",
+    "swiper",
+    "music",
+    "background"
   ],
   "author": "Beed Vision",
   "license": "ISC",
@@ -27,7 +34,9 @@
     "@wordpress/block-editor": "^15.7.0",
     "@wordpress/blocks": "^15.7.0",
     "@wordpress/components": "^30.7.0",
+    "@wordpress/element": "^6.35.0",
     "@wordpress/i18n": "^6.7.0",
-    "@wordpress/scripts": "^30.27.0"
+    "@wordpress/scripts": "^30.27.0",
+    "swiper": "^12.0.3"
   }
 }

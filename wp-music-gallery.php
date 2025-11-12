@@ -26,5 +26,16 @@ register_block_type(
 );
 
 function wp_music_gallery_block_render( $attributes ) {
+	$theme  = $attributes['theme'] ?? 'default';
+
+	$plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
+
+	wp_enqueue_style(
+		"wpmg-theme-$theme",
+		$plugin_url . "build/free/$theme.scss.css",
+		[],
+		'1.0.0'
+	);
+
 	return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }

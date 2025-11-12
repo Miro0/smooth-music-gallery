@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"title": "WP Music Gallery",
 	"category": "widgets",
-	"description": "Powerful Gutenberg blog that allows adding photo galleries with music and animations.",
+	"description": "Powerful Gutenberg block that allows adding photo galleries with music and animations.",
 	"attributes": {
 		"photos": {
 			"type": "array"
@@ -21,28 +21,29 @@
 			"type": "number",
 			"default": 2
 		},
-		"aspect_ratio": {
-			"type": "string"
-		},
 		"background_animation": {
 			"type": "string"
 		},
-		"background_animation_accent_color": {
-			"type": "string"
+		"background_animation_options": {
+			"type": "object"
 		},
 		"overlay_animation": {
 			"type": "string"
 		},
-		"overlay_animation_accent_color": {
-			"type": "string"
+		"overlay_animation_options": {
+			"type": "object"
 		},
 		"image_animation": {
 			"type": "string"
+		},
+		"image_animation_options": {
+			"type": "object"
 		}
 	},
 	"example": {},
 	"supports": {
-		"html": false
+		"html": false,
+		"align": [ "wide", "full" ]
 	},
 	"textdomain": "wpmusicgallery",
 	"editorScript": "file:./index.js",

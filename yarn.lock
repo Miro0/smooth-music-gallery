@@ -3671,10 +3671,28 @@
     react "^18.3.0"
     react-dom "^18.3.0"
 
+"@wordpress/element@^6.35.0":
+  version "6.35.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/element/-/element-6.35.0.tgz#619e7331d8a462fb39289a1d8329f43a31b7a997"
+  integrity sha512-RmxQsk0ANoHtxDc6anbUH/lHL7Mmbbdn016WKHYVh4+79EzN1tBeM8OML2gHpllUISmIYQvO4wIPSmEVzRh+Gw==
+  dependencies:
+    "@types/react" "^18.2.79"
+    "@types/react-dom" "^18.2.25"
+    "@wordpress/escape-html" "^3.35.0"
+    change-case "^4.1.2"
+    is-plain-object "^5.0.0"
+    react "^18.3.0"
+    react-dom "^18.3.0"
+
 "@wordpress/escape-html@^3.34.0":
   version "3.34.0"
   resolved "https://registry.yarnpkg.com/@wordpress/escape-html/-/escape-html-3.34.0.tgz#e89d7c0b3178ec00aae3ce36c6434f04e67c575d"
   integrity sha512-uDkh9w970Lnh43GTw/8csw0BkWY08tzYo2gqIF1I26N7YnpwRbVnv1Swet8PFvv8YDxpfejWBFfA7so4nciKfw==
+
+"@wordpress/escape-html@^3.35.0":
+  version "3.35.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/escape-html/-/escape-html-3.35.0.tgz#8d15c7e80c2829dcafdf8e912c671a95459c6278"
+  integrity sha512-thY7RGAI6UijG3sbBm4IRzMX9lnHkEA/vR3Y0E5BGQYzNFwc+i7t1Lm4scpEBnL3UEQxdlD1wiJTH4pv5olV+Q==
 
 "@wordpress/eslint-plugin@^22.20.0":
   version "22.20.0"
@@ -11248,6 +11266,11 @@ svgo@^3.0.2, svgo@^3.2.0:
     css-what "^6.1.0"
     csso "^5.0.5"
     picocolors "^1.0.0"
+
+swiper@^12.0.3:
+  version "12.0.3"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-12.0.3.tgz#c7804fd39955189d3ec652d9832896bd3d04733e"
+  integrity sha512-BHd6U1VPEIksrXlyXjMmRWO0onmdNPaTAFduzqR3pgjvi7KfmUCAm/0cj49u2D7B0zNjMw02TSeXfinC1hDCXg==
 
 symbol-tree@^3.2.4:
   version "3.2.4"

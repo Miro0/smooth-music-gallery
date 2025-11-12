@@ -1,20 +1,36 @@
+import Swiper from 'swiper';
+import { Pagination, Autoplay, Keyboard } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+
 export const initWpMusicGallery = (container) => {
   const props = JSON.parse(container.dataset.props || '{}');
-  const { photos = [], music, theme = 'default' } = props;
+  container.removeAttribute('data-props');
+  const { photos = [], music, theme = 'default', slides_duration = 2 } = props;
 
   container.classList.add(`theme-${theme}`);
 
   container.innerHTML = `
     <div class="wpmg-bg-layer"></div>
-    <div class="wpmg-overlay-layer"></div>
     <div class="wpmg-content">
+        <div class="wpmg-overlay-layer"></div>
       <div class="wpmg-image-container swiper">
         <div class="swiper-wrapper">
-          ${photos.map(photo => `
+          ${photos
+    .map(
+      (photo) => `
             <div class="swiper-slide">
-              <img src="${photo.url}" alt="${photo.alt || ''}" />
+              <img 
+                src="${photo.url}" 
+                alt="${photo.alt || ''}" 
+                loading="lazy" 
+                decoding="async" 
+                style="object-fit: cover; width: 100%; height: 100%;" 
+              />
             </div>
-          `).join('')}
+          `
+    )
+    .join('')}
         </div>
         <div class="swiper-pagination"></div>
       </div>
@@ -31,34 +47,102 @@ export const initWpMusicGallery = (container) => {
   `;
 
   const swiper = new Swiper(container.querySelector('.swiper'), {
+    modules: [Pagination, Autoplay, Keyboard],
+
     loop: true,
+    observer: true,
+    observeParents: true,
+    watchSlidesProgress: true,
+    preloadImages: false,
+
+    keyboard: {
+      enabled: true,
+      onlyInViewport: true,
+    },
+
     pagination: {
       el: container.querySelector('.swiper-pagination'),
-      clickable: true
+      clickable: true,
+    },
+
+    autoplay: false,
+
+    on: {
+      imagesReady() {
+        swiper.update();
+      },
     },
   });
 
-  initControls(container, swiper);
-}
+  const imgs = container.querySelectorAll('img[loading="lazy"]');
+  let loadedCount = 0;
+  imgs.forEach((img) => {
+    img.addEventListener('load', () => {
+      loadedCount++;
+      if (loadedCount === imgs.length) {
+        swiper.update();
+      }
+    });
+  });
 
-function initControls(container, swiper) {
+  initControls(container, swiper, slides_duration);
+};
+
+function initControls(container, swiper, slides_duration) {
   const btnPlay = container.querySelector('.wpmg-play');
   const btnFs = container.querySelector('.wpmg-fullscreen');
-  const audio = container.querySelector('audio');
+  const audio = container.querySelector('.wpmg-audio');
   let playing = false;
 
-  btnPlay.addEventListener('click', () => {
-    playing = !playing;
+  audio.load();
+
+  btnPlay.addEventListener('click', async () => {
     if (playing) {
-      swiper.autoplay?.start?.();
-      audio?.play();
-      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; // pause icon
-    } else {
-      swiper.autoplay?.stop?.();
+      playing = false;
+
+      swiper.autoplay.stop();
       audio?.pause();
-      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; // play icon
+      // audio.currentTime = 0; // Time reset.
+
+      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+      return;
     }
+
+    playing = true;
+
+    btnPlay.classList.add("is-loading");
+
+    // =======================
+    // 🎵 PREWARM AUDIO
+    // =======================
+    if (audio) {
+      try {
+        audio.volume = 0;
+        await audio.play();
+        audio.pause();
+        audio.currentTime = 0;
+        audio.volume = 0.05;  // @DEBUG
+      } catch (e) {
+        console.warn("Audio prewarm failed:", e);
+      }
+    }
+
+    // =======================
+    // ▶ START AUTOPLAY
+    // =======================
+    swiper.params.autoplay = {
+      delay: slides_duration * 1000,
+      disableOnInteraction: false,
+    };
+
+    swiper.autoplay.start();
+    audio?.play();
+
+    btnPlay.classList.remove("is-loading");
+
+    btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
   });
+
 
   btnFs.addEventListener('click', () => {
     if (!document.fullscreenElement) {
@@ -68,3 +152,4 @@ function initControls(container, swiper) {
     }
   });
 }
+
