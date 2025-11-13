@@ -8,8 +8,6 @@ import MediaUpload from './components/MediaUpload';
 import Select from "./components/Select";
 import Range from "./components/Range";
 
-const capitalizeWords = str => str.replace(/\b\w/g, c => c.toUpperCase());
-
 export default function EditSidebar({attributes, setAttributes, config}) {
   const {
     photos,
@@ -22,7 +20,13 @@ export default function EditSidebar({attributes, setAttributes, config}) {
     overlay_animation_options,
   } = attributes;
 
-  // @TODO Handle dot notation in setAttributes
+  console.log({
+    overlay_animation_options
+  });
+
+  // @TODO Handle dot notation in setAttributes/
+  // @TODO Handle theme PRO blockage.
+  // @TODO Handle per animation specific settings + PRO blockage.
   return (
     <BlockContext.Provider value={{setAttributes}}>
       <InspectorControls>
@@ -81,6 +85,12 @@ export default function EditSidebar({attributes, setAttributes, config}) {
 
           {background_animation && (
             <>
+              <Color
+                name="background_animation_options.accent"
+                value={background_animation_options?.accent}
+                label={__('Accent color', 'wpmusicgallery')}
+              />
+
               <Color
                 name="background_animation_options.accent"
                 value={background_animation_options?.accent}

@@ -1,26 +1,21 @@
 import Swiper from 'swiper';
-import { Pagination, Autoplay, Keyboard } from 'swiper/modules';
+import {Pagination, Autoplay, Keyboard} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-/**
- * @TODD
- * 1. Handle that clicking on slider should also show buttons overlay.
- * 2. Buttons overlay should disappear when there's no cursor movement in gallery area.
- */
 export const initWpMusicGallery = (container) => {
   const props = JSON.parse(container.dataset.props || '{}');
-  container.removeAttribute('data-props');
-  const { photos = [], music, theme = 'default', slides_duration = 2 } = props;
+  const {photos = [], music, theme = 'default', slides_duration = 2} = props;
 
+  container.classList.add('visible-controls');
   container.classList.add(`theme-${theme}`);
 
   container.innerHTML = `
     <div class="wpmg-bg-layer"></div>
     <div class="wpmg-content">
-        <div class="wpmg-overlay-layer"></div>
+      <div class="wpmg-overlay-layer"></div>
       <div class="wpmg-image-container swiper">
-        <div class="swiper-wrapper">
+      <div class="swiper-wrapper">
           ${photos
     .map(
       (photo) => `
@@ -50,6 +45,19 @@ export const initWpMusicGallery = (container) => {
     </div>
     ${music ? `<audio class="wpmg-audio" preload="auto" src="${music.url}"></audio>` : ''}
   `;
+
+  if (window.wpmg) {
+    window.wpmg.initialized = true;
+  } else {
+    window.wpmg = {initialized: true};
+  }
+
+  if (window.wpmg?.initOverlay) {
+    window.wpmg.initOverlay();
+  }
+  if (window.wpmg?.initBackground) {
+    window.wpmg.initBackground();
+  }
 
   const swiper = new Swiper(container.querySelector('.swiper'), {
     modules: [Pagination, Autoplay, Keyboard],
@@ -94,12 +102,23 @@ export const initWpMusicGallery = (container) => {
 };
 
 function initControls(container, swiper, slides_duration) {
+  const content = container.querySelector('.wpmg-content');
   const btnPlay = container.querySelector('.wpmg-play');
   const btnFs = container.querySelector('.wpmg-fullscreen');
   const audio = container.querySelector('.wpmg-audio');
-  let playing = false;
 
-  audio.load();
+  audio.volume = 0.8;
+
+  let playing = false;
+  let controlsTimeout = null;
+
+  const mouseMove = (e) => {
+    clearTimeout(controlsTimeout);
+    container.classList.add('visible-controls');
+    controlsTimeout = setTimeout(() => {
+      container.classList.remove('visible-controls');
+    }, 3000);
+  }
 
   btnPlay.addEventListener('click', async () => {
     if (playing) {
@@ -110,24 +129,16 @@ function initControls(container, swiper, slides_duration) {
       // audio.currentTime = 0; // Time reset.
 
       btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+
+      container.classList.add('visible-controls');
+      clearTimeout(controlsTimeout);
+      content.removeEventListener('mouseenter', mouseMove);
       return;
     }
 
     playing = true;
 
     btnPlay.classList.add("is-loading");
-
-    if (audio) {
-      try {
-        audio.volume = 0;
-        await audio.play();
-        audio.pause();
-        audio.currentTime = 0;
-        audio.volume = 0.05;  // @DEBUG
-      } catch (e) {
-        console.warn("Audio prewarm failed:", e);
-      }
-    }
 
     swiper.params.autoplay = {
       delay: slides_duration * 1000,
@@ -140,6 +151,12 @@ function initControls(container, swiper, slides_duration) {
     btnPlay.classList.remove("is-loading");
 
     btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+
+    controlsTimeout = setTimeout(() => {
+      container.classList.remove('visible-controls');
+    }, 1000);
+
+    content.addEventListener('mouseenter', mouseMove);
   });
 
 

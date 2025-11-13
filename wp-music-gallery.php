@@ -25,16 +25,34 @@ register_block_type(
 
 function wp_music_gallery_block_render( $attributes ) {
 	$theme  = $attributes['theme'] ?? 'default';
+	$overlay_animation = $attributes['overlay_animation'] ?? '';
 
 	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
 	$plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
 
 	wp_enqueue_style(
 		"wpmg-theme-$theme",
-		$plugin_url . "build/$theme.scss.css",
+		$plugin_url . "build/free/$theme.css", // @TODO Handle free?
 		[],
 		'1.0.0'
 	);
+
+	if ($overlay_animation) {
+		wp_enqueue_script(
+			"wpmg-overlay-animation-script-$overlay_animation",
+			$plugin_url . "build/free/$overlay_animation.js", // @TODO Handle free?
+			[],
+			'1.0.0'
+		);
+
+		wp_enqueue_style(
+			"wpmg-overlay-animation-style-$overlay_animation",
+			$plugin_url . "build/free/$overlay_animation.css", // @TODO Handle free?
+			[],
+			'1.0.0'
+		);
+	}
+
 
 	return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }

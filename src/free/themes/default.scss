@@ -38,7 +38,6 @@
   width: 85%;
   height: 85%;
   z-index: 5;
-
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.6),
@@ -96,42 +95,48 @@
 
 .theme-default .wpmg-controls {
   position: absolute;
-  bottom: 14px;
-  right: 14px;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+  box-sizing: border-box;
+  padding: 14px;
+  width: 100%;
+  height: 100%;
   display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 12px;
   z-index: 20;
   pointer-events: none;
-  transform: translateY(24px);
   opacity: 0;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: opacity 0.2s;
 }
 
-.theme-default .wpmg-content:hover .wpmg-controls {
-  pointer-events: all;
+.theme-default.visible-controls .wpmg-content .wpmg-controls {
   transform: translateY(0);
   opacity: 1;
 }
 
 .theme-default .wpmg-btn {
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(255, 255, 255, 0);
   border: none;
   border-radius: 50%;
   width: 42px;
   height: 42px;
-  fill: #bbb;
+  fill: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
+  outline: none;
+  pointer-events: all;
   backdrop-filter: blur(4px);
   transition: background 0.2s, fill 0.2s;
 }
 
 .theme-default .wpmg-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  fill: #333;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* umieść NA KOŃCU pliku default.scss albo nawet w osobnym css */

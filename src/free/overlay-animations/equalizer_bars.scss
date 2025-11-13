@@ -1,0 +1,23 @@
+.wpmg-overlay--equalizer-bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.2;
+  gap: 3px;
+
+  .wpmg-overlay--equalizer-bar {
+    flex: 1;
+    height: 95%;
+    background: #ffffff;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    transform-origin: bottom;
+    transform: scaleY(0.01);
+    will-change: transform;
+    transition: background 0.2s;
+  }
+}
