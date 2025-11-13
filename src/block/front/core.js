@@ -3,6 +3,11 @@ import { Pagination, Autoplay, Keyboard } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
+/**
+ * @TODD
+ * 1. Handle that clicking on slider should also show buttons overlay.
+ * 2. Buttons overlay should disappear when there's no cursor movement in gallery area.
+ */
 export const initWpMusicGallery = (container) => {
   const props = JSON.parse(container.dataset.props || '{}');
   container.removeAttribute('data-props');
@@ -112,9 +117,6 @@ function initControls(container, swiper, slides_duration) {
 
     btnPlay.classList.add("is-loading");
 
-    // =======================
-    // 🎵 PREWARM AUDIO
-    // =======================
     if (audio) {
       try {
         audio.volume = 0;
@@ -127,9 +129,6 @@ function initControls(container, swiper, slides_duration) {
       }
     }
 
-    // =======================
-    // ▶ START AUTOPLAY
-    // =======================
     swiper.params.autoplay = {
       delay: slides_duration * 1000,
       disableOnInteraction: false,

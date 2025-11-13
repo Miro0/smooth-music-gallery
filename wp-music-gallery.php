@@ -16,10 +16,8 @@ namespace BeedVision\WPMusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-// @TODO Register with Protected CDN for production ready build.
 register_block_type(
-	__DIR__ . '/build/free'
-//	__DIR__ . '/build/pro'
+	__DIR__ . '/build'
 	, [
 		'render_callback' => __NAMESPACE__ . '\\wp_music_gallery_block_render',
 	]
@@ -28,11 +26,12 @@ register_block_type(
 function wp_music_gallery_block_render( $attributes ) {
 	$theme  = $attributes['theme'] ?? 'default';
 
+	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
 	$plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
 
 	wp_enqueue_style(
 		"wpmg-theme-$theme",
-		$plugin_url . "build/free/$theme.scss.css",
+		$plugin_url . "build/$theme.scss.css",
 		[],
 		'1.0.0'
 	);

@@ -2,7 +2,7 @@ import {BaseControl, ComboboxControl} from "@wordpress/components";
 import {__} from "@wordpress/i18n";
 import {useBlockContext} from "../context";
 
-const capitalizeWords = str => str.replace(/\b\w/g, c => c.toUpperCase());
+const capitalizeWords = str => str.replace(/\b\w/g, c => c.toUpperCase()).replace('3d', '3D');
 
 const Select = (
   {

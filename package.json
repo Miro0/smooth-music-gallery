@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "Powerful Gutenberg blog that allows adding photo galleries with music and animations.",
   "scripts": {
-    "build:free": "wp-scripts build src/free/index.js src/free/view.js src/free/themes/*.scss --output-path=build/free",
-    "build:pro": "wp-scripts build src/pro/index.js src/free/view.js src/pro/themes/*.scss --output-path=build/pro",
-    "build": "yarn build:free && yarn build:pro",
+    "build": "wp-scripts build src/block/index.js src/block/view.js src/free/themes/*.scss src/pro/themes/*.scss --output-path=build",
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",

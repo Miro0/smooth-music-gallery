@@ -32,12 +32,6 @@
 		},
 		"overlay_animation_options": {
 			"type": "object"
-		},
-		"image_animation": {
-			"type": "string"
-		},
-		"image_animation_options": {
-			"type": "object"
 		}
 	},
 	"example": {},
