@@ -3,6 +3,7 @@ import './equalizer_bars.scss';
 document.addEventListener('DOMContentLoaded', () => {
   const init = () => document.querySelectorAll('.wpmg-gallery').forEach(attachOverlayAnimation);
 
+  // @TODO This is not handling well multiple galleries...
   if (window?.wpmg?.initialized) {
     init();
   } else if (window.wpmg) {
@@ -37,6 +38,7 @@ const attachOverlayAnimation = (container) => {
       const barHeights = new Array(barNodes.length).fill(0);
       const decay = 0.005;
 
+      console.log('HERE');
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const source = ctx.createMediaElementSource(audio);
       const analyser = ctx.createAnalyser();

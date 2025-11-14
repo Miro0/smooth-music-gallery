@@ -46,6 +46,7 @@ export const initWpMusicGallery = (container) => {
     ${music?.url ? `<audio class="wpmg-audio" preload="auto" src="${music.url}"></audio>` : ''}
   `;
 
+  // @TODO This is not handling well multiple galleries...
   if (window.wpmg) {
     window.wpmg.initialized = true;
   } else {
