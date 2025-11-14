@@ -8,29 +8,29 @@ export const initWpMusicGallery = (container) => {
   const {photos = [], music, theme = 'default', slides_duration = 2} = props;
 
   container.classList.add('visible-controls');
-  container.classList.add(`theme-${theme}`);
+  container.classList.add(`theme-${theme.replace(/free\/|pro\//, '')}`);
 
   container.innerHTML = `
-    <div class="wpmg-bg-layer"></div>
+    ${music?.url ? `<div class="wpmg-bg-layer"></div>` : ''}
     <div class="wpmg-content">
-      <div class="wpmg-overlay-layer"></div>
+      ${music?.url ? `<div class="wpmg-overlay-layer"></div>` : ''}
       <div class="wpmg-image-container swiper">
       <div class="swiper-wrapper">
-          ${photos
-    .map(
-      (photo) => `
-            <div class="swiper-slide">
-              <img 
-                src="${photo.url}" 
-                alt="${photo.alt || ''}" 
-                loading="lazy" 
-                decoding="async" 
-                style="object-fit: cover; width: 100%; height: 100%;" 
-              />
-            </div>
-          `
-    )
-    .join('')}
+        ${photos
+          .map(
+            (photo) => `
+              <div class="swiper-slide">
+                <img 
+                  src="${photo.url}" 
+                  alt="${photo.alt || ''}" 
+                  loading="lazy" 
+                  decoding="async" 
+                  style="object-fit: cover; width: 100%; height: 100%;" 
+                />
+              </div>
+            `
+          )
+          .join('')}
         </div>
         <div class="swiper-pagination"></div>
       </div>
@@ -43,7 +43,7 @@ export const initWpMusicGallery = (container) => {
         </button>
       </div>
     </div>
-    ${music ? `<audio class="wpmg-audio" preload="auto" src="${music.url}"></audio>` : ''}
+    ${music?.url ? `<audio class="wpmg-audio" preload="auto" src="${music.url}"></audio>` : ''}
   `;
 
   if (window.wpmg) {
@@ -104,10 +104,12 @@ export const initWpMusicGallery = (container) => {
 function initControls(container, swiper, slides_duration) {
   const content = container.querySelector('.wpmg-content');
   const btnPlay = container.querySelector('.wpmg-play');
-  const btnFs = container.querySelector('.wpmg-fullscreen');
+  const btnFullscreen = container.querySelector('.wpmg-fullscreen');
   const audio = container.querySelector('.wpmg-audio');
 
-  audio.volume = 0.8;
+  if (audio) {
+    audio.volume = 0.8;
+  }
 
   let playing = false;
   let controlsTimeout = null;
@@ -120,52 +122,55 @@ function initControls(container, swiper, slides_duration) {
     }, 3000);
   }
 
-  btnPlay.addEventListener('click', async () => {
-    if (playing) {
-      playing = false;
+  if (btnPlay) {
+    btnPlay.addEventListener('click', async () => {
+      if (playing) {
+        playing = false;
 
-      swiper.autoplay.stop();
-      audio?.pause();
-      // audio.currentTime = 0; // Time reset.
+        swiper.autoplay.stop();
+        audio?.pause();
+        // audio.currentTime = 0; // Time reset.
 
-      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+        btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 
-      container.classList.add('visible-controls');
-      clearTimeout(controlsTimeout);
-      content.removeEventListener('mouseenter', mouseMove);
-      return;
-    }
+        container.classList.add('visible-controls');
+        clearTimeout(controlsTimeout);
+        content.removeEventListener('mouseenter', mouseMove);
+        return;
+      }
 
-    playing = true;
+      playing = true;
 
-    btnPlay.classList.add("is-loading");
+      btnPlay.classList.add("is-loading");
 
-    swiper.params.autoplay = {
-      delay: slides_duration * 1000,
-      disableOnInteraction: false,
-    };
+      swiper.params.autoplay = {
+        delay: slides_duration * 1000,
+        disableOnInteraction: false,
+      };
 
-    swiper.autoplay.start();
-    audio?.play();
+      swiper.autoplay.start();
+      audio?.play();
 
-    btnPlay.classList.remove("is-loading");
+      btnPlay.classList.remove("is-loading");
 
-    btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
 
-    controlsTimeout = setTimeout(() => {
-      container.classList.remove('visible-controls');
-    }, 1000);
+      controlsTimeout = setTimeout(() => {
+        container.classList.remove('visible-controls');
+      }, 1000);
 
-    content.addEventListener('mouseenter', mouseMove);
-  });
+      content.addEventListener('mouseenter', mouseMove);
+    });
+  }
 
-
-  btnFs.addEventListener('click', () => {
-    if (!document.fullscreenElement) {
-      container.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  });
+  if (btnFullscreen) {
+    btnFullscreen.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        container.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
+  }
 }
 

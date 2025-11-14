@@ -1,7 +1,6 @@
 /* ================================
    WP Music Gallery – DEFAULT THEME
    ================================ */
-
 .wpmg-gallery.theme-default {
   position: relative;
   width: 100%;
@@ -140,7 +139,7 @@
     }
   }
 
-  &.visible-controls {
+  &.visible-controls, &.visible-controls-on-hover:hover {
     .wpmg-content .wpmg-controls {
       transform: translateY(0);
       opacity: 1;

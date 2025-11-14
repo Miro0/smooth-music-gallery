@@ -1,0 +1,25 @@
+{
+  "themes": [
+    "free/default",
+    "free/video_player",
+    "pro/3d_ring",
+    "pro/polaroid",
+    "pro/retro"
+  ],
+  "background_animations": [
+    "free/ambient_glow",
+    "free/soft_flame",
+    "pro/neon_pulse",
+    "pro/color_bloom",
+    "pro/aurora_streams"
+  ],
+  "overlay_animations": [
+    "free/equalizer_bars",
+    "free/wave_line",
+    "pro/audio_pulse",
+    "pro/vinyl_spin",
+    "pro/beat_flash",
+    "pro/light_rings",
+    "pro/frequency_wave"
+  ]
+}

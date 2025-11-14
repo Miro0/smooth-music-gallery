@@ -15,25 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
 const attachOverlayAnimation = (container) => {
   const props = JSON.parse(container.dataset.props || '{}');
   const { overlay_animation, overlay_animation_options = {} } = props;
-  const {accent = '#ffffff', opacity = 0.5, bars = 32} = overlay_animation_options;
+  const {accent = '#ffffff', opacity = 0.5, bars = 32, max_height = 95} = overlay_animation_options;
 
   const barsRatio = window.innerWidth < 768 ? 0.5 : 1;
 
-  console.log({
-    overlay_animation_options,
-    accent,
-    opacity,
-    bars,
-    barsRatio,
-  });
-
-  if (overlay_animation === 'equalizer_bars') {
+  if (overlay_animation === 'free/equalizer_bars') {
     const audio = container.querySelector('.wpmg-audio');
     const overlayLayer = container.querySelector('.wpmg-overlay-layer');
 
     if (overlayLayer && audio) {
       overlayLayer.innerHTML = `
-      <div class="wpmg-overlay--equalizer-bars" data-bars="${bars * barsRatio}" style="opacity:${opacity}">
+      <div class="wpmg-overlay--equalizer-bars" data-bars="${bars * barsRatio}" style="opacity:${opacity}; height: ${max_height}%">
         ${`<div class="wpmg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
       </div>
       `;

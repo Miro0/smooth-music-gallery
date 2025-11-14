@@ -24,7 +24,7 @@ register_block_type(
 );
 
 function wp_music_gallery_block_render( $attributes ) {
-	$theme  = $attributes['theme'] ?? 'default';
+	$theme             = $attributes['theme'] ?? 'default';
 	$overlay_animation = $attributes['overlay_animation'] ?? '';
 
 	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
@@ -32,22 +32,22 @@ function wp_music_gallery_block_render( $attributes ) {
 
 	wp_enqueue_style(
 		"wpmg-theme-$theme",
-		$plugin_url . "build/free/$theme.css", // @TODO Handle free?
+		$plugin_url . "build/$theme.css",
 		[],
 		'1.0.0'
 	);
 
-	if ($overlay_animation) {
+	if ( $overlay_animation ) {
 		wp_enqueue_script(
 			"wpmg-overlay-animation-script-$overlay_animation",
-			$plugin_url . "build/free/$overlay_animation.js", // @TODO Handle free?
+			$plugin_url . "build/$overlay_animation.js",
 			[],
 			'1.0.0'
 		);
 
 		wp_enqueue_style(
 			"wpmg-overlay-animation-style-$overlay_animation",
-			$plugin_url . "build/free/$overlay_animation.css", // @TODO Handle free?
+			$plugin_url . "build/$overlay_animation.css",
 			[],
 			'1.0.0'
 		);
@@ -57,34 +57,40 @@ function wp_music_gallery_block_render( $attributes ) {
 	return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }
 
-add_action( 'enqueue_block_editor_assets', function() {
-	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
-	$plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
+add_action('init', function() {
 
-	$themes = ['default', 'video_player'];//, '3d_ring', 'polaroid', 'retro'];
-	foreach($themes as $theme) {
-		wp_enqueue_style(
-			"wpmg-theme-$theme",
-			$plugin_url . "build/free/$theme.css", // @TODO Handle free?
-			[],
-			'1.0.0'
-		);
+	$cdn = get_option('wpmg_use_cdn') === 'yes';
+	$plugin_url = plugin_dir_url(__FILE__);
+	$cdn_base   = 'https://cdn.twojcdn.com/wpmg/';
+	$base       = $cdn ? $cdn_base : $plugin_url . 'build/';
+
+	$config = json_decode(file_get_contents(__DIR__.'/config.json'), true);
+
+	foreach ($config['themes'] as $theme) {
+		wp_register_style("wpmg-theme-$theme", $base . "$theme.css", [], '1.0.0');
 	}
 
-	$overlay_animations = ['equalizer_bars']; // @TODO Rest
-	foreach($overlay_animations as $overlay_animation) {
-		wp_enqueue_script(
-			"wpmg-overlay-animation-script-$overlay_animation",
-			$plugin_url . "build/free/$overlay_animation.js", // @TODO Handle free?
-			[],
-			'1.0.0'
-		);
-
-		wp_enqueue_style(
-			"wpmg-overlay-animation-style-$overlay_animation",
-			$plugin_url . "build/free/$overlay_animation.css", // @TODO Handle free?
-			[],
-			'1.0.0'
-		);
+	foreach ($config['overlay_animations'] as $overlay) {
+		wp_register_style("wpmg-overlay-$overlay", $base . "$overlay.css", [], '1.0.0');
 	}
-} );
+
+	foreach ($config['background_animations'] as $bg) {
+		wp_register_style("wpmg-bg-$bg", $base . "$bg.css", [], '1.0.0');
+	}
+
+	wp_register_style(
+		'wpmg-editor',
+		false,
+		array_merge(
+			array_map(function($t) {
+				return "wpmg-theme-$t";
+			}, $config['themes']),
+			array_map(function($o) {
+				return "wpmg-overlay-$o";
+			}, $config['overlay_animations']),
+			array_map(function($b) {
+				return "wpmg-bg-$b";
+			}, $config['background_animations'])
+		)
+	);
+});
