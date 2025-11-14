@@ -56,3 +56,35 @@ function wp_music_gallery_block_render( $attributes ) {
 
 	return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }
+
+add_action( 'enqueue_block_editor_assets', function() {
+	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
+	$plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
+
+	$themes = ['default', 'video_player'];//, '3d_ring', 'polaroid', 'retro'];
+	foreach($themes as $theme) {
+		wp_enqueue_style(
+			"wpmg-theme-$theme",
+			$plugin_url . "build/free/$theme.css", // @TODO Handle free?
+			[],
+			'1.0.0'
+		);
+	}
+
+	$overlay_animations = ['equalizer_bars']; // @TODO Rest
+	foreach($overlay_animations as $overlay_animation) {
+		wp_enqueue_script(
+			"wpmg-overlay-animation-script-$overlay_animation",
+			$plugin_url . "build/free/$overlay_animation.js", // @TODO Handle free?
+			[],
+			'1.0.0'
+		);
+
+		wp_enqueue_style(
+			"wpmg-overlay-animation-style-$overlay_animation",
+			$plugin_url . "build/free/$overlay_animation.css", // @TODO Handle free?
+			[],
+			'1.0.0'
+		);
+	}
+} );

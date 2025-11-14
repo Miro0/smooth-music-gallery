@@ -14,7 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const attachOverlayAnimation = (container) => {
   const props = JSON.parse(container.dataset.props || '{}');
-  const { overlay_animation } = props;
+  const { overlay_animation, overlay_animation_options = {} } = props;
+  const {accent = '#ffffff', opacity = 0.5, bars = 32} = overlay_animation_options;
+
+  const barsRatio = window.innerWidth < 768 ? 0.5 : 1;
+
+  console.log({
+    overlay_animation_options,
+    accent,
+    opacity,
+    bars,
+    barsRatio,
+  });
 
   if (overlay_animation === 'equalizer_bars') {
     const audio = container.querySelector('.wpmg-audio');
@@ -22,16 +33,16 @@ const attachOverlayAnimation = (container) => {
 
     if (overlayLayer && audio) {
       overlayLayer.innerHTML = `
-      <div class="wpmg-overlay--equalizer-bars" data-bars="32">
-        ${'<div class="wpmg-overlay--equalizer-bar"></div>'.repeat(32)}
+      <div class="wpmg-overlay--equalizer-bars" data-bars="${bars * barsRatio}" style="opacity:${opacity}">
+        ${`<div class="wpmg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
       </div>
       `;
 
-      const bars = Array.from(
+      const barNodes = Array.from(
         overlayLayer.querySelectorAll('.wpmg-overlay--equalizer-bar')
       );
 
-      const barHeights = new Array(bars.length).fill(0);
+      const barHeights = new Array(barNodes.length).fill(0);
       const decay = 0.005;
 
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -49,9 +60,9 @@ const attachOverlayAnimation = (container) => {
       function animate() {
         analyser.getByteFrequencyData(data);
 
-        const slice = Math.floor(data.length / bars.length);
+        const slice = Math.floor(data.length / barNodes.length);
 
-        bars.forEach((bar, i) => {
+        barNodes.forEach((bar, i) => {
           let start = i * slice;
           let sum = 0;
 

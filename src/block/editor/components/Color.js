@@ -10,7 +10,7 @@ const Color = (
     help,
   }
 ) => {
-  const {setAttributes} = useBlockContext();
+  const {changeAttribute} = useBlockContext();
 
   return (
     <BaseControl
@@ -20,8 +20,9 @@ const Color = (
     >
       <VStack spacing="4" style={{marginTop: 10}}>
         <ColorPalette
+          clearable={false}
           value={value}
-          onChange={(color) => setAttributes({[name]: color})}
+          onChange={(color) => changeAttribute(name, color)}
         />
       </VStack>
     </BaseControl>

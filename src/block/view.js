@@ -1,4 +1,4 @@
-import {initWpMusicGallery} from "./front/core";
+import {initWpMusicGallery} from "../wp-music-gallery";
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.wpmg-gallery').forEach(initWpMusicGallery);

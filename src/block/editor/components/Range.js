@@ -12,7 +12,7 @@ const Range = (
     step = 0.5
   }
 ) => {
-  const {setAttributes} = useBlockContext();
+  const {changeAttribute} = useBlockContext();
 
   return (
     <BaseControl
@@ -22,7 +22,7 @@ const Range = (
     >
       <RangeControl
         value={value}
-        onChange={(value) => setAttributes({[name]: value})}
+        onChange={(value) => changeAttribute(name, value)}
         min={min}
         max={max}
         step={step}

@@ -13,7 +13,7 @@ const MediaUpload = (
     multiple = false,
   }
 ) => {
-  const {setAttributes} = useBlockContext();
+  const {changeAttribute} = useBlockContext();
 
   return (
     <MediaUploadCheck>
@@ -24,7 +24,7 @@ const MediaUpload = (
       >
         <div style={{display: 'flex', gap: '8px'}}>
           <MediaUploadCore
-            onSelect={(media) => setAttributes({[name]: media})}
+            onSelect={(media) => changeAttribute(name, media)}
             allowedTypes={allowedTypes}
             multiple={multiple}
             gallery={multiple}
@@ -45,7 +45,7 @@ const MediaUpload = (
 
           {((multiple && value?.length > 0) || value?.id) && (
             <Button
-              onClick={() => setAttributes({[name]: multiple ? [] : {}})}
+              onClick={() => changeAttribute(name, multiple ? [] : {})}
               variant="secondary"
               isDestructive
             >

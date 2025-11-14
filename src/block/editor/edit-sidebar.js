@@ -21,15 +21,30 @@ export default function EditSidebar({attributes, setAttributes, config}) {
   } = attributes;
 
   console.log({
-    overlay_animation_options
+    attributes
   });
 
-  // @TODO Handle dot notation in setAttributes/
   // @TODO Handle theme PRO blockage.
   // @TODO Handle per animation specific settings + PRO blockage.
   return (
-    <BlockContext.Provider value={{setAttributes}}>
+    <BlockContext.Provider value={{changeAttribute: (name, value) => {
+      let newValuesToSet = {};
+      if (name.includes('.')) {
+        let [parent, child] = name.split('.');
+
+        newValuesToSet[parent] = {
+          ...(attributes[parent] || {}),
+          [child]: value,
+        };
+      } else {
+        newValuesToSet = {[name]: value};
+      }
+
+      setAttributes(newValuesToSet);
+    }}}>
       <InspectorControls>
+        {/*<p style={{ paddingRight: '16px', paddingLeft: '52px' }}>Powered by <a href="https://protectedcdn.com" target="_blank">Protected CDN</a></p>*/}
+
         <PanelBody
           title={__('Gallery settings', 'wpmusicgallery')}
           initialOpen={true}
@@ -75,6 +90,49 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           <hr/>
 
           <Select
+            name="overlay_animation"
+            value={overlay_animation}
+            options={[...config.overlay_animations.free, ...config.overlay_animations.pro]}
+            label={__('Overlay animation', 'wpmusicgallery')}
+            help={__('Select type of overlay animation', 'wpmusicgallery')}
+            placeholder={__('None', 'wpmusicgallery')}
+          />
+
+          {overlay_animation && (
+            <>
+              <Color
+                name="overlay_animation_options.accent"
+                value={overlay_animation_options?.accent ?? '#ffffff'}
+                label={__('Accent color', 'wpmusicgallery')}
+              />
+              <Range
+                name="overlay_animation_options.opacity"
+                value={overlay_animation_options?.opacity ?? 0.5}
+                label={__('Opacity', 'wpmusicgallery')}
+                min={0.1}
+                max={1}
+                step={0.05}
+              />
+
+              {overlay_animation === 'equalizer_bars' && (
+                <>
+                  <Range
+                    name="overlay_animation_options.bars"
+                    value={overlay_animation_options?.bars ?? 32}
+                    label={__('Amount of bars', 'wpmusicgallery')}
+                    help={__('On mobile this amount is split by half', 'wpmusicgallery')}
+                    min={16}
+                    max={128}
+                    step={1}
+                  />
+                </>
+              )}
+            </>
+          )}
+
+          <hr/>
+
+          <Select
             name="background_animation"
             value={background_animation}
             options={[...config.background_animations.free, ...config.background_animations.pro]}
@@ -88,33 +146,6 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               <Color
                 name="background_animation_options.accent"
                 value={background_animation_options?.accent}
-                label={__('Accent color', 'wpmusicgallery')}
-              />
-
-              <Color
-                name="background_animation_options.accent"
-                value={background_animation_options?.accent}
-                label={__('Accent color', 'wpmusicgallery')}
-              />
-            </>
-          )}
-
-          <hr/>
-
-          <Select
-            name="overlay_animation"
-            value={overlay_animation}
-            options={[...config.overlay_animations.free, ...config.overlay_animations.pro]}
-            label={__('Overlay animation', 'wpmusicgallery')}
-            help={__('Select type of overlay animation', 'wpmusicgallery')}
-            placeholder={__('None', 'wpmusicgallery')}
-          />
-
-          {overlay_animation && (
-            <>
-              <Color
-                name="overlay_animation_options.accent"
-                value={overlay_animation_options?.accent}
                 label={__('Accent color', 'wpmusicgallery')}
               />
             </>

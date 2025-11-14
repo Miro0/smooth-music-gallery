@@ -14,7 +14,7 @@ const Select = (
     help,
   }
 ) => {
-  const {setAttributes} = useBlockContext();
+  const {changeAttribute} = useBlockContext();
 
   return (
     <BaseControl
@@ -32,7 +32,7 @@ const Select = (
             value: item,
           }
         })}
-        onChange={(value) => setAttributes({[name]: value})}
+        onChange={(value) => changeAttribute(name, value)}
         placeholder={placeholder}
         __next40pxDefaultSize
         __nextHasNoMarginBottom
