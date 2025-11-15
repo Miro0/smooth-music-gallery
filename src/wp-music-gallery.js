@@ -3,7 +3,7 @@ import {Pagination, Autoplay, Keyboard} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-export const initWpMusicGallery = (container) => {
+export const initWpMusicGallery = (container, index) => {
   const props = JSON.parse(container.dataset.props || '{}');
   const {photos = [], music, theme = 'default', slides_duration = 2} = props;
 
@@ -46,18 +46,21 @@ export const initWpMusicGallery = (container) => {
     ${music?.url ? `<audio class="wpmg-audio" preload="auto" src="${music.url}"></audio>` : ''}
   `;
 
-  // @TODO This is not handling well multiple galleries...
-  if (window.wpmg) {
-    window.wpmg.initialized = true;
-  } else {
-    window.wpmg = {initialized: true};
+  if (!window.wpmg) {
+    window.wpmg = [];
   }
 
-  if (window.wpmg?.initOverlay) {
-    window.wpmg.initOverlay();
+  if (window.wpmg[index]) {
+    window.wpmg[index].initialized = true;
+  } else {
+    window.wpmg[index] = {initialized: true, source: null};
   }
-  if (window.wpmg?.initBackground) {
-    window.wpmg.initBackground();
+
+  if (window.wpmg[index]?.initOverlay) {
+    window.wpmg[index].initOverlay(container, index);
+  }
+  if (window.wpmg[index]?.initBackground) {
+    window.wpmg[index].initBackground(container, index);
   }
 
   const swiper = new Swiper(container.querySelector('.swiper'), {
