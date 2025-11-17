@@ -2,9 +2,9 @@
   "themes": [
     "free/default",
     "free/video_player",
+    "pro/retro",
     "pro/3d_ring",
-    "pro/polaroid",
-    "pro/retro"
+    "pro/polaroid"
   ],
   "background_animations": [
     "free/ambient_glow",
