@@ -1,4 +1,3 @@
-import './equalizer_bars.scss';
 import {createAnimationStyle} from "../../block/utils/style";
 
 document.addEventListener('DOMContentLoaded', () => {

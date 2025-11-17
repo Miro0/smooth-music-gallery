@@ -1,6 +1,7 @@
 import {useBlockProps} from '@wordpress/block-editor';
 import {__} from '@wordpress/i18n';
 import EditSidebar from "./editor/edit-sidebar";
+import AmbientGlow from "./editor/preview/background-animation/AmbientGlow";
 import EqualizerBars from "./editor/preview/overlay-animation/EqualizerBars";
 import config from '../../config.json';
 
@@ -14,12 +15,15 @@ export default function Edit(props) {
       <p {...useBlockProps()}>
         <div className={`wpmg-gallery theme-${theme.replace(/free\/|pro\//, '')} visible-controls-on-hover`}>
           <div className="wpmg-bg-layer">
-
+            {props.attributes?.music?.filename && props.attributes?.background_animation === 'free/ambient_glow' &&
+              <AmbientGlow {...props.attributes?.background_animation_options} />
+            }
           </div>
           <div className="wpmg-content">
             <div className="wpmg-overlay-layer">
               {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'free/equalizer_bars' &&
-                <EqualizerBars {...props.attributes?.overlay_animation_options} />}
+                <EqualizerBars {...props.attributes?.overlay_animation_options} />
+              }
             </div>
             <div className="wpmg-image-container swiper">
               <div className="swiper-wrapper">

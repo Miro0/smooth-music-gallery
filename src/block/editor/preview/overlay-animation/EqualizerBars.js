@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "@wordpress/element";
+import {useEffect, useRef} from "@wordpress/element";
 
-const EqualizerBars = ({ bars = 32, accent = '#ffffff', opacity = 0.5, max_height = 95 }) => {
+const EqualizerBars = ({bars = 32, accent = '#ffffff', opacity = 0.5, max_height = 95}) => {
   const containerRef = useRef(null);
   const animRef = useRef(null);
 
@@ -52,14 +52,36 @@ const EqualizerBars = ({ bars = 32, accent = '#ffffff', opacity = 0.5, max_heigh
   return (
     <div
       ref={containerRef}
-      className="wpmg-overlay--equalizer-bars"
-      style={{ opacity, height: `${max_height}%` }}
+      style={{
+        opacity,
+        height: `${max_height}%`,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        pointerEvents: 'none',
+        zIndex: 50,
+        gap: '3px',
+      }}
     >
-      {Array.from({ length: bars }).map((_, i) => (
+      {Array.from({length: bars}).map((_, i) => (
         <div
           key={i}
           className="wpmg-overlay--equalizer-bar"
-          style={{ backgroundColor: accent }}
+          style={{
+            backgroundColor: accent,
+            flex: 1,
+            height: '100%',
+            borderTopLeftRadius: '3px',
+            borderTopRightRadius: '3px',
+            transformOrigin: 'bottom',
+            transform: 'scaleY(0.01)',
+            willChange: 'transform',
+            transition: 'background 0.2s',
+          }}
         />
       ))}
     </div>
