@@ -26,6 +26,7 @@ register_block_type(
 function wp_music_gallery_block_render( $attributes ) {
 	$theme             = $attributes['theme'] ?? 'default';
 	$overlay_animation = $attributes['overlay_animation'] ?? '';
+	$background_animation = $attributes['background_animation'] ?? '';
 
 	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
 	$plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
@@ -44,10 +45,12 @@ function wp_music_gallery_block_render( $attributes ) {
 			[],
 			'1.0.0'
 		);
+	}
 
-		wp_enqueue_style(
-			"wpmg-overlay-animation-style-$overlay_animation",
-			$plugin_url . "build/$overlay_animation.css",
+	if ( $background_animation ) {
+		wp_enqueue_script(
+			"wpmg-overlay-animation-script-$background_animation",
+			$plugin_url . "build/$background_animation.js",
 			[],
 			'1.0.0'
 		);
@@ -58,7 +61,7 @@ function wp_music_gallery_block_render( $attributes ) {
 }
 
 add_action('init', function() {
-
+	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
 	$cdn = get_option('wpmg_use_cdn') === 'yes';
 	$plugin_url = plugin_dir_url(__FILE__);
 	$cdn_base   = 'https://cdn.twojcdn.com/wpmg/';
@@ -70,14 +73,6 @@ add_action('init', function() {
 		wp_register_style("wpmg-theme-$theme", $base . "$theme.css", [], '1.0.0');
 	}
 
-	foreach ($config['overlay_animations'] as $overlay) {
-		wp_register_style("wpmg-overlay-$overlay", $base . "$overlay.css", [], '1.0.0');
-	}
-
-	foreach ($config['background_animations'] as $bg) {
-		wp_register_style("wpmg-bg-$bg", $base . "$bg.css", [], '1.0.0');
-	}
-
 	wp_register_style(
 		'wpmg-editor',
 		false,
@@ -85,12 +80,6 @@ add_action('init', function() {
 			array_map(function($t) {
 				return "wpmg-theme-$t";
 			}, $config['themes']),
-			array_map(function($o) {
-				return "wpmg-overlay-$o";
-			}, $config['overlay_animations']),
-			array_map(function($b) {
-				return "wpmg-bg-$b";
-			}, $config['background_animations'])
 		)
 	);
 });

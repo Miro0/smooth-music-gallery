@@ -1,4 +1,5 @@
 import './equalizer_bars.scss';
+import {createAnimationStyle} from "../../block/utils/style";
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
@@ -25,11 +26,39 @@ const attachOverlayAnimation = (container, index) => {
       const overlayLayer = container.querySelector('.wpmg-overlay-layer');
 
       if (overlayLayer && audio) {
+        const equalizerClass = createAnimationStyle('wpmg-overlay--equalizer-bars', (c) => `
+          .${c} {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.2;
+            gap: 3px;
+          }
+          .${c} {
+            .wpmg-overlay--equalizer-bar {
+            flex: 1;
+            height: 95%;
+            background: #ffffff;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            transform-origin: bottom;
+            transform: scaleY(0.01);
+            will-change: transform;
+            transition: background 0.2s;
+          }
+        `);
+
         overlayLayer.innerHTML = `
-      <div class="wpmg-overlay--equalizer-bars" data-bars="${bars * barsRatio}" style="opacity:${opacity}; height: ${max_height}%">
-        ${`<div class="wpmg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
-      </div>
-      `;
+          <div class="${equalizerClass}" data-bars="${bars * barsRatio}" style="opacity:${opacity}; height: ${max_height}%">
+            ${`<div class="wpmg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
+          </div>
+        `;
 
         const barNodes = Array.from(
           overlayLayer.querySelectorAll('.wpmg-overlay--equalizer-bar')
