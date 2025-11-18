@@ -1,4 +1,5 @@
 import {createAnimationStyle} from "../../block/utils/style";
+import {initAudioSource} from "../../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
@@ -66,22 +67,7 @@ const attachOverlayAnimation = (container, index) => {
         const barHeights = new Array(barNodes.length).fill(0);
         const decay = 0.005;
 
-        if (!window?.wpmg[index]?.ctx) {
-          window.wpmg[index].ctx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        const ctx = window.wpmg[index].ctx;
-
-        if (!window?.wpmg[index]?.source) {
-          window.wpmg[index].source = ctx.createMediaElementSource(audio);
-        }
-        const source = window.wpmg[index].source;
-
-        const analyser = ctx.createAnalyser();
-        analyser.fftSize = 256;
-        const data = new Uint8Array(analyser.frequencyBinCount);
-
-        source.connect(analyser);
-        analyser.connect(ctx.destination);
+        const [analyser, ctx, data] = initAudioSource(audio, index);
 
         let animFrame;
 

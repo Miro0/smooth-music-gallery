@@ -1,4 +1,5 @@
 import {createAnimationStyle, hexToRgb} from "../../block/utils/style";
+import {initAudioSource} from "../../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
@@ -49,14 +50,14 @@ const attachBackgroundAnimation = (container, index) => {
             width:70%;
             height:70%;
             filter:blur(50px);
-            opacity:0;
+            opacity:0.2;
             transition:opacity .12s linear,transform .12s linear;
             background:radial-gradient(circle,var(--glow-color) 0%, transparent 90%);
           }
-          .${c} .wpmg-bg--ambient-light__tl {top:2.5%;left:-5%;}
-          .${c} .wpmg-bg--ambient-light__tr {top:2.5%;right:-5%;}
-          .${c} .wpmg-bg--ambient-light__bl {bottom:2.5%;left:-5%;}
-          .${c} .wpmg-bg--ambient-light__br {bottom:2.5%;right:-5%;}
+          .${c} .wpmg-bg--ambient-light__tl {top:2.5%;left:-2.5%;}
+          .${c} .wpmg-bg--ambient-light__tr {top:2.5%;right:-2.5%;}
+          .${c} .wpmg-bg--ambient-light__bl {bottom:2.5%;left:-2.5%;}
+          .${c} .wpmg-bg--ambient-light__br {bottom:2.5%;right:-2.5%;}
         `);
 
         backgroundLayer.innerHTML = `
@@ -77,22 +78,7 @@ const attachBackgroundAnimation = (container, index) => {
           el.style.setProperty("--glow-color", baseColor);
         });
 
-        if (!window?.wpmg[index]?.ctx) {
-          window.wpmg[index].ctx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        const ctx = window.wpmg[index].ctx;
-
-        if (!window?.wpmg[index]?.source) {
-          window.wpmg[index].source = ctx.createMediaElementSource(audio);
-        }
-        const source = window.wpmg[index].source;
-
-        const analyser = ctx.createAnalyser();
-        analyser.fftSize = 256;
-        const data = new Uint8Array(analyser.frequencyBinCount);
-
-        source.connect(analyser);
-        analyser.connect(ctx.destination);
+        const [analyser, ctx, data] = initAudioSource(audio, index);
 
         let smoothBass = 0;
         let smoothMid = 0;

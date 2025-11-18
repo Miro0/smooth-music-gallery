@@ -10,6 +10,10 @@
   justify-content: center;
   max-width: unset;
 
+  @media screen and (max-width: 768px) {
+    aspect-ratio: 9 / 16;
+  }
+
   .wpmg-bg-layer {
     position: absolute;
     inset: 0;
@@ -65,17 +69,33 @@
   }
 
   .swiper-pagination {
-    bottom: 10px !important;
-    z-index: 10;
+    bottom: 14px !important;
+    z-index: 99;
+    width: calc(100% - 112px);
+    left: 56px;
+    position: absolute;
+    height: 42px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
   }
 
   .swiper-pagination-bullet {
-    background: rgba(255, 255, 255, 0.5);
-    opacity: 1;
+    background: #fff;
+    opacity: 0.25;
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .swiper-pagination-bullet-active {
-    background: #fff;
+    opacity: 1;
   }
 
   .wpmg-controls {
@@ -110,7 +130,6 @@
     justify-content: center;
     cursor: pointer;
     outline: none;
-    pointer-events: all;
     backdrop-filter: blur(4px);
     transition: background 0.2s, fill 0.2s;
 
@@ -141,8 +160,30 @@
 
   &.visible-controls, &.visible-controls-on-hover:hover {
     .wpmg-content .wpmg-controls {
-      transform: translateY(0);
       opacity: 1;
+
+      .swiper-pagination-bullet,
+      .wpmg-btn,
+      .wpmg-volume {
+        pointer-events: all;
+      }
+    }
+  }
+
+  .wpmg-volume {
+    appearance: none;
+    bottom: 102px;
+    height: 2px;
+    position: absolute;
+    right: -10px;
+    transform: rotate(-90deg);
+    width: 80px;
+    background: rgba(255, 255, 255, 0.5);
+    accent-color: #ffffff;
+    outline: none;
+
+    &:hover {
+      cursor: pointer;
     }
   }
 }

@@ -66,7 +66,7 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,
           top: '2.5%',
-          left: '-5%',
+          left: '-2.5%',
         }}
       />
       <div
@@ -80,7 +80,7 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,
           top: '2.5%',
-          right: '-5%',
+          right: '-2.5%',
         }}
       />
       <div
@@ -94,7 +94,7 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,
           bottom: '2.5%',
-          left: '-5%',
+          left: '-2.5%',
         }}
       />
       <div
@@ -108,7 +108,7 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,
           bottom: '2.5%',
-          right: '-5%',
+          right: '-2.5%',
         }}
       />
     </div>

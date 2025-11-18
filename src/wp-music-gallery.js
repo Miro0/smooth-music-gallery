@@ -17,8 +17,8 @@ export const initWpMusicGallery = (container, index) => {
       <div class="wpmg-image-container swiper">
       <div class="swiper-wrapper">
         ${photos
-          .map(
-            (photo) => `
+    .map(
+      (photo) => `
               <div class="swiper-slide">
                 <img 
                   src="${photo.url}" 
@@ -29,17 +29,26 @@ export const initWpMusicGallery = (container, index) => {
                 />
               </div>
             `
-          )
-          .join('')}
+    )
+    .join('')}
         </div>
-        <div class="swiper-pagination"></div>
       </div>
       <div class="wpmg-controls">
+        <div class="swiper-pagination"></div>
+        <input 
+          type="range" 
+          min="0" 
+          max="1" 
+          step="0.01" 
+          value="1" 
+          orient="vertical"
+          class="wpmg-volume"
+        >
         <button class="wpmg-btn wpmg-play" aria-label="Play / Pause">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
         <button class="wpmg-btn wpmg-fullscreen" aria-label="Fullscreen">
-          <svg viewBox="0 0 24 24"><path d="M7 14h2v3h3v2H7v-5zM14 7h3v3h2V5h-5v2z"/></svg>
+          <svg class="on" viewBox="0 0 24 24"><path d="M7 14h2v3h3v2H7v-5zM14 7h3v3h2V5h-5v2z"/></svg>
         </button>
       </div>
     </div>
@@ -102,23 +111,30 @@ export const initWpMusicGallery = (container, index) => {
     });
   });
 
-  initControls(container, swiper, slides_duration);
+  initControls(container, swiper, slides_duration, index);
 };
 
-function initControls(container, swiper, slides_duration) {
+function initControls(container, swiper, slides_duration, index) {
   const content = container.querySelector('.wpmg-content');
   const btnPlay = container.querySelector('.wpmg-play');
   const btnFullscreen = container.querySelector('.wpmg-fullscreen');
   const audio = container.querySelector('.wpmg-audio');
+  const volumeSlider = container.querySelector('.wpmg-volume');
 
-  if (audio) {
-    audio.volume = 0.8;
+  if (audio && volumeSlider) {
+    volumeSlider.value = 0.8;
+    volumeSlider.addEventListener('input', () => {
+      if (window.wpmg[index].gain) {
+        window.wpmg[index].gain.gain.value = parseFloat(volumeSlider.value);
+        mouseMove();
+      }
+    });
   }
 
   let playing = false;
   let controlsTimeout = null;
 
-  const mouseMove = (e) => {
+  const mouseMove = () => {
     clearTimeout(controlsTimeout);
     container.classList.add('visible-controls');
     controlsTimeout = setTimeout(() => {
@@ -128,6 +144,8 @@ function initControls(container, swiper, slides_duration) {
 
   if (btnPlay) {
     btnPlay.addEventListener('click', async () => {
+      mouseMove();
+
       if (playing) {
         playing = false;
 
@@ -169,6 +187,8 @@ function initControls(container, swiper, slides_duration) {
 
   if (btnFullscreen) {
     btnFullscreen.addEventListener('click', () => {
+      mouseMove();
+
       if (!document.fullscreenElement) {
         container.requestFullscreen();
       } else {
