@@ -141,6 +141,37 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                       />
                     </>
                   )}
+
+                  {overlay_animation === 'free/wave_line' && (
+                    <>
+                      <Range
+                        name="overlay_animation_options.position"
+                        value={overlay_animation_options?.position ?? 0}
+                        label={__('Position [%]', 'wpmusicgallery')}
+                        help={__('Where 0 is center, -50 is top and 50 is bottom', 'wpmusicgallery')}
+                        min={-50}
+                        max={50}
+                        step={1}
+                      />
+                      <Range
+                        name="overlay_animation_options.line_height"
+                        value={overlay_animation_options?.line_height ?? 4}
+                        label={__('Line thickness', 'wpmusicgallery')}
+                        min={1}
+                        max={120}
+                        step={1}
+                      />
+                      <Range
+                        name="overlay_animation_options.intensity"
+                        value={overlay_animation_options?.intensity ?? 1}
+                        label={__('Intensity', 'wpmusicgallery')}
+                        help={__('How strong wave amplitude can be', 'wpmusicgallery')}
+                        min={0.2}
+                        max={3}
+                        step={0.2}
+                      />
+                    </>
+                  )}
                 </>
               )}
 

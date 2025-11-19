@@ -40,8 +40,7 @@ const attachOverlayAnimation = (container, index) => {
             opacity: 0.2;
             gap: 3px;
           }
-          .${c} {
-            .wpmg-overlay--equalizer-bar {
+          .${c} .wpmg-overlay--equalizer-bar {
             flex: 1;
             height: 95%;
             background: #ffffff;

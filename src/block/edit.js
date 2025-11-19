@@ -3,6 +3,7 @@ import {__} from '@wordpress/i18n';
 import EditSidebar from "./editor/edit-sidebar";
 import AmbientGlow from "./editor/preview/background-animation/AmbientGlow";
 import EqualizerBars from "./editor/preview/overlay-animation/EqualizerBars";
+import WaveLine from "./editor/preview/overlay-animation/WaveLine";
 import config from '../../config.json';
 
 export default function Edit(props) {
@@ -23,6 +24,9 @@ export default function Edit(props) {
             <div className="wpmg-overlay-layer">
               {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'free/equalizer_bars' &&
                 <EqualizerBars {...props.attributes?.overlay_animation_options} />
+              }
+              {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'free/wave_line' &&
+                <WaveLine {...props.attributes?.overlay_animation_options} />
               }
             </div>
             <div className="wpmg-image-container swiper">
