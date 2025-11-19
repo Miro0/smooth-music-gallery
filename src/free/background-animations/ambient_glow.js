@@ -34,7 +34,7 @@ const attachBackgroundAnimation = (container, index) => {
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
     const {background_animation, background_animation_options = {}} = props;
-    const {accent = '#ffffff'} = background_animation_options;
+    const {accent = '#ffffff', intensity = 1} = background_animation_options;
 
     if (background_animation === 'free/ambient_glow') {
       const audio = container.querySelector('.wpmg-audio');
@@ -47,9 +47,9 @@ const attachBackgroundAnimation = (container, index) => {
           }
           .${c} .wpmg-bg--ambient-light {
             position:absolute;
-            width:70%;
-            height:70%;
-            filter:blur(50px);
+            width:${0.5 * intensity * 100}%;
+            height:${0.5 * intensity * 100}%;
+            filter:blur(${50 * intensity}px);
             opacity:0.2;
             transition:opacity .12s linear,transform .12s linear;
             background:radial-gradient(circle,var(--glow-color) 0%, transparent 90%);
@@ -98,10 +98,10 @@ const attachBackgroundAnimation = (container, index) => {
           smoothMid = smoothMid * (1 - smoothing) + mid * smoothing;
           smoothHigh = smoothHigh * (1 - smoothing) + high * smoothing;
 
-          ambient.querySelector('.wpmg-bg--ambient-light__tl').style.opacity = 0.2 + smoothMid;
-          ambient.querySelector('.wpmg-bg--ambient-light__tr').style.opacity = 0.2 + smoothHigh;
-          ambient.querySelector('.wpmg-bg--ambient-light__bl').style.opacity = 0.2 + smoothBass;
-          ambient.querySelector('.wpmg-bg--ambient-light__br').style.opacity = 0.2 + smoothHigh;
+          ambient.querySelector('.wpmg-bg--ambient-light__tl').style.opacity = 0.2 + smoothMid * intensity;
+          ambient.querySelector('.wpmg-bg--ambient-light__tr').style.opacity = 0.2 + smoothHigh * intensity;
+          ambient.querySelector('.wpmg-bg--ambient-light__bl').style.opacity = 0.2 + smoothBass * intensity;
+          ambient.querySelector('.wpmg-bg--ambient-light__br').style.opacity = 0.2 + smoothHigh * intensity;
 
           requestAnimationFrame(animate);
         }

@@ -2,7 +2,7 @@ import {useEffect, useRef} from "@wordpress/element";
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
-const AmbientGlow = ({accent = '#ffffff'}) => {
+const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
   const containerRef = useRef(null);
   const animRef = useRef(null);
 
@@ -37,7 +37,7 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
 
         s.value = lerp(s.value, s.target, s.speed);
 
-        lights[i].style.opacity = s.value.toFixed(3);
+        lights[i].style.opacity = (s.value * intensity).toFixed(3);
       });
 
       animRef.current = requestAnimationFrame(animate);
@@ -59,9 +59,9 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
         className="wpmg-bg--ambient-light wpmg-bg--ambient-light__tl"
         style={{
           position: 'absolute',
-          width: '70%',
-          height: '70%',
-          filter: 'blur(50px)',
+          width: `${0.5 * intensity * 100}%`,
+          height: `${0.5 * intensity * 100}%`,
+          filter: `blur(${50 * intensity}px)`,
           opacity: 0,
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,
@@ -73,9 +73,9 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
         className="wpmg-bg--ambient-light wpmg-bg--ambient-light__tr"
         style={{
           position: 'absolute',
-          width: '70%',
-          height: '70%',
-          filter: 'blur(50px)',
+          width: `${0.5 * intensity * 100}%`,
+          height: `${0.5 * intensity * 100}%`,
+          filter: `blur(${50 * intensity}px)`,
           opacity: 0,
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,
@@ -87,9 +87,9 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
         className="wpmg-bg--ambient-light wpmg-bg--ambient-light__bl"
         style={{
           position: 'absolute',
-          width: '70%',
-          height: '70%',
-          filter: 'blur(50px)',
+          width: `${0.5 * intensity * 100}%`,
+          height: `${0.5 * intensity * 100}%`,
+          filter: `blur(${50 * intensity}px)`,
           opacity: 0,
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,
@@ -101,9 +101,9 @@ const AmbientGlow = ({accent = '#ffffff'}) => {
         className="wpmg-bg--ambient-light wpmg-bg--ambient-light__br"
         style={{
           position: 'absolute',
-          width: '70%',
-          height: '70%',
-          filter: 'blur(50px)',
+          width: `${0.5 * intensity * 100}%`,
+          height: `${0.5 * intensity * 100}%`,
+          filter: `blur(${50 * intensity}px)`,
           opacity: 0,
           transition: 'opacity .12s linear',
           background: `radial-gradient(circle,${accent} 0%, transparent 90%)`,

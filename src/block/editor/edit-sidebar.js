@@ -195,6 +195,20 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                   />
                 </>
               )}
+
+              {background_animation === 'free/ambient_glow' && (
+                <>
+                  <Range
+                    name="background_animation_options.intensity"
+                    value={background_animation_options?.intensity ?? 1}
+                    label={__('Intensity', 'wpmusicgallery')}
+                    help={__('How strong ambient lights are', 'wpmusicgallery')}
+                    min={1}
+                    max={2}
+                    step={0.1}
+                  />
+                </>
+              )}
             </>
           )}
         </PanelBody>
