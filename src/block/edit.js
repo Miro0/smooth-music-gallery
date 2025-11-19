@@ -5,6 +5,7 @@ import AmbientGlow from "./editor/preview/background-animation/AmbientGlow";
 import EqualizerBars from "./editor/preview/overlay-animation/EqualizerBars";
 import WaveLine from "./editor/preview/overlay-animation/WaveLine";
 import config from '../../config.json';
+import AudioPulse from "./editor/preview/overlay-animation/AudioPulse";
 
 export default function Edit(props) {
   const {photos = [], theme = 'default'} = props.attributes;
@@ -27,6 +28,9 @@ export default function Edit(props) {
               }
               {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'free/wave_line' &&
                 <WaveLine {...props.attributes?.overlay_animation_options} />
+              }
+              {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'pro/audio_pulse' &&
+                <AudioPulse {...props.attributes?.overlay_animation_options} />
               }
             </div>
             <div className="wpmg-image-container swiper">

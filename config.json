@@ -8,8 +8,7 @@
   ],
   "background_animations": [
     "free/ambient_glow",
-    "free/soft_flame",
-    "pro/neon_pulse",
+    "free/neon_pulse",
     "pro/color_bloom",
     "pro/aurora_streams"
   ],

@@ -22,19 +22,14 @@ const WaveLine = ({accent = '#ffffff', opacity = 0.5, intensity = 1, position = 
 
       elements.forEach((segment, i) => {
         const x = i / elements.length;
-
         const wave = Math.sin((x + t) * Math.PI * 2);
-
         const previewAmp = 35 * (intensity / 2);
-
         const y = wave * previewAmp;
-
         segment.style.transform = `translateY(${y + offset}px)`;
       });
 
       animRef.current = requestAnimationFrame(animate);
     }
-
 
     animate();
 

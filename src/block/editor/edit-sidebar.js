@@ -175,6 +175,38 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                 </>
               )}
 
+              {overlay_animation === 'pro/audio_pulse' && (
+                <>
+                  <Range
+                    name="overlay_animation_options.intensity"
+                    value={overlay_animation_options?.intensity ?? 1}
+                    label={__('Intensity', 'wpmusicgallery')}
+                    help={__('How much dots can stretch', 'wpmusicgallery')}
+                    min={0.1}
+                    max={1}
+                    step={0.1}
+                  />
+                  <Range
+                    name="overlay_animation_options.density"
+                    value={overlay_animation_options?.density ?? 0.2}
+                    label={__('Density', 'wpmusicgallery')}
+                    help={__('Amount of dots', 'wpmusicgallery')}
+                    min={0.1}
+                    max={1}
+                    step={0.1}
+                  />
+                  <Range
+                    name="overlay_animation_options.speed"
+                    value={overlay_animation_options?.speed ?? 0.2}
+                    label={__('Speed', 'wpmusicgallery')}
+                    help={__('Movement speed. 0 - no movement.', 'wpmusicgallery')}
+                    min={0}
+                    max={1}
+                    step={0.1}
+                  />
+                </>
+              )}
+
               <hr/>
 
               <Select

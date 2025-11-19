@@ -12,4 +12,4 @@
 
 # Bugi
 [ ] Zmiana slideów przez pagination nie opóźnia chowania control overlay.
-[ ] Wave line - offset powinien być procentowy i to utrzymywać - teraz zależny od onload co później się nie zgrywa np. z trybem fullscreen.
+[ ] Wave line - offset powinien być procentowy i to utrzymywać - teraz zależny od onload co później się nie zgrywa np. z trybem fullscreen. Inne overlay animacje tez.
