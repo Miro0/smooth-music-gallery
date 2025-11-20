@@ -8,7 +8,8 @@
   ],
   "backgrounds": [
     "free/ambient_glow",
-    "free/blurred_photos"
+    "free/blurred_photos",
+    "pro/orbital_pulse"
   ],
   "overlays": [
     "free/equalizer_bars",

@@ -103,7 +103,7 @@ const attachBackgroundAnimation = (container, index) => {
           ambient.querySelector('.wpmg-bg--ambient-light__bl').style.opacity = 0.2 + smoothBass * intensity;
           ambient.querySelector('.wpmg-bg--ambient-light__br').style.opacity = 0.2 + smoothHigh * intensity;
 
-          requestAnimationFrame(animate);
+          animFrame = requestAnimationFrame(animate);
         }
 
         audio.addEventListener('play', () => {

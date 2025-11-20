@@ -51,7 +51,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
 
         <PanelBody
           title={__('Gallery', 'wpmusicgallery')}
-          initialOpen={true}
+          initialOpen={false}
         >
           <MediaUpload
             name="photos"
@@ -211,10 +211,19 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                     name="overlay_options.speed"
                     value={overlay_options?.speed ?? 0.2}
                     label={__('Speed', 'wpmusicgallery')}
-                    help={__('Movement speed. 0 - no movement.', 'wpmusicgallery')}
-                    min={0}
+                    help={__('Movement speed', 'wpmusicgallery')}
+                    min={0.1}
                     max={1}
                     step={0.1}
+                  />
+                  <Range
+                    name="overlay_options.size"
+                    value={overlay_options?.size ?? 8}
+                    label={__('Size', 'wpmusicgallery')}
+                    help={__('Size of dots', 'wpmusicgallery')}
+                    min={6}
+                    max={40}
+                    step={1}
                   />
                 </>
               )}
@@ -285,6 +294,63 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                 name="background_options.opacity"
                 value={background_options?.opacity ?? 0.5}
                 label={__('Opacity', 'wpmusicgallery')}
+                min={0.1}
+                max={1}
+                step={0.1}
+              />
+            </>
+          )}
+
+          {background === 'pro/orbital_pulse' && (
+            <>
+              <Range
+                name="background_options.intensity"
+                value={background_options?.intensity ?? 1}
+                label={__('Intensity', 'wpmusicgallery')}
+                help={__('How much dots amplitude big is', 'wpmusicgallery')}
+                min={0.1}
+                max={2}
+                step={0.1}
+              />
+              <Range
+                name="background_options.size"
+                value={background_options?.size ?? 8}
+                label={__('Size', 'wpmusicgallery')}
+                help={__('Size of dots', 'wpmusicgallery')}
+                min={2}
+                max={40}
+                step={1}
+              />
+              <Range
+                name="background_options.density"
+                value={background_options?.density ?? 0.5}
+                label={__('Density', 'wpmusicgallery')}
+                help={__('Amount of dots', 'wpmusicgallery')}
+                min={0.1}
+                max={1}
+                step={0.1}
+              />
+              <Range
+                name="background_options.radius"
+                value={background_options?.radius ?? 90}
+                label={__('Radius', 'wpmusicgallery')}
+                min={60}
+                max={100}
+                step={1}
+              />
+              <Range
+                name="background_options.opacity"
+                value={background_options?.opacity ?? 0.5}
+                label={__('Opacity', 'wpmusicgallery')}
+                min={0.1}
+                max={1}
+                step={0.1}
+              />
+              <Range
+                name="overlay_options.speed"
+                value={overlay_options?.speed ?? 0.2}
+                label={__('Speed', 'wpmusicgallery')}
+                help={__('Movement speed', 'wpmusicgallery')}
                 min={0.1}
                 max={1}
                 step={0.1}

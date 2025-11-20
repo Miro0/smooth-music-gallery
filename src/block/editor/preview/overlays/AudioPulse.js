@@ -1,6 +1,6 @@
 import {useEffect, useRef} from "@wordpress/element";
 
-const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density = 0.2, speed = 0.5}) => {
+const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density = 0.2, speed = 0.2, size = 8}) => {
   const containerRef = useRef(null);
   const animRef = useRef(null);
 
@@ -24,7 +24,7 @@ const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density =
     const state = dots.map(() => ({
       px: Math.random() * width,
       py: Math.random() * height,
-      size: 8 + Math.random() * 16,
+      size: size + Math.random() * 16,
       bandStart: Math.floor(Math.random() * 100),
       bandWidth: 10 + Math.random() * 20,
       strength: 0.4 + Math.random() * intensity,
@@ -80,8 +80,7 @@ const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density =
     animRef.current = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animRef.current);
-  }, [intensity, density, speed]);
-
+  }, [intensity, density, speed, size]);
 
   return (
     <>
@@ -91,9 +90,9 @@ const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density =
           content: '';
           position:absolute;
           border-radius:50%;
-          border: 1px solid ${accent};
-          width: calc(100% - 5px);
-          height: calc(100% - 5px);
+          border: ${size >= 14 ? 2 : 1}px solid ${accent};
+          width: calc(100% - ${size >= 14 ? parseInt(size / 3, 10) : 5}px);
+          height: calc(100% - ${size >= 14 ? parseInt(size / 3, 10) : 5}px);
         }
       `}
       </style>
@@ -118,7 +117,7 @@ const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density =
             style={{
               position: 'absolute',
               borderRadius: '50%',
-              border: `2px solid ${accent}`,
+              border: `${parseInt(size / 4, 10)}px solid ${accent}`,
               transform: 'scale(1)',
               transition: 'opacity 0.15s linear',
               display: 'flex',
