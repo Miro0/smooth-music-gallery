@@ -7,6 +7,7 @@ import BlurredPhotos from "./editor/preview/backgrounds/BlurredPhotos";
 import OrbitalPulse from "./editor/preview/backgrounds/OrbitalPulse";
 
 import AudioPulse from "./editor/preview/overlays/AudioPulse";
+import ColorBlend from "./editor/preview/overlays/ColorBlend";
 import EqualizerBars from "./editor/preview/overlays/EqualizerBars";
 import WaveLine from "./editor/preview/overlays/WaveLine";
 
@@ -58,6 +59,9 @@ export default function Edit(props) {
             </div>
             <div className="wpmg-image-container swiper">
               <div className="swiper-wrapper">
+                {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/color_blend' &&
+                  <ColorBlend {...props.attributes?.overlay_options} />
+                }
                 <div className="swiper-slide">
                   {photos[0]?.url ? (
                     <img

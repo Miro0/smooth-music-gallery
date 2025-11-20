@@ -1,5 +1,5 @@
 import {InspectorControls} from '@wordpress/block-editor';
-import {PanelBody} from '@wordpress/components';
+import {Button, PanelBody} from '@wordpress/components';
 import {__} from '@wordpress/i18n';
 
 import {BlockContext} from "./context";
@@ -7,6 +7,60 @@ import Color from './components/Color';
 import MediaUpload from './components/MediaUpload';
 import Select from "./components/Select";
 import Range from "./components/Range";
+
+const blendModePresets = [
+  {
+    label: __('Grayscale Fade', 'wpmusicgallery'),
+    color: '#FFFFFF',
+    blendMode: 'luminosity',
+  },
+  {
+    label: __('Warm Glow', 'wpmusicgallery'),
+    color: '#FFB86C',
+    blendMode: 'overlay',
+  },
+  {
+    label: __('Cold Glow', 'wpmusicgallery'),
+    color: '#6ECBFF',
+    blendMode: 'overlay',
+  },
+  {
+    label: __('Neon Magenta', 'wpmusicgallery'),
+    color: '#FF00FF',
+    blendMode: 'screen',
+  },
+  {
+    label: __('Neon Blue', 'wpmusicgallery'),
+    color: '#00BBFF',
+    blendMode: 'screen',
+  },
+  {
+    label: __('Duotone Blue/Pink', 'wpmusicgallery'),
+    color: '#8F7AFF',
+    blendMode: 'color',
+  },
+  {
+    label: __('Vintage Fade', 'wpmusicgallery'),
+    color: '#d6b48c',
+    blendMode: 'multiply',
+  },
+  {
+    label: __('Soft Pastel Pink', 'wpmusicgallery'),
+    color: '#FFD1E8',
+    blendMode: 'soft-light',
+  },
+  {
+    label: __('Deep Contrast', 'wpmusicgallery'),
+    color: '#000000',
+    blendMode: 'hard-light',
+  },
+  {
+    label: __('Dreamy Purple', 'wpmusicgallery'),
+    color: '#C77BFF',
+    blendMode: 'overlay',
+  },
+];
+
 
 export default function EditSidebar({attributes, setAttributes, config}) {
   const {
@@ -25,27 +79,27 @@ export default function EditSidebar({attributes, setAttributes, config}) {
     attributes
   });
 
+  const changeAttribute = (name, value) => {
+    let newValuesToSet = {};
+    if (name.includes('.')) {
+      let [parent, child] = name.split('.');
+
+      newValuesToSet[parent] = {
+        ...(attributes[parent] || {}),
+        [child]: value,
+      };
+    } else {
+      newValuesToSet = {[name]: value};
+    }
+
+    setAttributes(newValuesToSet);
+  };
+
   // @TODO Handle theme PRO blockage.
   // @TODO Handle per animation specific settings + PRO blockage.
   // @TODO Probably easiest to ping Powered CDN to check pro assets and if fails - show error below Powered by... - check should be done once per Editor session or rarer.
   return (
-    <BlockContext.Provider value={{
-      changeAttribute: (name, value) => {
-        let newValuesToSet = {};
-        if (name.includes('.')) {
-          let [parent, child] = name.split('.');
-
-          newValuesToSet[parent] = {
-            ...(attributes[parent] || {}),
-            [child]: value,
-          };
-        } else {
-          newValuesToSet = {[name]: value};
-        }
-
-        setAttributes(newValuesToSet);
-      }
-    }}>
+    <BlockContext.Provider value={{changeAttribute}}>
       <InspectorControls>
         {/*<p style={{ paddingRight: '16px', paddingLeft: '52px' }}>Powered by <a href="https://protectedcdn.com" target="_blank">Protected CDN</a></p>*/}
 
@@ -119,19 +173,55 @@ export default function EditSidebar({attributes, setAttributes, config}) {
 
           {overlay && (
             <>
+              {overlay === 'pro/color_blend' && (
+                <>
+                  <PanelBody
+                    title={__('Presets', 'wpmusicgallery')}
+                    initialOpen={false}
+                  >
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
+                      {blendModePresets.map(({label, color, blendMode}, index) => (
+                        <Button
+                          key={`color-blend-preset-${index}`}
+                          variant="secondary"
+                          text={label}
+                          onClick={() => {
+                            setTimeout(() => {
+                              setAttributes({
+                                overlay_options: {
+                                  ...overlay_options,
+                                  accent: color,
+                                  blend_mode: blendMode,
+                                }
+                              })
+                            }, 0);
+                          }}
+                          __next40pxDefaultSize
+                        />
+                      ))}
+                    </div>
+                  </PanelBody>
+
+                  <hr/>
+                </>
+              )}
+
               <Color
                 name="overlay_options.accent"
                 value={overlay_options?.accent ?? '#ffffff'}
                 label={__('Accent color', 'wpmusicgallery')}
               />
-              <Range
-                name="overlay_options.opacity"
-                value={overlay_options?.opacity ?? 0.5}
-                label={__('Opacity', 'wpmusicgallery')}
-                min={0.1}
-                max={1}
-                step={0.05}
-              />
+
+              {overlay !== 'pro/color_blend' && (
+                <Range
+                  name="overlay_options.opacity"
+                  value={overlay_options?.opacity ?? 0.5}
+                  label={__('Opacity', 'wpmusicgallery')}
+                  min={0.1}
+                  max={1}
+                  step={0.05}
+                />
+              )}
 
               {overlay === 'free/equalizer_bars' && (
                 <>
@@ -224,6 +314,34 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                     min={6}
                     max={60}
                     step={1}
+                  />
+                </>
+              )}
+
+              {overlay === 'pro/color_blend' && (
+                <>
+                  <Select
+                    name="overlay_options.blend_mode"
+                    value={overlay_options?.blend_mode ?? 'multiply'}
+                    label={__('Color blend', 'wpmusicgallery')}
+                    help={__('How overlay color blends in with gallery', 'wpmusicgallery')}
+                    options={[
+                      'multiply',
+                      'screen',
+                      'overlay',
+                      'darken',
+                      'lighten',
+                      'color-dodge',
+                      'color-burn',
+                      'hard-light',
+                      'soft-light',
+                      'difference',
+                      'exclusion',
+                      'hue',
+                      'saturation',
+                      'color',
+                      'luminosity',
+                    ]}
                   />
                 </>
               )}

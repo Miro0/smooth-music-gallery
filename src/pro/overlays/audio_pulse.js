@@ -17,7 +17,7 @@ const attachOverlayAnimation = (container, index) => {
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
     const {overlay, overlay_options = {}} = props;
-    let {accent = '#ffffff', opacity = 0.5, intensity = 1, density = 0.2, speed = 0.2, size = 8} = overlay_options;
+    const {accent = '#ffffff', opacity = 0.5, intensity = 1, density = 0.2, speed = 0.2, size = 8} = overlay_options;
 
     if (overlay === 'pro/audio_pulse') {
       const audio = container.querySelector('.wpmg-audio');
