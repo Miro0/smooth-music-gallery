@@ -13,6 +13,7 @@ import HeartbeatLine from "./editor/preview/overlays/HeartbeatLine";
 import WaveLine from "./editor/preview/overlays/WaveLine";
 
 import config from '../../config.json';
+import Pixelate from "./editor/preview/overlays/Pixelate";
 
 export default function Edit(props) {
   const {
@@ -40,13 +41,13 @@ export default function Edit(props) {
               <AmbientGlow {...props.attributes?.background_options} />
             }
             {props.attributes?.music?.filename && props.attributes?.background === 'pro/blurred_photos' &&
-              <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]} />
+              <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]}/>
             }
             {props.attributes?.music?.filename && props.attributes?.background === 'free/orbital_pulse' &&
               <OrbitalPulse {...props.attributes?.background_options} />
             }
           </div>
-          <div className="wpmg-content" style={{ width: `${size}%`, height: `${size}%` }}>
+          <div className="wpmg-content" style={{width: `${size}%`, height: `${size}%`}}>
             <div className="wpmg-overlay-layer">
               {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/audio_pulse' &&
                 <AudioPulse {...props.attributes?.overlay_options} />
@@ -68,13 +69,18 @@ export default function Edit(props) {
                 }
                 <div className="swiper-slide">
                   {photos[0]?.url ? (
-                    <img
-                      alt={photos[0]?.alt ?? 'WP Music Gallery preview'}
-                      src={photos[0].url}
-                      loading="lazy"
-                      decoding="async"
-                      style={{objectFit: 'cover', width: '100%', height: '100%'}}
-                    />
+                    <>
+                      <img
+                        alt={photos[0]?.alt ?? 'WP Music Gallery preview'}
+                        src={photos[0].url}
+                        loading="lazy"
+                        decoding="async"
+                        style={{objectFit: 'cover', width: '100%', height: '100%'}}
+                      />
+                      {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/pixelate' &&
+                        <Pixelate {...props.attributes?.overlay_options} photo={photos[0]}/>
+                      }
+                    </>
                   ) : (
                     <div style={{
                       position: 'relative',

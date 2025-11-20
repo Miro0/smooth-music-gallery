@@ -206,13 +206,15 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                 </>
               )}
 
-              <Color
-                name="overlay_options.accent"
-                value={overlay_options?.accent ?? '#ffffff'}
-                label={__('Accent color', 'wpmusicgallery')}
-              />
+              {overlay !== 'pro/pixelate' && (
+                <Color
+                  name="overlay_options.accent"
+                  value={overlay_options?.accent ?? '#ffffff'}
+                  label={__('Accent color', 'wpmusicgallery')}
+                />
+              )}
 
-              {overlay !== 'pro/color_blend' && (
+              {overlay !== 'pro/color_blend' && overlay !== 'pro/pixelate' && (
                 <Range
                   name="overlay_options.opacity"
                   value={overlay_options?.opacity ?? 0.5}
@@ -365,6 +367,20 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                       'color',
                       'luminosity',
                     ]}
+                  />
+                </>
+              )}
+
+              {overlay === 'pro/pixelate' && (
+                <>
+                  <Range
+                    name="overlay_options.max_size"
+                    value={overlay_options?.max_size ?? 20}
+                    label={__('Max size', 'wpmusicgallery')}
+                    help={__('Maximum size of pixel', 'wpmusicgallery')}
+                    min={2}
+                    max={80}
+                    step={1}
                   />
                 </>
               )}
