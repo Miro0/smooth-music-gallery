@@ -246,7 +246,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                 </>
               )}
 
-              {overlay === 'free/wave_line' && (
+              {(overlay === 'free/wave_line' || overlay === 'pro/heartbeat_line') && (
                 <>
                   <Range
                     name="overlay_options.position"
@@ -273,6 +273,29 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                     min={0.2}
                     max={3}
                     step={0.2}
+                  />
+                </>
+              )}
+
+              {(overlay === 'pro/heartbeat_line') && (
+                <>
+                  <Range
+                    name="overlay_options.start_position"
+                    value={overlay_options?.start_position ?? 0}
+                    label={__('Start position [%]', 'wpmusicgallery')}
+                    help={__('Where 0 is center, -50 is left and 50 is right', 'wpmusicgallery')}
+                    min={-50}
+                    max={50}
+                    step={1}
+                  />
+                  <Range
+                    name="overlay_options.speed"
+                    value={overlay_options?.speed ?? 0.2}
+                    label={__('Speed', 'wpmusicgallery')}
+                    help={__('Movement speed', 'wpmusicgallery')}
+                    min={0.1}
+                    max={1}
+                    step={0.1}
                   />
                 </>
               )}
