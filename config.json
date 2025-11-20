@@ -2,22 +2,25 @@
   "themes": [
     "free/default",
     "free/video_player",
-    "pro/retro",
+    "pro/playlist",
     "pro/polaroid",
-    "pro/playlist"
+    "pro/retro"
   ],
   "backgrounds": [
     "free/ambient_glow",
     "free/orbital_pulse",
-    "pro/blurred_photos"
+    "pro/blurred_photos",
+    "pro/dust_particles",
+    "pro/dreamy_bokeh",
+    "pro/noise_gradient_motion",
+    "pro/soft_shapes_flow"
   ],
   "overlays": [
     "free/equalizer_bars",
     "free/wave_line",
     "pro/audio_pulse",
-    "pro/vinyl_spin",
-    "pro/beat_flash",
-    "pro/light_rings",
-    "pro/frequency_wave"
+    "pro/color_blend",
+    "pro/heartbeat_line",
+    "pro/pixelate"
   ]
 }
