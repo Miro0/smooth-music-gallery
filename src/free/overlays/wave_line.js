@@ -16,10 +16,10 @@ const attachOverlayAnimation = (container, index) => {
     window.wpmg[index].initOverlay = attachOverlayAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
-    const {overlay_animation, overlay_animation_options = {}} = props;
-    const {accent = '#ffffff', opacity = 0.5, intensity = 1, position = 0, line_height = 4} = overlay_animation_options;
+    const {overlay, overlay_options = {}} = props;
+    const {accent = '#ffffff', opacity = 0.5, intensity = 1, position = 0, line_height = 4} = overlay_options;
 
-    if (overlay_animation === 'free/wave_line') {
+    if (overlay === 'free/wave_line') {
       const audio = container.querySelector('.wpmg-audio');
       const overlayLayer = container.querySelector('.wpmg-overlay-layer');
 

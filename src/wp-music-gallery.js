@@ -5,20 +5,21 @@ import 'swiper/css/pagination';
 
 export const initWpMusicGallery = (container, index) => {
   const props = JSON.parse(container.dataset.props || '{}');
-  const {photos = [], music, theme = 'default', slides_duration = 2} = props;
+  const {photos = [], music, theme = 'default', size = 85, slides_duration = 2, background_options} = props;
+  const {background_color = 'transparent'} = background_options;
 
   container.classList.add('visible-controls');
   container.classList.add(`theme-${theme.replace(/free\/|pro\//, '')}`);
 
   container.innerHTML = `
-    ${music?.url ? `<div class="wpmg-bg-layer"></div>` : ''}
-    <div class="wpmg-content">
+    ${music?.url ? `<div class="wpmg-bg-layer" style="background:${background_color}"></div>` : ''}
+    <div class="wpmg-content" style="width:${size}%; height:${size}%;">
       ${music?.url ? `<div class="wpmg-overlay-layer"></div>` : ''}
-      <div class="wpmg-image-container swiper">
-      <div class="swiper-wrapper">
-        ${photos
-    .map(
-      (photo) => `
+      <div class="wpmg-image-container">
+        <div class="swiper-wrapper">
+          ${photos
+          .map(
+            (photo) => `
               <div class="swiper-slide">
                 <img 
                   src="${photo.url}" 
@@ -29,7 +30,7 @@ export const initWpMusicGallery = (container, index) => {
                 />
               </div>
             `
-    )
+          )
     .join('')}
         </div>
       </div>
@@ -41,8 +42,8 @@ export const initWpMusicGallery = (container, index) => {
           max="1" 
           step="0.01" 
           value="1" 
-          orient="vertical"
           class="wpmg-volume"
+          data-label="Volume"
         >
         <button class="wpmg-btn wpmg-play" aria-label="Play / Pause">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -72,7 +73,7 @@ export const initWpMusicGallery = (container, index) => {
     window.wpmg[index].initBackground(container, index);
   }
 
-  const swiper = new Swiper(container.querySelector('.swiper'), {
+  window.wpmg[index].swiper = new Swiper(container.querySelector('.wpmg-image-container'), {
     modules: [Pagination, Autoplay, Keyboard],
 
     loop: true,
@@ -80,6 +81,7 @@ export const initWpMusicGallery = (container, index) => {
     observeParents: true,
     watchSlidesProgress: true,
     preloadImages: false,
+    speed: 600,
 
     keyboard: {
       enabled: true,
@@ -95,8 +97,13 @@ export const initWpMusicGallery = (container, index) => {
 
     on: {
       imagesReady() {
-        swiper.update();
+        window.wpmg[index].swiper.update();
       },
+      slideChange() {
+        if (window.wpmg[index]?.onSlideChange) {
+          window.wpmg[index]?.onSlideChange(this.realIndex);
+        }
+      }
     },
   });
 
@@ -106,12 +113,12 @@ export const initWpMusicGallery = (container, index) => {
     img.addEventListener('load', () => {
       loadedCount++;
       if (loadedCount === imgs.length) {
-        swiper.update();
+        window.wpmg[index].swiper.update();
       }
     });
   });
 
-  initControls(container, swiper, slides_duration, index);
+  initControls(container, window.wpmg[index].swiper, slides_duration, index);
 };
 
 function initControls(container, swiper, slides_duration, index) {

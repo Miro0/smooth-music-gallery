@@ -1,14 +1,25 @@
-import {useBlockProps} from '@wordpress/block-editor';
 import {__} from '@wordpress/i18n';
+import {useBlockProps} from '@wordpress/block-editor';
 import EditSidebar from "./editor/edit-sidebar";
-import AmbientGlow from "./editor/preview/background-animation/AmbientGlow";
-import EqualizerBars from "./editor/preview/overlay-animation/EqualizerBars";
-import WaveLine from "./editor/preview/overlay-animation/WaveLine";
+
+import AmbientGlow from "./editor/preview/backgrounds/AmbientGlow";
+import BlurredPhotos from "./editor/preview/backgrounds/BlurredPhotos";
+
+import AudioPulse from "./editor/preview/overlays/AudioPulse";
+import EqualizerBars from "./editor/preview/overlays/EqualizerBars";
+
+import WaveLine from "./editor/preview/overlays/WaveLine";
 import config from '../../config.json';
-import AudioPulse from "./editor/preview/overlay-animation/AudioPulse";
 
 export default function Edit(props) {
-  const {photos = [], theme = 'default'} = props.attributes;
+  const {
+    photos = [],
+    theme = 'default',
+    size = 85,
+    background_options = {},
+  } = props.attributes;
+
+  const {background_color = 'transparent'} = background_options;
 
   return (
     <>
@@ -16,21 +27,29 @@ export default function Edit(props) {
 
       <p {...useBlockProps()}>
         <div className={`wpmg-gallery theme-${theme.replace(/free\/|pro\//, '')} visible-controls-on-hover`}>
-          <div className="wpmg-bg-layer">
-            {props.attributes?.music?.filename && props.attributes?.background_animation === 'free/ambient_glow' &&
-              <AmbientGlow {...props.attributes?.background_animation_options} />
+          <div
+            className="wpmg-bg-layer"
+            style={{
+              background: background_color,
+            }}
+          >
+            {props.attributes?.music?.filename && props.attributes?.background === 'free/ambient_glow' &&
+              <AmbientGlow {...props.attributes?.background_options} />
+            }
+            {props.attributes?.music?.filename && props.attributes?.background === 'free/blurred_photos' &&
+              <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]} />
             }
           </div>
-          <div className="wpmg-content">
+          <div className="wpmg-content" style={{ width: `${size}%`, height: `${size}%` }}>
             <div className="wpmg-overlay-layer">
-              {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'free/equalizer_bars' &&
-                <EqualizerBars {...props.attributes?.overlay_animation_options} />
+              {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/audio_pulse' &&
+                <AudioPulse {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'free/wave_line' &&
-                <WaveLine {...props.attributes?.overlay_animation_options} />
+              {props.attributes?.music?.filename && props.attributes?.overlay === 'free/equalizer_bars' &&
+                <EqualizerBars {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.music?.filename && props.attributes?.overlay_animation === 'pro/audio_pulse' &&
-                <AudioPulse {...props.attributes?.overlay_animation_options} />
+              {props.attributes?.music?.filename && props.attributes?.overlay === 'free/wave_line' &&
+                <WaveLine {...props.attributes?.overlay_options} />
               }
             </div>
             <div className="wpmg-image-container swiper">

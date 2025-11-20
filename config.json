@@ -6,13 +6,11 @@
     "pro/3d_ring",
     "pro/polaroid"
   ],
-  "background_animations": [
+  "backgrounds": [
     "free/ambient_glow",
-    "free/neon_pulse",
-    "pro/color_bloom",
-    "pro/aurora_streams"
+    "free/blurred_photos"
   ],
-  "overlay_animations": [
+  "overlays": [
     "free/equalizer_bars",
     "free/wave_line",
     "pro/audio_pulse",

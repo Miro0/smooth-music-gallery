@@ -25,8 +25,8 @@ register_block_type(
 
 function wp_music_gallery_block_render( $attributes ) {
 	$theme             = $attributes['theme'] ?? 'default';
-	$overlay_animation = $attributes['overlay_animation'] ?? '';
-	$background_animation = $attributes['background_animation'] ?? '';
+	$overlay_animation = $attributes['overlay'] ?? '';
+	$background_animation = $attributes['background'] ?? '';
 
 	// @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
 	$plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';

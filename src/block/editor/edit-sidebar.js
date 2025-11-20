@@ -13,11 +13,12 @@ export default function EditSidebar({attributes, setAttributes, config}) {
     photos,
     music,
     theme = 'default',
+    size,
     slides_duration,
-    background_animation,
-    background_animation_options,
-    overlay_animation,
-    overlay_animation_options,
+    background,
+    background_options,
+    overlay,
+    overlay_options,
   } = attributes;
 
   console.log({
@@ -49,7 +50,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
         {/*<p style={{ paddingRight: '16px', paddingLeft: '52px' }}>Powered by <a href="https://protectedcdn.com" target="_blank">Protected CDN</a></p>*/}
 
         <PanelBody
-          title={__('Gallery settings', 'wpmusicgallery')}
+          title={__('Gallery', 'wpmusicgallery')}
           initialOpen={true}
         >
           <MediaUpload
@@ -84,102 +85,113 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           <hr/>
 
           <Range
+            name="size"
+            value={size ?? 85}
+            label={__('Size', 'wpmusicgallery')}
+            help={__('How much space gallery takes and leaves space for background', 'wpmusicgallery')}
+            min={50}
+            max={90}
+            step={1}
+          />
+
+          <hr/>
+
+          <Range
             name="slides_duration"
             value={slides_duration}
             label={__('Slide change time', 'wpmusicgallery')}
             help={__('How long it will take to change slides when playing in seconds', 'wpmusicgallery')}
           />
+        </PanelBody>
 
-          <hr/>
+        <PanelBody
+          title={__('Overlay', 'wpmusicgallery')}
+          initialOpen={false}
+        >
+          <Select
+            name="overlay"
+            value={overlay}
+            options={config.overlays}
+            label={__('Overlay', 'wpmusicgallery')}
+            help={__('Select type of overlay', 'wpmusicgallery')}
+            placeholder={__('None', 'wpmusicgallery')}
+          />
 
-          {music?.filename && (
+          {overlay && (
             <>
-              <Select
-                name="overlay_animation"
-                value={overlay_animation}
-                options={config.overlay_animations}
-                label={__('Overlay animation', 'wpmusicgallery')}
-                help={__('Select type of overlay animation', 'wpmusicgallery')}
-                placeholder={__('None', 'wpmusicgallery')}
+              <Color
+                name="overlay_options.accent"
+                value={overlay_options?.accent ?? '#ffffff'}
+                label={__('Accent color', 'wpmusicgallery')}
+              />
+              <Range
+                name="overlay_options.opacity"
+                value={overlay_options?.opacity ?? 0.5}
+                label={__('Opacity', 'wpmusicgallery')}
+                min={0.1}
+                max={1}
+                step={0.05}
               />
 
-              {overlay_animation && (
+              {overlay === 'free/equalizer_bars' && (
                 <>
-                  <Color
-                    name="overlay_animation_options.accent"
-                    value={overlay_animation_options?.accent ?? '#ffffff'}
-                    label={__('Accent color', 'wpmusicgallery')}
+                  <Range
+                    name="overlay_options.bars"
+                    value={overlay_options?.bars ?? 32}
+                    label={__('Amount of bars', 'wpmusicgallery')}
+                    help={__('On mobile this amount is split by half', 'wpmusicgallery')}
+                    min={16}
+                    max={128}
+                    step={1}
                   />
                   <Range
-                    name="overlay_animation_options.opacity"
-                    value={overlay_animation_options?.opacity ?? 0.5}
-                    label={__('Opacity', 'wpmusicgallery')}
-                    min={0.1}
-                    max={1}
-                    step={0.05}
+                    name="overlay_options.max_height"
+                    value={overlay_options?.max_height ?? 95}
+                    label={__('Max height of bars', 'wpmusicgallery')}
+                    help={__('How much space of gallery area bars can take in percentage', 'wpmusicgallery')}
+                    min={10}
+                    max={100}
+                    step={1}
                   />
-
-                  {overlay_animation === 'free/equalizer_bars' && (
-                    <>
-                      <Range
-                        name="overlay_animation_options.bars"
-                        value={overlay_animation_options?.bars ?? 32}
-                        label={__('Amount of bars', 'wpmusicgallery')}
-                        help={__('On mobile this amount is split by half', 'wpmusicgallery')}
-                        min={16}
-                        max={128}
-                        step={1}
-                      />
-                      <Range
-                        name="overlay_animation_options.max_height"
-                        value={overlay_animation_options?.max_height ?? 95}
-                        label={__('Max height of bars', 'wpmusicgallery')}
-                        help={__('How much space of gallery area bars can take in percentage', 'wpmusicgallery')}
-                        min={10}
-                        max={100}
-                        step={1}
-                      />
-                    </>
-                  )}
-
-                  {overlay_animation === 'free/wave_line' && (
-                    <>
-                      <Range
-                        name="overlay_animation_options.position"
-                        value={overlay_animation_options?.position ?? 0}
-                        label={__('Position [%]', 'wpmusicgallery')}
-                        help={__('Where 0 is center, -50 is top and 50 is bottom', 'wpmusicgallery')}
-                        min={-50}
-                        max={50}
-                        step={1}
-                      />
-                      <Range
-                        name="overlay_animation_options.line_height"
-                        value={overlay_animation_options?.line_height ?? 4}
-                        label={__('Line thickness', 'wpmusicgallery')}
-                        min={1}
-                        max={120}
-                        step={1}
-                      />
-                      <Range
-                        name="overlay_animation_options.intensity"
-                        value={overlay_animation_options?.intensity ?? 1}
-                        label={__('Intensity', 'wpmusicgallery')}
-                        help={__('How strong wave amplitude can be', 'wpmusicgallery')}
-                        min={0.2}
-                        max={3}
-                        step={0.2}
-                      />
-                    </>
-                  )}
                 </>
               )}
 
-              {overlay_animation === 'pro/audio_pulse' && (
+              {overlay === 'free/wave_line' && (
                 <>
                   <Range
-                    name="overlay_animation_options.intensity"
-                    value={overlay_animation_options?.intensity ?? 1}
+                    name="overlay_options.position"
+                    value={overlay_options?.position ?? 0}
+                    label={__('Position [%]', 'wpmusicgallery')}
+                    help={__('Where 0 is center, -50 is top and 50 is bottom', 'wpmusicgallery')}
+                    min={-50}
+                    max={50}
+                    step={1}
+                  />
+                  <Range
+                    name="overlay_options.line_height"
+                    value={overlay_options?.line_height ?? 4}
+                    label={__('Line thickness', 'wpmusicgallery')}
+                    min={1}
+                    max={120}
+                    step={1}
+                  />
+                  <Range
+                    name="overlay_options.intensity"
+                    value={overlay_options?.intensity ?? 1}
+                    label={__('Intensity', 'wpmusicgallery')}
+                    help={__('How strong wave amplitude can be', 'wpmusicgallery')}
+                    min={0.2}
+                    max={3}
+                    step={0.2}
+                  />
+                </>
+              )}
+
+              {overlay === 'pro/audio_pulse' && (
+                <>
+                  <Range
+                    name="overlay_options.intensity"
+                    value={overlay_options?.intensity ?? 1}
                     label={__('Intensity', 'wpmusicgallery')}
                     help={__('How much dots can stretch', 'wpmusicgallery')}
                     min={0.1}
@@ -187,8 +199,8 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                     step={0.1}
                   />
                   <Range
-                    name="overlay_animation_options.density"
-                    value={overlay_animation_options?.density ?? 0.2}
+                    name="overlay_options.density"
+                    value={overlay_options?.density ?? 0.2}
                     label={__('Density', 'wpmusicgallery')}
                     help={__('Amount of dots', 'wpmusicgallery')}
                     min={0.1}
@@ -196,8 +208,8 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                     step={0.1}
                   />
                   <Range
-                    name="overlay_animation_options.speed"
-                    value={overlay_animation_options?.speed ?? 0.2}
+                    name="overlay_options.speed"
+                    value={overlay_options?.speed ?? 0.2}
                     label={__('Speed', 'wpmusicgallery')}
                     help={__('Movement speed. 0 - no movement.', 'wpmusicgallery')}
                     min={0}
@@ -206,41 +218,77 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                   />
                 </>
               )}
+            </>
+          )}
+        </PanelBody>
 
-              <hr/>
+        <PanelBody
+          title={__('Background', 'wpmusicgallery')}
+          initialOpen={false}
+        >
+          <Select
+            name="background"
+            value={background}
+            options={config.backgrounds}
+            label={__('Background', 'wpmusicgallery')}
+            help={__('Select type of background', 'wpmusicgallery')}
+            placeholder={__('None', 'wpmusicgallery')}
+          />
 
-              <Select
-                name="background_animation"
-                value={background_animation}
-                options={config.background_animations}
-                label={__('Background animation', 'wpmusicgallery')}
-                help={__('Select type of background animation', 'wpmusicgallery')}
-                placeholder={__('None', 'wpmusicgallery')}
+          <Color
+            name="background_options.background_color"
+            value={background_options?.background_color}
+            label={__('Background color', 'wpmusicgallery')}
+          />
+
+          {background && background !== 'free/blurred_photos' && (
+            <Color
+              name="background_options.accent"
+              value={background_options?.accent}
+              label={__('Accent color', 'wpmusicgallery')}
+            />
+          )}
+
+          {background === 'free/ambient_glow' && (
+            <>
+              <Range
+                name="background_options.intensity"
+                value={background_options?.intensity ?? 1}
+                label={__('Intensity', 'wpmusicgallery')}
+                help={__('How strong ambient lights are', 'wpmusicgallery')}
+                min={1}
+                max={2}
+                step={0.1}
               />
+            </>
+          )}
 
-              {background_animation && (
-                <>
-                  <Color
-                    name="background_animation_options.accent"
-                    value={background_animation_options?.accent}
-                    label={__('Accent color', 'wpmusicgallery')}
-                  />
-                </>
-              )}
-
-              {background_animation === 'free/ambient_glow' && (
-                <>
-                  <Range
-                    name="background_animation_options.intensity"
-                    value={background_animation_options?.intensity ?? 1}
-                    label={__('Intensity', 'wpmusicgallery')}
-                    help={__('How strong ambient lights are', 'wpmusicgallery')}
-                    min={1}
-                    max={2}
-                    step={0.1}
-                  />
-                </>
-              )}
+          {background === 'free/blurred_photos' && (
+            <>
+              <Range
+                name="background_options.blur"
+                value={background_options?.blur ?? 20}
+                label={__('Blur', 'wpmusicgallery')}
+                min={5}
+                max={50}
+                step={1}
+              />
+              <Range
+                name="background_options.zoom"
+                value={background_options?.zoom ?? 2}
+                label={__('Zoom', 'wpmusicgallery')}
+                min={1}
+                max={3}
+                step={0.1}
+              />
+              <Range
+                name="background_options.opacity"
+                value={background_options?.opacity ?? 0.5}
+                label={__('Opacity', 'wpmusicgallery')}
+                min={0.1}
+                max={1}
+                step={0.1}
+              />
             </>
           )}
         </PanelBody>

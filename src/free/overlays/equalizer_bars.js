@@ -16,12 +16,12 @@ const attachOverlayAnimation = (container, index) => {
     window.wpmg[index].initOverlay = attachOverlayAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
-    const {overlay_animation, overlay_animation_options = {}} = props;
-    const {accent = '#ffffff', opacity = 0.5, bars = 32, max_height = 95} = overlay_animation_options;
+    const {overlay, overlay_options = {}} = props;
+    const {accent = '#ffffff', opacity = 0.5, bars = 32, max_height = 95} = overlay_options;
 
     const barsRatio = window.innerWidth < 768 ? 0.5 : 1;
 
-    if (overlay_animation === 'free/equalizer_bars') {
+    if (overlay === 'free/equalizer_bars') {
       const audio = container.querySelector('.wpmg-audio');
       const overlayLayer = container.querySelector('.wpmg-overlay-layer');
 

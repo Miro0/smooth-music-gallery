@@ -33,10 +33,10 @@ const attachBackgroundAnimation = (container, index) => {
     window.wpmg[index].initBackground = attachBackgroundAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
-    const {background_animation, background_animation_options = {}} = props;
-    const {accent = '#ffffff', intensity = 1} = background_animation_options;
+    const {background, background_options = {}} = props;
+    const {accent = '#ffffff', intensity = 1} = background_options;
 
-    if (background_animation === 'free/ambient_glow') {
+    if (background === 'free/ambient_glow') {
       const audio = container.querySelector('.wpmg-audio');
       const backgroundLayer = container.querySelector('.wpmg-bg-layer');
 

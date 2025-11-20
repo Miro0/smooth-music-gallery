@@ -16,10 +16,10 @@ const attachOverlayAnimation = (container, index) => {
     window.wpmg[index].initOverlay = attachOverlayAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
-    const {overlay_animation, overlay_animation_options = {}} = props;
-    const {accent = '#ffffff', opacity = 0.5, intensity = 1, density = 0.2, speed = 0.5} = overlay_animation_options;
+    const {overlay, overlay_options = {}} = props;
+    const {accent = '#ffffff', opacity = 0.5, intensity = 1, density = 0.2, speed = 0.5} = overlay_options;
 
-    if (overlay_animation === 'pro/audio_pulse') {
+    if (overlay === 'pro/audio_pulse') {
       const audio = container.querySelector('.wpmg-audio');
       const overlayLayer = container.querySelector('.wpmg-overlay-layer');
 
@@ -56,8 +56,8 @@ const attachOverlayAnimation = (container, index) => {
         overlayLayer.innerHTML = `
           <div class="${equalizerClass}" style="opacity:${opacity}">
             ${Array.from({length: container.getBoundingClientRect().width * density / 5}).map(() =>
-            `<div class="wpmg-overlay--audio-pulse__dot"></div>`
-          ).join('')}
+              `<div class="wpmg-overlay--audio-pulse__dot"></div>`
+            ).join('')}
           </div>
         `;
 

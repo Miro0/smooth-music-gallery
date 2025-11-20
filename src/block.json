@@ -17,20 +17,23 @@
 			"type": "string",
 			"default": "default"
 		},
+		"size": {
+			"type": "number"
+		},
 		"slides_duration": {
 			"type": "number",
 			"default": 2
 		},
-		"background_animation": {
+		"background": {
 			"type": "string"
 		},
-		"background_animation_options": {
+		"background_options": {
 			"type": "object"
 		},
-		"overlay_animation": {
+		"overlay": {
 			"type": "string"
 		},
-		"overlay_animation_options": {
+		"overlay_options": {
 			"type": "object"
 		}
 	},

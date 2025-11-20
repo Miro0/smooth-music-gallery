@@ -4,8 +4,8 @@
   "description": "Powerful Gutenberg blog that allows adding photo galleries with music and animations.",
   "scripts": {
     "build:app": "wp-scripts build src/block/index.js src/block/view.js --output-path=build",
-    "build:free": "wp-scripts build src/free/themes/*.js src/free/overlay-animations/*.js src/free/background-animations/*.js --output-path=build/free",
-    "build:pro": "wp-scripts build src/pro/themes/*.scss src/pro/overlay-animations/*.js src/pro/background-animations/*.js --output-path=build/pro",
+    "build:free": "wp-scripts build src/free/themes/*.js src/free/overlays/*.js src/free/backgrounds/*.js --output-path=build/free",
+    "build:pro": "wp-scripts build src/pro/themes/*.scss src/pro/overlays/*.js src/pro/backgrounds/*.js --output-path=build/pro",
     "build": "yarn build:app && yarn build:free && yarn build:pro",
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
