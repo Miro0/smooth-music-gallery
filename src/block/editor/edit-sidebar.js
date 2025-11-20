@@ -407,7 +407,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
             label={__('Background color', 'wpmusicgallery')}
           />
 
-          {background && background !== 'free/blurred_photos' && (
+          {background && background !== 'pro/blurred_photos' && (
             <Color
               name="background_options.accent"
               value={background_options?.accent}
