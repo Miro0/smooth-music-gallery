@@ -81,7 +81,7 @@ export const initWpMusicGallery = (container, index) => {
     observeParents: true,
     watchSlidesProgress: true,
     preloadImages: false,
-    speed: 600,
+    speed: 300,
 
     keyboard: {
       enabled: true,

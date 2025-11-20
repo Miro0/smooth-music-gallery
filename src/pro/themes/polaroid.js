@@ -1,0 +1,1 @@
+import './polaroid.scss';

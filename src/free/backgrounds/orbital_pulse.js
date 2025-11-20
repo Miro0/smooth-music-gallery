@@ -19,7 +19,7 @@ const attachBackgroundAnimation = (container, index) => {
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
     const {background, background_options = {}} = props;
-    let {
+    const {
       accent = '#ffffff',
       opacity = 0.5,
       density = 0.5,
@@ -29,7 +29,7 @@ const attachBackgroundAnimation = (container, index) => {
       speed = 0.2,
     } = background_options;
 
-    if (background === 'pro/orbital_pulse') {
+    if (background === 'free/orbital_pulse') {
       const audio = container.querySelector('.wpmg-audio');
       const backgroundLayer = container.querySelector('.wpmg-bg-layer');
 
@@ -65,9 +65,8 @@ const attachBackgroundAnimation = (container, index) => {
           }
         `);
 
-        const rectContainer = backgroundLayer.getBoundingClientRect();
-        const maxParticles = 80;
-        const rawCount = (rectContainer.width * density) / 20;
+        const maxParticles = 120;
+        const rawCount = 120 * density;
         const particlesCount = Math.max(
           4,
           Math.min(maxParticles, Math.floor(rawCount || 0))

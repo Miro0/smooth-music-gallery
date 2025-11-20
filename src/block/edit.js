@@ -4,11 +4,12 @@ import EditSidebar from "./editor/edit-sidebar";
 
 import AmbientGlow from "./editor/preview/backgrounds/AmbientGlow";
 import BlurredPhotos from "./editor/preview/backgrounds/BlurredPhotos";
+import OrbitalPulse from "./editor/preview/backgrounds/OrbitalPulse";
 
 import AudioPulse from "./editor/preview/overlays/AudioPulse";
 import EqualizerBars from "./editor/preview/overlays/EqualizerBars";
-
 import WaveLine from "./editor/preview/overlays/WaveLine";
+
 import config from '../../config.json';
 
 export default function Edit(props) {
@@ -36,8 +37,11 @@ export default function Edit(props) {
             {props.attributes?.music?.filename && props.attributes?.background === 'free/ambient_glow' &&
               <AmbientGlow {...props.attributes?.background_options} />
             }
-            {props.attributes?.music?.filename && props.attributes?.background === 'free/blurred_photos' &&
+            {props.attributes?.music?.filename && props.attributes?.background === 'pro/blurred_photos' &&
               <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]} />
+            }
+            {props.attributes?.music?.filename && props.attributes?.background === 'free/orbital_pulse' &&
+              <OrbitalPulse {...props.attributes?.background_options} />
             }
           </div>
           <div className="wpmg-content" style={{ width: `${size}%`, height: `${size}%` }}>

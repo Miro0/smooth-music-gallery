@@ -222,7 +222,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                     label={__('Size', 'wpmusicgallery')}
                     help={__('Size of dots', 'wpmusicgallery')}
                     min={6}
-                    max={40}
+                    max={60}
                     step={1}
                   />
                 </>
@@ -272,36 +272,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
             </>
           )}
 
-          {background === 'free/blurred_photos' && (
-            <>
-              <Range
-                name="background_options.blur"
-                value={background_options?.blur ?? 20}
-                label={__('Blur', 'wpmusicgallery')}
-                min={5}
-                max={50}
-                step={1}
-              />
-              <Range
-                name="background_options.zoom"
-                value={background_options?.zoom ?? 2}
-                label={__('Zoom', 'wpmusicgallery')}
-                min={1}
-                max={3}
-                step={0.1}
-              />
-              <Range
-                name="background_options.opacity"
-                value={background_options?.opacity ?? 0.5}
-                label={__('Opacity', 'wpmusicgallery')}
-                min={0.1}
-                max={1}
-                step={0.1}
-              />
-            </>
-          )}
-
-          {background === 'pro/orbital_pulse' && (
+          {background === 'free/orbital_pulse' && (
             <>
               <Range
                 name="background_options.intensity"
@@ -318,7 +289,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                 label={__('Size', 'wpmusicgallery')}
                 help={__('Size of dots', 'wpmusicgallery')}
                 min={2}
-                max={40}
+                max={60}
                 step={1}
               />
               <Range
@@ -347,10 +318,39 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                 step={0.1}
               />
               <Range
-                name="overlay_options.speed"
-                value={overlay_options?.speed ?? 0.2}
+                name="background_options.speed"
+                value={background_options?.speed ?? 0.2}
                 label={__('Speed', 'wpmusicgallery')}
                 help={__('Movement speed', 'wpmusicgallery')}
+                min={0.1}
+                max={1}
+                step={0.1}
+              />
+            </>
+          )}
+
+          {background === 'pro/blurred_photos' && (
+            <>
+              <Range
+                name="background_options.blur"
+                value={background_options?.blur ?? 20}
+                label={__('Blur', 'wpmusicgallery')}
+                min={5}
+                max={50}
+                step={1}
+              />
+              <Range
+                name="background_options.zoom"
+                value={background_options?.zoom ?? 2}
+                label={__('Zoom', 'wpmusicgallery')}
+                min={1}
+                max={3}
+                step={0.1}
+              />
+              <Range
+                name="background_options.opacity"
+                value={background_options?.opacity ?? 0.5}
+                label={__('Opacity', 'wpmusicgallery')}
                 min={0.1}
                 max={1}
                 step={0.1}

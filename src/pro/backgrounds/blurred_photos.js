@@ -19,7 +19,7 @@ const attachBackgroundAnimation = (container, index) => {
     const {background, background_options = {}, photos = []} = props;
     const {blur = 10, zoom = 1.2, opacity = 0.5} = background_options;
 
-    if (background === 'free/blurred_photos') {
+    if (background === 'pro/blurred_photos') {
       const backgroundLayer = container.querySelector('.wpmg-bg-layer');
 
       if (backgroundLayer) {
@@ -41,7 +41,7 @@ const attachBackgroundAnimation = (container, index) => {
             width: 100%;
             height: 100%;
             opacity: 0;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.3s ease;
           }
           
           .${c} img.visible {

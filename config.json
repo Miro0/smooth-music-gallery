@@ -3,13 +3,13 @@
     "free/default",
     "free/video_player",
     "pro/retro",
-    "pro/3d_ring",
-    "pro/polaroid"
+    "pro/polaroid",
+    "pro/playlist"
   ],
   "backgrounds": [
     "free/ambient_glow",
-    "free/blurred_photos",
-    "pro/orbital_pulse"
+    "free/orbital_pulse",
+    "pro/blurred_photos"
   ],
   "overlays": [
     "free/equalizer_bars",
