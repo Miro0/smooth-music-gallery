@@ -53,7 +53,7 @@ export const initWpMusicGallery = (container, index) => {
         </button>
       </div>
     </div>
-    ${music?.url ? `<audio class="wpmg-audio" preload="auto" src="${music.url}"></audio>` : ''}
+    ${music?.url ? `<audio class="wpmg-audio" preload="auto" loop src="${music.url}"></audio>` : ''}
   `;
 
   if (!window.wpmg) {

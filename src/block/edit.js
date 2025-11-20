@@ -9,6 +9,7 @@ import OrbitalPulse from "./editor/preview/backgrounds/OrbitalPulse";
 import AudioPulse from "./editor/preview/overlays/AudioPulse";
 import ColorBlend from "./editor/preview/overlays/ColorBlend";
 import EqualizerBars from "./editor/preview/overlays/EqualizerBars";
+import HeartbeatLine from "./editor/preview/overlays/HeartbeatLine";
 import WaveLine from "./editor/preview/overlays/WaveLine";
 
 import config from '../../config.json';
@@ -52,6 +53,9 @@ export default function Edit(props) {
               }
               {props.attributes?.music?.filename && props.attributes?.overlay === 'free/equalizer_bars' &&
                 <EqualizerBars {...props.attributes?.overlay_options} />
+              }
+              {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/heartbeat_line' &&
+                <HeartbeatLine {...props.attributes?.overlay_options} />
               }
               {props.attributes?.music?.filename && props.attributes?.overlay === 'free/wave_line' &&
                 <WaveLine {...props.attributes?.overlay_options} />

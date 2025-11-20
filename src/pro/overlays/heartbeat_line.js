@@ -1,92 +1,79 @@
-import {createAnimationStyle} from "../../block/utils/style";
 import {initAudioSource} from "../../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
+  document
+    .querySelectorAll('.wpmg-gallery')
+    .forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
-  }
 
-  if (!window?.wpmg[index]) {
-    window.wpmg[index] = { initOverlay: attachOverlayAnimation, source: null };
-  } else if (!window?.wpmg[index]?.initialized) {
+  if (!window?.wpmg) window.wpmg = [];
+
+  if (!window.wpmg[index]) {
+    window.wpmg[index] = {initOverlay: attachOverlayAnimation, source: null};
+  } else if (!window.wpmg[index]?.initialized) {
     window.wpmg[index].initOverlay = attachOverlayAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
-    const { overlay, overlay_options = {} } = props;
+    const {overlay, overlay_options = {}} = props;
+
     const {
       accent = '#ffffff',
-      opacity = 0.5,
+      opacity = 0.95,
       intensity = 1,
       position = 0,
-      line_height = 4,
-      start_position = 0,
-      speed = 0.2,
+      line_height = 3,
+      speed = 0.5,
+      smoothness = 0.5
     } = overlay_options;
 
-    if (overlay === 'pro/heartbeat_line') {
-      const audio = container.querySelector('.wpmg-audio');
-      const overlayLayer = container.querySelector('.wpmg-overlay-layer');
+    if (overlay !== 'pro/heartbeat_line') return;
 
-      if (!overlayLayer || !audio) return;
+    const audio = container.querySelector('.wpmg-audio');
+    const overlayLayer = container.querySelector('.wpmg-overlay-layer');
 
-      // ILOŚĆ SEGMENTÓW – ZAOKRĄGLONA
-      const segments = Math.max(4, Math.floor(container.getBoundingClientRect().width));
+    if (!overlayLayer || !audio) return;
 
-      const heartbeatClass = createAnimationStyle('wpmg-overlay--wave-lines', (c) => `
-        .${c} {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          pointer-events: none;
-          z-index: 50;
-        }
-        
-        .${c} .wpmg-overlay--line-segment {
-          flex: 1;
-          height: ${line_height}px;
-          background: linear-gradient(180deg, ${accent}55 0%, ${accent} 10%, ${accent} 90%, ${accent}55 100%);
-          box-shadow:
-            0 0 6px ${accent},
-            0 0 14px ${accent}66;
-        }
-      `);
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.inset = '0';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.opacity = opacity;
+    overlayLayer.appendChild(canvas);
 
-      const containerHeight = overlayLayer.getBoundingClientRect().height;
-      const offsetY = (position / 100) * containerHeight;
+    const ctx2 = canvas.getContext('2d');
 
-      overlayLayer.innerHTML = `
-        <div class="${heartbeatClass}" style="opacity:${opacity}">
-          ${`<div class="wpmg-overlay--line-segment" style="transform:translateY(${offsetY}px)"></div>`.repeat(segments)}
-        </div>
-      `;
+    function resize() {
+      const rect = overlayLayer.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
 
-      const lineSegments = Array.from(
-        overlayLayer.querySelectorAll('.wpmg-overlay--line-segment')
-      );
-      const realSegments = lineSegments.length || 1;
+    resize();
+    window.addEventListener('resize', resize);
+    document.addEventListener('fullscreenchange', resize);
 
-      const [analyser, ctx, data] = initAudioSource(audio, index);
+    const width = () => canvas.width;
+    const height = () => canvas.height;
 
-      let animFrame;
+    const baseOffsetY = () => (
+      height() / 2 + (position / 50) * (height() / 2)
+    );
 
-      // 🔸 STAŁY PUNKT ODCZYTU (jak igła sejsmografu)
-      const midIndex = Math.floor(realSegments / 2);
-      const offsetIndex = Math.round((start_position / 50) * midIndex);
-      const readIndex = Math.min(realSegments - 1, Math.max(0, midIndex + offsetIndex));
+    const [analyser, ctx, data] = initAudioSource(audio, index);
 
-      // 🔸 Historia amplitudy – po lewej stronie od readIndex
-      const history = new Array(realSegments).fill(0);
+    let history = new Array(width()).fill(0);
+    let shiftAccumulator = 0;
 
-      function animate() {
+    let started = false;
+    animate();
+
+    function animate() {
+
+      let currentAmp = 0;
+
+      if (!audio.paused) {
         analyser.getByteFrequencyData(data);
 
         let sum = 0, count = 0;
@@ -94,40 +81,84 @@ const attachOverlayAnimation = (container, index) => {
           sum += data[i];
           count++;
         }
+
         const avg = count ? sum / count : 0;
-        const amp = (avg / 255) * 120 * intensity;
-
-        const shift = Math.max(1, Math.round(speed));
-
-        // 🚨 1. PRZESUNIĘCIE HISTORII W LEWO TYLKO DO readIndex
-        for (let i = 0; i < readIndex; i++) {
-          history[i] = history[i + shift];
-        }
-
-        // 🚨 2. NOWY ODCZYT — wpisujemy amplitudę TYLKO DO readIndex
-        history[readIndex] = amp;
-
-        // 🚨 3. PRAWA STRONA — ZAWSZE ZERA
-        for (let i = readIndex + shift; i < realSegments; i++) {
-          history[i] = shift;
-        }
-
-        // 🚨 4. RYSOWANIE
-        for (let i = 0; i < realSegments; i++) {
-          const y = -history[i]; // wychylenie
-          lineSegments[i].style.transform = `translateY(${y + offsetY}px)`;
-        }
-
-        animFrame = requestAnimationFrame(animate);
+        currentAmp = (avg / 255) * 100 * intensity;
       }
 
+      const lastAmp = history[history.length - 1] ?? 0;
+      const smoothedAmp = lastAmp + (currentAmp - lastAmp) * smoothness;
 
+      shiftAccumulator += speed;
+      const shift = Math.floor(shiftAccumulator);
+      shiftAccumulator -= shift;
 
-      audio.addEventListener('play', () => {
-        ctx.resume().then(() => animate());
-      });
+      if (shift > 0) {
+        const W = width();
+        const newHist = new Array(W);
 
-      return () => cancelAnimationFrame(animFrame);
+        for (let x = 0; x < W - shift; x++) {
+          newHist[x] = history[x + shift];
+        }
+
+        const last = history[W - 1 - shift] ?? 0;
+        for (let x = W - shift; x < W; x++) {
+          newHist[x] = last;
+        }
+
+        history = newHist;
+      }
+
+      history[history.length - 1] = smoothedAmp;
+
+      ctx2.clearRect(0, 0, width(), height());
+      const baseY = baseOffsetY();
+
+      ctx2.lineWidth = line_height;
+      ctx2.strokeStyle = accent;
+      ctx2.shadowBlur = 0;
+      ctx2.lineCap = 'round';
+      ctx2.lineJoin = 'round';
+      ctx2.beginPath();
+      for (let x = 0; x < history.length; x++) {
+        const y = baseY - history[x];
+        if (x === 0) ctx2.moveTo(x, y);
+        else ctx2.lineTo(x, y);
+      }
+      ctx2.stroke();
+
+      ctx2.lineWidth = line_height;
+      ctx2.strokeStyle = accent;
+      ctx2.shadowColor = accent;
+      ctx2.shadowBlur = line_height * 0.8;
+      ctx2.beginPath();
+      for (let x = 0; x < history.length; x++) {
+        const y = baseY - history[x];
+        if (x === 0) ctx2.moveTo(x, y);
+        else ctx2.lineTo(x, y);
+      }
+      ctx2.stroke();
+
+      ctx2.lineWidth = line_height;
+      ctx2.strokeStyle = accent + "99";
+      ctx2.shadowBlur = line_height * 2;
+      ctx2.shadowColor = accent;
+      ctx2.beginPath();
+      for (let x = 0; x < history.length; x++) {
+        const y = baseY - history[x];
+        if (x === 0) ctx2.moveTo(x, y);
+        else ctx2.lineTo(x, y);
+      }
+      ctx2.stroke();
+
+      requestAnimationFrame(animate);
     }
+
+    audio.addEventListener('play', () => {
+      if (!started) {
+        started = true;
+        ctx.resume();
+      }
+    });
   }
 };

@@ -262,7 +262,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
                     value={overlay_options?.line_height ?? 4}
                     label={__('Line thickness', 'wpmusicgallery')}
                     min={1}
-                    max={120}
+                    max={40}
                     step={1}
                   />
                   <Range
@@ -280,13 +280,13 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               {(overlay === 'pro/heartbeat_line') && (
                 <>
                   <Range
-                    name="overlay_options.start_position"
-                    value={overlay_options?.start_position ?? 0}
-                    label={__('Start position [%]', 'wpmusicgallery')}
-                    help={__('Where 0 is center, -50 is left and 50 is right', 'wpmusicgallery')}
-                    min={-50}
-                    max={50}
-                    step={1}
+                    name="overlay_options.smoothness"
+                    value={overlay_options?.smoothness ?? 0.5}
+                    label={__('Smoothness', 'wpmusicgallery')}
+                    help={__('Amplitude smoothness', 'wpmusicgallery')}
+                    min={0.1}
+                    max={1}
+                    step={0.1}
                   />
                   <Range
                     name="overlay_options.speed"
