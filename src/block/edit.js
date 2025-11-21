@@ -1,6 +1,8 @@
 import {__} from '@wordpress/i18n';
-import {useBlockProps} from '@wordpress/block-editor';
+import {useBlockProps, InspectorControls} from '@wordpress/block-editor';
 import EditSidebar from "./editor/edit-sidebar";
+
+import {BlockContext} from "./editor/context";
 
 import AmbientGlow from "./editor/preview/backgrounds/AmbientGlow";
 import BlurredPhotos from "./editor/preview/backgrounds/BlurredPhotos";
@@ -10,24 +12,46 @@ import AudioPulse from "./editor/preview/overlays/AudioPulse";
 import ColorBlend from "./editor/preview/overlays/ColorBlend";
 import EqualizerBars from "./editor/preview/overlays/EqualizerBars";
 import HeartbeatLine from "./editor/preview/overlays/HeartbeatLine";
+import Pixelate from "./editor/preview/overlays/Pixelate";
 import WaveLine from "./editor/preview/overlays/WaveLine";
 
 import config from '../../config.json';
-import Pixelate from "./editor/preview/overlays/Pixelate";
 
 export default function Edit(props) {
+  const {attributes, setAttributes} = props;
+
   const {
     photos = [],
     theme = 'default',
     size = 85,
     background_options = {},
-  } = props.attributes;
+  } = attributes;
 
   const {background_color = 'transparent'} = background_options;
 
+  const changeAttribute = (name, value) => {
+    let newValuesToSet = {};
+    if (name.includes('.')) {
+      let [parent, child] = name.split('.');
+
+      newValuesToSet[parent] = {
+        ...(attributes[parent] || {}),
+        [child]: value,
+      };
+    } else {
+      newValuesToSet = {[name]: value};
+    }
+
+    setAttributes(newValuesToSet);
+  };
+
   return (
     <>
-      <EditSidebar {...props} config={config}/>
+      <BlockContext.Provider value={{changeAttribute}}>
+        <InspectorControls>
+          <EditSidebar {...props} config={config}/>
+        </InspectorControls>
+      </BlockContext.Provider>
 
       <p {...useBlockProps()}>
         <div className={`wpmg-gallery theme-${theme.replace(/free\/|pro\//, '')} visible-controls-on-hover`}>
