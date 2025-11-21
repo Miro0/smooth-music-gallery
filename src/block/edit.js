@@ -143,15 +143,41 @@ export default function Edit(props) {
                   )}
                 </div>
               </div>
-              <div className="swiper-pagination"></div>
             </div>
 
             <div className="wpmg-controls">
-              <button className="wpmg-btn wpmg-play" aria-label="Play / Pause">
-                <svg viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </button>
+              <div className="swiper-pagination">
+                <span className="swiper-pagination-bullet swiper-pagination-bullet-active" />
+                {Array.from({length: photos.length - 1}).map(() => (
+                  <span className="swiper-pagination-bullet"/>
+                ))}
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value="1"
+                className="wpmg-volume"
+                data-label="Volume"
+              />
+              <div className="wpmg-btn--wrapper">
+                <button className="wpmg-btn wpmg-btn--small wpmg-prev" aria-label="Previous">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z"/>
+                  </svg>
+                </button>
+                <button className="wpmg-btn wpmg-play" aria-label="Play / Pause">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
+                  </svg>
+                </button>
+                <button className="wpmg-btn wpmg-btn--small wpmg-next" aria-label="Next">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"/>
+                  </svg>
+                </button>
+              </div>
               <button className="wpmg-btn wpmg-fullscreen" aria-label="Fullscreen">
                 <svg viewBox="0 0 24 24">
                   <path d="M7 14h2v3h3v2H7v-5zM14 7h3v3h2V5h-5v2z"/>

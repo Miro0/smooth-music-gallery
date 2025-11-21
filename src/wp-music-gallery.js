@@ -18,8 +18,8 @@ export const initWpMusicGallery = (container, index) => {
       <div class="wpmg-image-container">
         <div class="swiper-wrapper">
           ${photos
-          .map(
-            (photo) => `
+    .map(
+      (photo) => `
               <div class="swiper-slide">
                 <img 
                   src="${photo.url}" 
@@ -30,7 +30,7 @@ export const initWpMusicGallery = (container, index) => {
                 />
               </div>
             `
-          )
+    )
     .join('')}
         </div>
       </div>
@@ -45,11 +45,20 @@ export const initWpMusicGallery = (container, index) => {
           class="wpmg-volume"
           data-label="Volume"
         >
-        <button class="wpmg-btn wpmg-play" aria-label="Play / Pause">
-          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </button>
+        <div class="wpmg-btn--wrapper">
+          <button class="wpmg-btn wpmg-btn--small wpmg-prev" aria-label="Previous">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg>
+          </button>
+          <button class="wpmg-btn wpmg-play" aria-label="Play / Pause">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+          </button>
+          <button class="wpmg-btn wpmg-btn--small wpmg-next" aria-label="Next">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg>
+          </button>
+        </div>
         <button class="wpmg-btn wpmg-fullscreen" aria-label="Fullscreen">
-          <svg class="on" viewBox="0 0 24 24"><path d="M7 14h2v3h3v2H7v-5zM14 7h3v3h2V5h-5v2z"/></svg>
+          <svg class="wpmg-icon--expand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>
+          <svg class="wpmg-icon--collapse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>
         </button>
       </div>
     </div>
@@ -103,6 +112,18 @@ export const initWpMusicGallery = (container, index) => {
         if (window.wpmg[index]?.onSlideChange) {
           window.wpmg[index]?.onSlideChange(this.realIndex);
         }
+
+        if (window.wpmg[index]?.swiper) {
+          const bullets = window.wpmg[index].swiper.pagination.bullets;
+          const activeIndex = window.wpmg[index].swiper.realIndex;
+
+          bullets.forEach((bullet, index) => {
+            bullet.classList.remove('swiper-pagination-bullet-before-active');
+            if (index < activeIndex) {
+              bullet.classList.add('swiper-pagination-bullet-before-active');
+            }
+          });
+        }
       }
     },
   });
@@ -124,6 +145,8 @@ export const initWpMusicGallery = (container, index) => {
 function initControls(container, swiper, slides_duration, index) {
   const content = container.querySelector('.wpmg-content');
   const btnPlay = container.querySelector('.wpmg-play');
+  const btnPrev = container.querySelector('.wpmg-prev');
+  const btnNext = container.querySelector('.wpmg-next');
   const btnFullscreen = container.querySelector('.wpmg-fullscreen');
   const audio = container.querySelector('.wpmg-audio');
   const volumeSlider = container.querySelector('.wpmg-volume');
@@ -198,9 +221,23 @@ function initControls(container, swiper, slides_duration, index) {
 
       if (!document.fullscreenElement) {
         container.requestFullscreen();
+        container.classList.add('wpmg--fullscreen');
       } else {
         document.exitFullscreen();
+        container.classList.remove('wpmg--fullscreen');
       }
+    });
+  }
+
+  if (btnPrev) {
+    btnPrev.addEventListener('click', () => {
+      swiper?.slidePrev();
+    });
+  }
+
+  if (btnNext) {
+    btnNext.addEventListener('click', () => {
+      swiper?.slideNext();
     });
   }
 }
