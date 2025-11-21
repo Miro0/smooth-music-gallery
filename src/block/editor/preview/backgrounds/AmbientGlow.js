@@ -56,7 +56,6 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
       zIndex: 40,
     }}>
       <div
-        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__tl"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,
@@ -70,7 +69,6 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
         }}
       />
       <div
-        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__tr"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,
@@ -84,7 +82,6 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
         }}
       />
       <div
-        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__bl"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,

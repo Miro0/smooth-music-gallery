@@ -491,6 +491,46 @@ export default function EditSidebar({attributes, setAttributes, config}) {
             />
           </>
         )}
+
+        {background === 'pro/dust_particles' && (
+          <>
+            <Range
+              name="background_options.density"
+              value={background_options?.density ?? 0.5}
+              label={__('Density', 'wpmusicgallery')}
+              help={__('Amount of dots', 'wpmusicgallery')}
+              min={0.1}
+              max={1}
+              step={0.1}
+            />
+            <Range
+              name="background_options.opacity"
+              value={background_options?.opacity ?? 0.5}
+              label={__('Opacity', 'wpmusicgallery')}
+              min={0.1}
+              max={1}
+              step={0.1}
+            />
+            <Range
+              name="background_options.min_size"
+              value={background_options?.min_size ?? 8}
+              label={__('Min size', 'wpmusicgallery')}
+              help={__('Minimum size of dust particle', 'wpmusicgallery')}
+              min={1}
+              max={background_options?.max_size ?? 16}
+              step={1}
+            />
+            <Range
+              name="background_options.max_size"
+              value={background_options?.max_size ?? 16}
+              label={__('Max size', 'wpmusicgallery')}
+              help={__('Maximum size of dust particle', 'wpmusicgallery')}
+              min={background_options?.min_size ?? 8}
+              max={120}
+              step={1}
+            />
+          </>
+        )}
       </PanelBody>
     </>
 

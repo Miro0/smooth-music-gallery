@@ -2,18 +2,15 @@
   "themes": [
     "free/default",
     "free/video_player",
+    "pro/music_player",
     "pro/playlist",
-    "pro/polaroid",
-    "pro/retro"
+    "pro/polaroid"
   ],
   "backgrounds": [
     "free/ambient_glow",
     "free/orbital_pulse",
     "pro/blurred_photos",
-    "pro/dust_particles",
-    "pro/dreamy_bokeh",
-    "pro/noise_gradient_motion",
-    "pro/soft_shapes_flow"
+    "pro/dust_particles"
   ],
   "overlays": [
     "free/equalizer_bars",

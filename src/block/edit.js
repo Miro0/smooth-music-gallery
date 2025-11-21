@@ -6,6 +6,7 @@ import {BlockContext} from "./editor/context";
 
 import AmbientGlow from "./editor/preview/backgrounds/AmbientGlow";
 import BlurredPhotos from "./editor/preview/backgrounds/BlurredPhotos";
+import DustParticles from "./editor/preview/backgrounds/DustParticles";
 import OrbitalPulse from "./editor/preview/backgrounds/OrbitalPulse";
 
 import AudioPulse from "./editor/preview/overlays/AudioPulse";
@@ -66,6 +67,9 @@ export default function Edit(props) {
             }
             {props.attributes?.music?.filename && props.attributes?.background === 'pro/blurred_photos' &&
               <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]}/>
+            }
+            {props.attributes?.music?.filename && props.attributes?.background === 'pro/dust_particles' &&
+              <DustParticles {...props.attributes?.background_options}/>
             }
             {props.attributes?.music?.filename && props.attributes?.background === 'free/orbital_pulse' &&
               <OrbitalPulse {...props.attributes?.background_options} />

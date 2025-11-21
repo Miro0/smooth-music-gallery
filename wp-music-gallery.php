@@ -99,17 +99,18 @@ function wp_music_gallery_render_shortcode_builder_page() {
 	<?php
 }
 
-add_action( 'admin_menu', function () {
-	add_menu_page(
-		__( 'WP Music Gallery', 'wp-music-gallery' ),
-		__( 'WP Music Gallery', 'wp-music-gallery' ),
-		'manage_options',
-		'wp_music_gallery--builder',
-		__NAMESPACE__ . '\\wp_music_gallery_render_shortcode_builder_page',
-		'dashicons-format-audio',
-		58
-	);
-} );
+// @TODO Not working for now as expected.
+//add_action( 'admin_menu', function () {
+//	add_menu_page(
+//		__( 'WP Music Gallery', 'wp-music-gallery' ),
+//		__( 'WP Music Gallery', 'wp-music-gallery' ),
+//		'manage_options',
+//		'wp_music_gallery--builder',
+//		__NAMESPACE__ . '\\wp_music_gallery_render_shortcode_builder_page',
+//		'dashicons-format-audio',
+//		58
+//	);
+//} );
 
 add_action( 'admin_enqueue_scripts', function ( $hook ) {
 	if ( $hook !== 'toplevel_page_wp_music_gallery--builder' ) {
