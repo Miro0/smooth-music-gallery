@@ -113,6 +113,13 @@
     transition: opacity 0.2s;
   }
 
+  .wpmg-btn--wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
   .wpmg-btn {
     background: rgba(255, 255, 255, 0);
     border: none;
@@ -129,7 +136,9 @@
     transition: background 0.2s, fill 0.2s;
 
     &--small {
-      display: none;
+      width: 32px;
+      height: 32px;
+      padding: 4px;
     }
 
     &:hover {

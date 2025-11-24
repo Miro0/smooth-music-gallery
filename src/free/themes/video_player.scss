@@ -86,21 +86,57 @@
   }
 
   .swiper-pagination-bullet {
+    position: relative;
+    overflow: hidden;
     flex: 1;
     height: 100%;
-    background: transparent;
+    background: transparent !important;
     opacity: 1;
     border-radius: 0;
     margin: 0 !important;
+    border-right: 2px solid transparent;
 
-    &:hover {
-      cursor: pointer;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: #fff;
+      transform: scaleX(0);
+      transform-origin: left center;
+      will-change: transform;
     }
   }
 
-  .swiper-pagination-bullet-active, .swiper-pagination-bullet-before-active {
-    background: #fff !important;
-    transition: background 0.2s linear;
+  .swiper-pagination-bullet:hover {
+    cursor: pointer;
+    border-right: 2px solid white;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: transparent !important;
+    border-right: 2px solid white;
+    transition: border 0.2s linear;
+  }
+
+  .swiper-pagination-bullet-before-active {
+    border-right: 2px solid white;
+
+    &::after {
+      transition: none;
+      transform: scaleX(1);
+    }
+  }
+
+  &.is-playing {
+    .swiper-pagination-bullet-active {
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  .swiper-pagination-bullet-before-active {
+    transition-duration: 0s !important;
   }
 
   .wpmg-controls {

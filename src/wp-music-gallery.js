@@ -62,6 +62,7 @@ export const initWpMusicGallery = (container, index) => {
         </button>
       </div>
     </div>
+    ${theme === 'free/video_player' ? `<style>.wpmg-gallery.theme-video_player.is-playing .swiper-pagination-bullet-active::after {transition: transform linear ${slides_duration}s;}</style>` : ''}
     ${music?.url ? `<audio class="wpmg-audio" preload="auto" loop src="${music.url}"></audio>` : ''}
   `;
 
@@ -108,20 +109,29 @@ export const initWpMusicGallery = (container, index) => {
       imagesReady() {
         window.wpmg[index].swiper.update();
       },
-      slideChange() {
+      realIndexChange() {
+        const activeIndex = window.wpmg[index].swiper.realIndex;
+
         if (window.wpmg[index]?.onSlideChange) {
-          window.wpmg[index]?.onSlideChange(this.realIndex);
+          window.wpmg[index]?.onSlideChange(activeIndex);
         }
 
         if (window.wpmg[index]?.swiper) {
           const bullets = window.wpmg[index].swiper.pagination.bullets;
-          const activeIndex = window.wpmg[index].swiper.realIndex;
 
-          bullets.forEach((bullet, index) => {
+          bullets.forEach((bullet) => {
+            bullet.classList.remove('swiper-pagination-bullet-active');
             bullet.classList.remove('swiper-pagination-bullet-before-active');
-            if (index < activeIndex) {
-              bullet.classList.add('swiper-pagination-bullet-before-active');
-            }
+          });
+
+          requestAnimationFrame(() => {
+            bullets.forEach((bullet, index) => {
+              if (index < activeIndex) {
+                bullet.classList.add('swiper-pagination-bullet-before-active');
+              } else if (index === activeIndex) {
+                bullet.classList.add('swiper-pagination-bullet-active');
+              }
+            });
           });
         }
       }
@@ -156,7 +166,6 @@ function initControls(container, swiper, slides_duration, index) {
     volumeSlider.addEventListener('input', () => {
       if (window.wpmg[index].gain) {
         window.wpmg[index].gain.gain.value = parseFloat(volumeSlider.value);
-        mouseMove();
       }
     });
   }
@@ -164,18 +173,27 @@ function initControls(container, swiper, slides_duration, index) {
   let playing = false;
   let controlsTimeout = null;
 
-  const mouseMove = () => {
-    clearTimeout(controlsTimeout);
-    container.classList.add('visible-controls');
-    controlsTimeout = setTimeout(() => {
-      container.classList.remove('visible-controls');
-    }, 3000);
-  }
+  window.addEventListener('pointermove', (event) => {
+    if (container.classList.contains('visible-controls')) return;
+
+    const rect = content.getBoundingClientRect();
+
+    if (
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom
+    ) {
+      clearTimeout(controlsTimeout);
+      container.classList.add('visible-controls');
+      controlsTimeout = setTimeout(() => {
+        container.classList.remove('visible-controls');
+      }, 3000);
+    }
+  }, {passive: true});
 
   if (btnPlay) {
     btnPlay.addEventListener('click', async () => {
-      mouseMove();
-
       if (playing) {
         playing = false;
 
@@ -185,14 +203,13 @@ function initControls(container, swiper, slides_duration, index) {
 
         btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 
-        container.classList.add('visible-controls');
-        clearTimeout(controlsTimeout);
-        content.removeEventListener('mouseenter', mouseMove);
+        container.classList.remove('is-playing');
         return;
       }
 
       playing = true;
 
+      container.classList.add('is-playing');
       btnPlay.classList.add("is-loading");
 
       swiper.params.autoplay = {
@@ -207,24 +224,29 @@ function initControls(container, swiper, slides_duration, index) {
 
       btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
 
+      container.classList.add('visible-controls');
       controlsTimeout = setTimeout(() => {
         container.classList.remove('visible-controls');
       }, 1000);
-
-      content.addEventListener('mouseenter', mouseMove);
     });
   }
 
   if (btnFullscreen) {
     btnFullscreen.addEventListener('click', () => {
-      mouseMove();
-
       if (!document.fullscreenElement) {
         container.requestFullscreen();
         container.classList.add('wpmg--fullscreen');
       } else {
         document.exitFullscreen();
         container.classList.remove('wpmg--fullscreen');
+      }
+
+      const activeBullet = container.querySelector('.swiper-pagination-bullet-active');
+      if (activeBullet) {
+        activeBullet.classList.remove('swiper-pagination-bullet-active');
+        requestAnimationFrame(() => {
+          activeBullet.classList.add('swiper-pagination-bullet-active');
+        });
       }
     });
   }
