@@ -35,7 +35,9 @@ export const initWpMusicGallery = (container, index) => {
         </div>
       </div>
       <div class="wpmg-controls">
-        <div class="swiper-pagination"></div>
+        <div class="swiper-pagination--wrapper">
+          <div class="swiper-pagination"></div>
+        </div>
         <input 
           type="range" 
           min="0" 
@@ -43,7 +45,8 @@ export const initWpMusicGallery = (container, index) => {
           step="0.01" 
           value="1" 
           class="wpmg-volume"
-          data-label="Volume"
+          aria-label="Volume"
+          title="Volume"
         >
         <div class="wpmg-btn--wrapper">
           <button class="wpmg-btn wpmg-btn--small wpmg-prev" aria-label="Previous">
