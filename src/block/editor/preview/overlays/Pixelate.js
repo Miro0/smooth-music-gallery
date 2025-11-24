@@ -1,8 +1,12 @@
-import { useEffect, useRef } from "@wordpress/element";
+import {useEffect, useRef, useState} from "@wordpress/element";
 
-const Pixelate = ({ max_size = 20, photo }) => {
+const Pixelate = ({max_size = 20, photo}) => {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
+  const offscreenRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -37,6 +41,15 @@ const Pixelate = ({ max_size = 20, photo }) => {
 
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.imageSmoothingEnabled = false;
+
+        if (window.OffscreenCanvas) {
+          offscreenRef.current = new OffscreenCanvas(rect.width * dpr, rect.height * dpr);
+        } else {
+          const tmp = document.createElement("canvas");
+          tmp.width = rect.width * dpr;
+          tmp.height = rect.height * dpr;
+          offscreenRef.current = tmp;
+        }
       }
 
       resize();
@@ -51,7 +64,6 @@ const Pixelate = ({ max_size = 20, photo }) => {
         const sw = img.naturalWidth;
         const sh = img.naturalHeight;
 
-        // cover + center
         const dst = w / h;
         const src = sw / sh;
 
@@ -69,12 +81,15 @@ const Pixelate = ({ max_size = 20, photo }) => {
           sy = (sh - sHeight) / 2;
         }
 
-        // pixel size — preview animacja
         const t = performance.now() / 300;
         const pixelSize = 1 + (Math.sin(t) * 0.5 + 0.5) * max_size;
 
         const smallW = Math.max(1, Math.floor(w / pixelSize));
         const smallH = Math.max(1, Math.floor(h / pixelSize));
+
+        const off = offscreenRef.current;
+        const octx = off.getContext("2d");
+        octx.imageSmoothingEnabled = false;
 
         if (!render.tmp) {
           render.tmp = document.createElement("canvas");
@@ -91,8 +106,13 @@ const Pixelate = ({ max_size = 20, photo }) => {
         tctx.clearRect(0, 0, smallW, smallH);
         tctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, smallW, smallH);
 
+        // ⭐ render to offscreen
+        octx.clearRect(0, 0, w, h);
+        octx.drawImage(tmp, 0, 0, smallW, smallH, 0, 0, w, h);
+
+        // ⭐ copy from offscreen to main canvas
         ctx.clearRect(0, 0, w, h);
-        ctx.drawImage(tmp, 0, 0, smallW, smallH, 0, 0, w, h);
+        ctx.drawImage(off, 0, 0);
 
         animRef.current = requestAnimationFrame(render);
       }
@@ -104,7 +124,7 @@ const Pixelate = ({ max_size = 20, photo }) => {
         cancelAnimationFrame(animRef.current);
       };
     }
-  }, [max_size, photo]);
+  }, [max_size, photo, mounted]);
 
   return (
     <canvas

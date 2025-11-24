@@ -1,49 +1,98 @@
-import {useEffect, useRef} from "@wordpress/element";
+import {useEffect, useRef, useState} from "@wordpress/element";
 
-const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density = 0.2, speed = 0.2, size = 8}) => {
+const AudioPulse = (
+  {
+    accent = '#ffffff',
+    opacity = 0.5,
+    intensity = 1,
+    density = 0.2,
+    speed = 0.2,
+    size = 8
+  }
+) => {
   const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const offscreenRef = useRef(null);
   const animRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
+    if (!mounted) return;
+
     const container = containerRef.current;
     if (!container) return;
 
-    let width = container.getBoundingClientRect().width;
-    let height = container.getBoundingClientRect().height;
-    setTimeout(() => {
-      // @TODO - not updating all related properties.
-      width = container.getBoundingClientRect().width;
-      height = container.getBoundingClientRect().height;
-    }, 10);
+    let canvas = canvasRef.current;
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvasRef.current = canvas;
+      canvas.style.position = "absolute";
+      canvas.style.inset = 0;
+      canvas.style.pointerEvents = "none";
+      canvas.style.opacity = opacity;
+      container.appendChild(canvas);
+    }
+    const ctx2 = canvas.getContext("2d");
 
-    const dotCount = Math.max(1, Math.floor(width * density / 10));
+    function setupOffscreen(w, h) {
+      if (window.OffscreenCanvas) {
+        offscreenRef.current = new OffscreenCanvas(w, h);
+      } else {
+        const tmp = document.createElement("canvas");
+        tmp.width = w;
+        tmp.height = h;
+        offscreenRef.current = tmp;
+      }
+    }
 
-    const dots = Array.from(container.querySelectorAll('.wpmg-overlay--audio-pulse__dot'))
-      .slice(0, dotCount);
+    let width = 0;
+    let height = 0;
+    let dots = [];
 
-    const state = dots.map(() => ({
-      px: Math.random() * width,
-      py: Math.random() * height,
-      size: size + Math.random() * 16,
-      bandStart: Math.floor(Math.random() * 100),
-      bandWidth: 10 + Math.random() * 20,
-      strength: 0.4 + Math.random() * intensity,
-      vx: (Math.random() * 0.2 - 0.1) * (10 * speed),
-      vy: (Math.random() * 0.2 - 0.1) * (10 * speed)
-    }));
+    function initDots() {
+      const count = Math.max(1, Math.floor((width * density) / 10));
+      dots = [];
 
-    dots.forEach((dot, i) => {
-      const s = state[i];
-      dot.style.width = `${s.size}px`;
-      dot.style.height = `${s.size}px`;
-      dot.style.transform = `translate(${s.px}px, ${s.py}px) scale(1)`;
-    });
+      for (let i = 0; i < count; i++) {
+        dots.push({
+          px: Math.random() * width,
+          py: Math.random() * height,
+          size: size + Math.random() * 16,
+          bandStart: Math.floor(Math.random() * 100),
+          bandWidth: 10 + Math.random() * 20,
+          strength: 0.4 + Math.random() * intensity,
+          vx: (Math.random() * 0.2 - 0.1) * (10 * speed),
+          vy: (Math.random() * 0.2 - 0.1) * (10 * speed)
+        });
+      }
+    }
 
-    function animate(t) {
-      const wobbleBase = Math.sin(t / 300);
+    function resize() {
+      const rect = container.getBoundingClientRect();
+      width = Math.floor(rect.width);
+      height = Math.floor(rect.height);
 
-      dots.forEach((dot, i) => {
-        const s = state[i];
+      canvas.width = width;
+      canvas.height = height;
+
+      setupOffscreen(width, height);
+      initDots();
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    function animate(ts) {
+      const off = offscreenRef.current;
+      const octx = off.getContext("2d");
+      octx.clearRect(0, 0, width, height);
+
+      const wobbleBase = Math.sin(ts / 300);
+
+      for (let i = 0; i < dots.length; i++) {
+        const s = dots[i];
 
         s.px += s.vx;
         s.py += s.vy;
@@ -65,69 +114,74 @@ const AudioPulse = ({accent = '#ffffff', opacity = 0.5, intensity = 1, density =
           s.vy *= -1;
         }
 
-        const pulse = (Math.sin((t / 200) + i) * 0.5 + 0.5) * s.strength;
+        const pulse = (Math.sin((ts / 200) + i) * 0.5 + 0.5) * s.strength;
         const wobble = wobbleBase * (0.3 * intensity);
-
         const scale = 1 + pulse + wobble;
+        const finalScale = Math.max(0.5, Math.min(scale, 2.5));
 
-        dot.style.transform = `translate(${s.px}px, ${s.py}px) scale(${scale})`;
-        dot.style.opacity = 0.7 + pulse;
-      });
+        const outerRadius = (s.size * finalScale) / 2;
+
+        const innerGap = s.size >= 14 ? s.size / 3 : 5;
+        const innerRadius = Math.max(
+          0,
+          (s.size * finalScale - innerGap) / 2
+        );
+
+        const alpha = Math.max(0.1, Math.min(1, 0.7 + pulse));
+
+        octx.save();
+        octx.globalAlpha = alpha;
+        octx.translate(s.px, s.py);
+
+        octx.strokeStyle = accent;
+        octx.lineWidth = s.size / 4;
+        octx.beginPath();
+        octx.arc(0, 0, outerRadius, 0, Math.PI * 2);
+        octx.stroke();
+
+        octx.strokeStyle = accent;
+        octx.lineWidth = s.size >= 14 ? 2 : 1;
+        octx.beginPath();
+        octx.arc(0, 0, innerRadius, 0, Math.PI * 2);
+        octx.stroke();
+
+        octx.restore();
+      }
+
+      ctx2.clearRect(0, 0, width, height);
+      ctx2.drawImage(off, 0, 0);
 
       animRef.current = requestAnimationFrame(animate);
     }
 
     animRef.current = requestAnimationFrame(animate);
 
-    return () => cancelAnimationFrame(animRef.current);
-  }, [intensity, density, speed, size]);
+    return () => {
+      window.removeEventListener("resize", resize);
+      cancelAnimationFrame(animRef.current);
+
+      if (canvasRef.current) {
+        canvasRef.current.remove();
+        canvasRef.current = null;
+      }
+    };
+  }, [accent, opacity, intensity, density, speed, size, mounted]);
 
   return (
-    <>
-      <style>
-        {`
-        .wpmg-overlay--audio-pulse__dot:after {
-          content: '';
-          position:absolute;
-          border-radius:50%;
-          border: ${size >= 14 ? 2 : 1}px solid ${accent};
-          width: calc(100% - ${size >= 14 ? parseInt(size / 3, 10) : 5}px);
-          height: calc(100% - ${size >= 14 ? parseInt(size / 3, 10) : 5}px);
-        }
-      `}
-      </style>
-      <div
-        ref={containerRef}
-        style={{
-          opacity,
-          height: `100%`,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          pointerEvents: 'none',
-          zIndex: 50,
-          overflow: 'hidden',
-        }}
-      >
-        {Array.from({length: 325 * density}).map((_, i) => (
-          <div
-            key={i}
-            className="wpmg-overlay--audio-pulse__dot"
-            style={{
-              position: 'absolute',
-              borderRadius: '50%',
-              border: `${parseInt(size / 4, 10)}px solid ${accent}`,
-              transform: 'scale(1)',
-              transition: 'opacity 0.15s linear',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          />
-        ))}
-      </div>
-    </>
+    <div
+      ref={containerRef}
+      style={{
+        opacity,
+        height: "100%",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        pointerEvents: "none",
+        zIndex: 50,
+        overflow: "hidden",
+      }}
+    ></div>
   );
 };
 
