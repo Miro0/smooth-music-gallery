@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "@wordpress/element";
+import {useEffect, useRef, useState} from "@wordpress/element";
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -56,6 +56,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
       zIndex: 40,
     }}>
       <div
+        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__tl"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,
@@ -69,6 +70,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
         }}
       />
       <div
+        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__ri"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,
@@ -82,6 +84,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
         }}
       />
       <div
+        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__bl"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,

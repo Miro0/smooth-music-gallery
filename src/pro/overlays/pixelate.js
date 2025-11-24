@@ -166,12 +166,25 @@ const attachOverlayAnimation = (container, index) => {
 
     const pixelSize = 2 + Math.pow(avg / 255, 1.4) * max_size;
 
-    items.forEach(item => drawPixel(item, pixelSize));
+    const activeIndex = window?.wpmg[index]?.swiper?.realIndex || window?.wpmg[index]?.swiper?.activeIndex || 0;
+
+    items.forEach(((item) => {
+      if (item?.parent?.dataset?.swiperSlideIndex !== undefined && parseInt(activeIndex) === parseInt(item?.parent?.dataset?.swiperSlideIndex)) {
+        drawPixel(item, pixelSize);
+      }
+    }));
 
     animFrame = requestAnimationFrame(animate);
   }
 
   audio.addEventListener("play", () => {
-    audioCtx.resume().then(() => animate());
+    audioCtx.resume().then(() => {
+      items.forEach(((item) => item.canvas.style.display = 'block'));
+      animate()
+    });
+  });
+
+  audio.addEventListener("pause", () => {
+    items.forEach(((item) => item.canvas.style.display = 'none'));
   });
 };
