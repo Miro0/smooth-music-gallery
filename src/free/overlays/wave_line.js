@@ -1,100 +1,183 @@
-import {createAnimationStyle} from "../../block/utils/style";
-import {initAudioSource} from "../../block/utils/audio";
+import { initAudioSource } from "../../block/utils/audio";
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .querySelectorAll(".wpmg-gallery")
+    .forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
+  if (!window?.wpmg) window.wpmg = [];
+
+  if (!window.wpmg[index]) {
+    window.wpmg[index] = { initOverlay: attachOverlayAnimation, source: null };
+    return;
+  } else if (!window.wpmg[index]?.initialized) {
+    window.wpmg[index].initOverlay = attachOverlayAnimation;
+    return;
   }
 
-  if (!window?.wpmg[index]) {
-    window.wpmg[index] = {initOverlay: attachOverlayAnimation, source: null};
-  } else if (!window?.wpmg[index]?.initialized) {
-    window.wpmg[index].initOverlay = attachOverlayAnimation;
-  } else {
-    const props = JSON.parse(container.dataset.props || '{}');
-    const {overlay, overlay_options = {}} = props;
-    const {accent = '#ffffff', opacity = 0.5, intensity = 1, position = 0, line_height = 4} = overlay_options;
+  const props = JSON.parse(container.dataset.props || "{}");
+  const { overlay, overlay_options = {} } = props;
+  const {
+    accent = "#ffffff",
+    opacity = 0.5,
+    intensity = 1,
+    position = 0,
+    line_height = 4,
+  } = overlay_options;
 
-    if (overlay === 'free/wave_line') {
-      const audio = container.querySelector('.wpmg-audio');
-      const overlayLayer = container.querySelector('.wpmg-overlay-layer');
+  if (overlay !== "free/wave_line") return;
 
-      const segments = container.getBoundingClientRect().width / 4;
+  const audio = container.querySelector(".wpmg-audio");
+  const overlayLayer = container.querySelector(".wpmg-overlay-layer");
+  if (!overlayLayer || !audio) return;
 
-      if (overlayLayer && audio) {
-        const equalizerClass = createAnimationStyle('wpmg-overlay--wave-lines', (c) => `
-          .${c} {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            z-index: 50;
-          }
-          
-          .${c} .wpmg-overlay--line-segment {
-            flex: 1;
-            height: ${line_height}px;
-            background: linear-gradient(180deg, ${accent}55 0%, ${accent} 10%, ${accent} 90%, ${accent}55 100%);
-            box-shadow:
-              0 0 6px ${accent},
-              0 0 14px ${accent}66;
-            }
-        `);
+  const canvas = document.createElement("canvas");
+  canvas.style.position = "absolute";
+  canvas.style.inset = "0";
+  canvas.style.pointerEvents = "none";
+  canvas.style.zIndex = "50";
+  canvas.style.opacity = opacity;
+  overlayLayer.appendChild(canvas);
 
-        const containerHeight = overlayLayer.getBoundingClientRect().height;
-        const offset = (position / 100) * containerHeight;
+  const ctx = canvas.getContext("2d");
 
-        overlayLayer.innerHTML = `
-          <div class="${equalizerClass}" style="opacity:${opacity}">
-            ${`<div class="wpmg-overlay--line-segment" style="transform:translateY(${offset}px)"></div>`.repeat(segments)}
-          </div>
-        `;
+  let off = null;
+  let octx = null;
 
-        const lineSegments = Array.from(container.querySelectorAll('.wpmg-overlay--line-segment'));
+  let cssW = 0;
+  let cssH = 0;
+  let segments = 0;
+  let segmentWidth = 0;
+  let baseY = 0;
+  let gradient = null;
 
-        const [analyser, ctx, data] = initAudioSource(audio, index);
+  const dpr = window.devicePixelRatio || 1;
 
-        let animFrame;
+  const makeGradient = (context) => {
+    const g = context.createLinearGradient(0, 0, 0, line_height);
+    g.addColorStop(0.0, accent + "55");
+    g.addColorStop(0.1, accent);
+    g.addColorStop(0.9, accent);
+    g.addColorStop(1.0, accent + "55");
+    return g;
+  };
 
-        function animate() {
-          analyser.getByteFrequencyData(data);
+  function resize() {
+    const rect = overlayLayer.getBoundingClientRect();
+    cssW = rect.width;
+    cssH = rect.height;
 
-          let sum = 0, count = 0;
-          for (let i = 10; i < 50; i++) {
-            sum += data[i];
-            count++;
-          }
-          const avg = sum / count;
-          const amp = (avg / 255) * 35 * intensity;
+    if (!cssW || !cssH) return;
 
-          const t = performance.now() / 600;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    canvas.style.width = cssW + "px";
+    canvas.style.height = cssH + "px";
 
-          lineSegments.forEach((segment, i) => {
-            const x = i / segments;
-            const wave = Math.sin((x + t) * Math.PI * 2);
-            const y = wave * amp;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            segment.style.transform = `translateY(${y + offset}px)`;
-          });
+    if (window.OffscreenCanvas) {
+      off = new OffscreenCanvas(cssW * dpr, cssH * dpr);
+      octx = off.getContext("2d");
+      octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      octx.imageSmoothingEnabled = true;
+    } else {
+      off = null;
+      octx = null;
+    }
 
-          animFrame = requestAnimationFrame(animate);
-        }
+    segments = Math.max(4, Math.floor(cssW / 4));
+    segmentWidth = cssW / segments;
 
-        audio.addEventListener('play', () => {
-          ctx.resume().then(() => animate());
-        });
+    baseY = (cssH * 0.25) + (cssH * position / 200);
 
-        return () => cancelAnimationFrame(animFrame);
-      }
+    const targetCtx = octx || ctx;
+    gradient = makeGradient(targetCtx);
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+  document.addEventListener("fullscreenchange", resize);
+
+  const [analyser, audioCtx, data] = initAudioSource(audio, index);
+
+  let animFrame = null;
+  let isVisible = true;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      isVisible = entries[0]?.isIntersecting ?? true;
+    },
+    { threshold: 0.1 }
+  );
+  observer.observe(container);
+
+  function drawFrame(time) {
+    if (!cssW || !cssH) return;
+
+    const targetCtx = octx || ctx;
+
+    targetCtx.clearRect(0, 0, cssW, cssH);
+
+    analyser.getByteFrequencyData(data);
+
+    let sum = 0;
+    let count = 0;
+    for (let i = 10; i < 50 && i < data.length; i++) {
+      sum += data[i];
+      count++;
+    }
+    const avg = count ? sum / count : 0;
+
+    const amp = (avg / 255) * 35 * intensity;
+    const t = time / 600;
+
+    for (let i = 0; i < segments; i++) {
+      const xNorm = i / segments;
+      const wave = Math.sin((xNorm + t) * Math.PI * 2);
+      const y = baseY + wave * amp;
+
+      const x = i * segmentWidth;
+
+      targetCtx.save();
+      targetCtx.translate(x, y - line_height / 2);
+
+      targetCtx.fillStyle = gradient;
+
+      targetCtx.shadowColor = accent + "66";
+      targetCtx.shadowBlur = 14;
+      targetCtx.fillRect(0, 0, segmentWidth, line_height);
+
+      targetCtx.shadowColor = accent;
+      targetCtx.shadowBlur = 6;
+      targetCtx.fillRect(0, 0, segmentWidth, line_height);
+
+      targetCtx.restore();
+    }
+
+    if (off && octx) {
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.drawImage(off, 0, 0);
     }
   }
+
+  function loop(time) {
+    if (isVisible) {
+      drawFrame(time);
+    }
+    animFrame = requestAnimationFrame(loop);
+  }
+
+  animFrame = requestAnimationFrame(loop);
+
+  return () => {
+    observer.disconnect();
+    cancelAnimationFrame(animFrame);
+    animFrame = null;
+    window.removeEventListener("resize", resize);
+    document.removeEventListener("fullscreenchange", resize);
+    canvas.remove();
+  };
 };

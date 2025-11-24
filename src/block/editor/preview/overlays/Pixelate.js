@@ -9,6 +9,8 @@ const Pixelate = ({max_size = 20, photo}) => {
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
+    if (!mounted) return;
+
     const canvas = canvasRef.current;
     if (!canvas || !photo) return;
 
