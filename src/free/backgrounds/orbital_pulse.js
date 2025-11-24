@@ -1,10 +1,9 @@
-import {createAnimationStyle, hexToRgb} from "../../block/utils/style";
-import {initAudioSource} from "../../block/utils/audio";
+import { initAudioSource } from "../../block/utils/audio";
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) =>
-    attachBackgroundAnimation(gallery, index)
-  );
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .querySelectorAll(".wpmg-gallery")
+    .forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
 const attachBackgroundAnimation = (container, index) => {
@@ -17,10 +16,11 @@ const attachBackgroundAnimation = (container, index) => {
   } else if (!window?.wpmg[index]?.initialized) {
     window.wpmg[index].initBackground = attachBackgroundAnimation;
   } else {
-    const props = JSON.parse(container.dataset.props || '{}');
-    const {background, background_options = {}} = props;
+    const props = JSON.parse(container.dataset.props || "{}");
+    const { background, background_options = {} } = props;
+
     const {
-      accent = '#ffffff',
+      accent = "#ffffff",
       opacity = 0.5,
       density = 0.5,
       radius = 90,
@@ -29,138 +29,192 @@ const attachBackgroundAnimation = (container, index) => {
       speed = 0.2,
     } = background_options;
 
-    if (background === 'free/orbital_pulse') {
-      const audio = container.querySelector('.wpmg-audio');
-      const backgroundLayer = container.querySelector('.wpmg-bg-layer');
+    if (background !== "free/orbital_pulse") return;
 
-      if (backgroundLayer && audio) {
-        const ringClass = createAnimationStyle('wpmg-bg--orbital-ring', (c) => `
-          .${c} {
-            position:absolute;
-            inset:0;
-            pointer-events:none;
-            overflow:hidden;
-            opacity:${opacity};
-          }
+    const audio = container.querySelector(".wpmg-audio");
+    const backgroundLayer = container.querySelector(".wpmg-bg-layer");
 
-          .${c} .wpmg-bg--orbital-ring__particle {
-            position:absolute;
-            width:${size}px;
-            height:${size}px;
-            background:${accent};
-            border-radius:50%;
-            transition:opacity 0.2s linear;
-            will-change:transform, opacity;
-          }
+    if (!backgroundLayer || !audio) return;
 
-          .${c} .wpmg-bg--orbital-ring__particle::after {
-            content:"";
-            position:absolute;
-            inset:0;
-            border-radius:50%;
-            background:${accent};
-            filter:blur(6px);
-            opacity:0.9;
-            pointer-events:none;
-          }
-        `);
+    let isVisible = true;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isVisible = entries[0]?.isIntersecting ?? true;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(container);
 
-        const maxParticles = 120;
-        const rawCount = 120 * density;
-        const particlesCount = Math.max(
-          4,
-          Math.min(maxParticles, Math.floor(rawCount || 0))
-        );
+    const canvas = document.createElement("canvas");
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.opacity = opacity;
+    backgroundLayer.innerHTML = "";
+    backgroundLayer.appendChild(canvas);
 
-        backgroundLayer.innerHTML = `
-          <div class="${ringClass}">
-            ${Array.from({length: particlesCount})
-          .map((_, i) => `<div class="wpmg-bg--orbital-ring__particle" data-i="${i}"></div>`)
-          .join('')}
-          </div>`;
+    const ctx2 = canvas.getContext("2d");
 
-        const ring = backgroundLayer.querySelector(`.${ringClass}`);
-        if (!ring) return;
+    let off = null;
+    let octx = null;
 
-        const particles = Array.from(
-          ring.querySelectorAll('.wpmg-bg--orbital-ring__particle')
-        );
+    function setupOffscreen(w, h) {
+      if (window.OffscreenCanvas) {
+        off = new OffscreenCanvas(w, h);
+      } else {
+        const tmp = document.createElement("canvas");
+        tmp.width = w;
+        tmp.height = h;
+        off = tmp;
+      }
+      octx = off.getContext("2d");
+      octx.imageSmoothingEnabled = true;
+    }
 
-        if (!particles.length) return;
+    const width = () => canvas.width;
+    const height = () => canvas.height;
 
-        const rect = ring.getBoundingClientRect();
-        const cx = rect.width / 2;
-        const cy = rect.height / 2;
+    let cx = 0;
+    let cy = 0;
+    let aspectX = 1;
+    let aspectY = 1;
+    let baseRadius = 0;
 
-        const aspectX = rect.width > rect.height ? rect.width / rect.height : 1;
-        const aspectY = rect.height > rect.width ? rect.height / rect.width : 1;
+    const particlesCount = Math.floor(240 * density);
 
-        const baseRadius =
-          (Math.min(rect.width, rect.height) / 2) * (radius / 100);
+    const particles = [];
 
-        const half = size / 2;
+    function initParticles() {
+      particles.length = 0;
 
-        const state = particles.map((p, i) => ({
-          angle: (i / particles.length) * Math.PI * 2,
+      for (let i = 0; i < particlesCount; i++) {
+        particles.push({
+          angle: (i / particlesCount) * Math.PI * 2,
           bandStart: Math.floor(Math.random() * 80),
           bandWidth: 10 + Math.random() * 20,
           jx: 0,
           jy: 0,
-        }));
-
-        const [analyser, ctx, data] = initAudioSource(audio, index);
-
-        let animFrame;
-        let frame = 0;
-
-        function animate() {
-          analyser.getByteFrequencyData(data);
-          frame++;
-
-          particles.forEach((p, i) => {
-            const s = state[i];
-
-            let energy = 0;
-            let count = 0;
-            const bandEnd = Math.min(s.bandStart + s.bandWidth, data.length);
-            for (let j = s.bandStart; j < bandEnd; j++) {
-              energy += data[j];
-              count++;
-            }
-            energy = count ? energy / count : 0;
-
-            const norm = energy / 255;
-
-            const distortion = norm * (80 * intensity);
-            const R1 = baseRadius * aspectX + distortion;
-            const R2 = baseRadius * aspectY + distortion * 0.6;
-
-            s.angle += (0.002 * speed) + (norm * 0.004 * speed);
-
-            const x = cx + Math.cos(s.angle) * R1;
-            const y = cy + Math.sin(s.angle) * R2;
-
-            const scale = 1 + norm * (size / 10) * intensity;
-
-            if (speed > 0 && frame % Math.max(2, Math.floor(6 / speed)) === 0) {
-              s.jx = (Math.random() - 0.5) * (1.5 * speed);
-              s.jy = (Math.random() - 0.5) * (1.5 * speed);
-            }
-
-            p.style.opacity = 0.3 + norm * 0.7;
-            p.style.transform =
-              `translate(${x - half + s.jx}px,${y - half + s.jy}px) scale(${scale})`;
-          });
-
-          animFrame = requestAnimationFrame(animate);
-        }
-
-        ctx.resume().catch(() => {}).finally(() => {
-          animate();
         });
-
-        return () => cancelAnimationFrame(animFrame);
       }
     }
+
+    function resize() {
+      const rect = backgroundLayer.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+
+      canvas.width = w;
+      canvas.height = h;
+
+      setupOffscreen(w, h);
+
+      cx = w / 2;
+      cy = h / 2;
+
+      aspectX = w > h ? w / h : 1;
+      aspectY = h > w ? h / w : 1;
+
+      baseRadius = (Math.min(w, h) / 2) * (radius / 100);
+
+      if (!particles.length) {
+        initParticles();
+      }
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+    document.addEventListener("fullscreenchange", resize);
+
+    const [analyser, audioCtx, data] = initAudioSource(audio, index);
+
+    let animFrame;
+    let frame = 0;
+
+    function animate() {
+      if (!isVisible) {
+        animFrame = requestAnimationFrame(animate);
+        return;
+      }
+
+      analyser.getByteFrequencyData(data);
+      frame++;
+
+      const W = width();
+      const H = height();
+
+      const targetCtx = octx || ctx2;
+      targetCtx.clearRect(0, 0, W, H);
+
+      for (let i = 0; i < particles.length; i++) {
+        const s = particles[i];
+
+        let energy = 0;
+        let count = 0;
+        const bandEnd = Math.min(s.bandStart + s.bandWidth, data.length);
+        for (let j = s.bandStart; j < bandEnd; j++) {
+          energy += data[j];
+          count++;
+        }
+        energy = count ? energy / count : 0;
+
+        const norm = energy / 255;
+
+        const distortion = norm * (80 * intensity);
+        const R1 = baseRadius * aspectX + distortion;
+        const R2 = baseRadius * aspectY + distortion * 0.6;
+
+        s.angle += (0.002 * speed) + (norm * 0.004 * speed);
+
+        const x = cx + Math.cos(s.angle) * R1;
+        const y = cy + Math.sin(s.angle) * R2;
+
+        const scale = 1 + norm * (size / 10) * intensity;
+        const radiusPx = (size / 2) * scale;
+
+        if (speed > 0 && frame % Math.max(2, Math.floor(6 / speed)) === 0) {
+          s.jx = (Math.random() - 0.5) * (1.5 * speed);
+          s.jy = (Math.random() - 0.5) * (1.5 * speed);
+        }
+
+        const alpha = 0.3 + norm * 0.7;
+
+        targetCtx.save();
+        targetCtx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        targetCtx.fillStyle = accent;
+        targetCtx.shadowColor = accent;
+        targetCtx.shadowBlur = 6 * intensity;
+
+        targetCtx.beginPath();
+        targetCtx.arc(
+          x + s.jx,
+          y + s.jy,
+          radiusPx,
+          0,
+          Math.PI * 2
+        );
+        targetCtx.fill();
+
+        targetCtx.restore();
+      }
+
+      if (off && octx) {
+        ctx2.clearRect(0, 0, W, H);
+        ctx2.drawImage(off, 0, 0);
+      }
+
+      animFrame = requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animFrame);
+      observer.disconnect();
+      window.removeEventListener("resize", resize);
+      document.removeEventListener("fullscreenchange", resize);
+      if (canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
+      }
+    };
   }
 };

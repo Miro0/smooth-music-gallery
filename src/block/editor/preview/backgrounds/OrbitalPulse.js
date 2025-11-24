@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "@wordpress/element";
 
 const OrbitalPulse = (
   {
-    accent = '#ffffff',
+    accent = "#ffffff",
     opacity = 0.5,
     density = 0.5,
     radius = 90,
@@ -12,101 +12,155 @@ const OrbitalPulse = (
 ) => {
   const containerRef = useRef(null);
   const animRef = useRef(null);
+  const canvasRef = useRef(null);
+  const offscreenRef = useRef(null);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (mounted) {
-      const container = containerRef.current;
-      if (!container) return;
+    if (!mounted) return;
 
-      const particles = Array.from(
-        container.querySelectorAll('.wpmg-bg--orbital-ring__particle')
-      );
+    const container = containerRef.current;
+    if (!container) return;
 
+    cancelAnimationFrame(animRef.current);
+    if (canvasRef.current) {
+      canvasRef.current.remove();
+      canvasRef.current = null;
+    }
+
+    let canvas = document.createElement("canvas");
+    canvas.style.position = "absolute";
+    canvas.style.inset = 0;
+    canvas.style.pointerEvents = "none";
+    canvas.style.opacity = opacity;
+    container.appendChild(canvas);
+    canvasRef.current = canvas;
+
+    const ctx2 = canvas.getContext("2d");
+
+    function createOffscreen(w, h) {
+      let off;
+      if (window.OffscreenCanvas) {
+        off = new OffscreenCanvas(w, h);
+      } else {
+        off = document.createElement("canvas");
+        off.width = w;
+        off.height = h;
+      }
+      offscreenRef.current = off;
+    }
+
+    let width = 0;
+    let height = 0;
+    let cx = 0;
+    let cy = 0;
+    let aspectX = 1;
+    let aspectY = 1;
+    let baseRadius = 0;
+
+    const particles = [];
+
+    function initParticles(count) {
+      particles.length = 0;
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          angle: (i / count) * Math.PI * 2,
+        });
+      }
+    }
+
+    function resizeAndInit() {
       const rect = container.getBoundingClientRect();
-      const cx = rect.width / 2;
-      const cy = rect.height / 2;
+      if (!rect.width || !rect.height) {
+        requestAnimationFrame(resizeAndInit);
+        return;
+      }
 
-      const aspectX = rect.width > rect.height ? rect.width / rect.height : 1;
-      const aspectY = rect.height > rect.width ? rect.height / rect.width : 1;
+      width = Math.floor(rect.width);
+      height = Math.floor(rect.height);
 
-      const baseRadius = Math.min(rect.width, rect.height) / 2 * (radius / 100);
+      canvas.width = width;
+      canvas.height = height;
+
+      createOffscreen(width, height);
+
+      cx = width / 2;
+      cy = height / 2;
+
+      aspectX = width > height ? width / height : 1;
+      aspectY = height > width ? height / width : 1;
+
+      baseRadius = (Math.min(width, height) / 2) * (radius / 100);
+
+      const count = Math.floor(240 * density);
+      initParticles(count);
+
+      startAnimation();
+    }
+
+    requestAnimationFrame(resizeAndInit);
+
+    function startAnimation() {
+      const off = offscreenRef.current;
+      const octx = off.getContext("2d");
 
       const half = size / 2;
       const spd = Math.max(0, Math.min(1, speed));
 
-      const state = particles.map((_, i) => ({
-        angle: (i / particles.length) * Math.PI * 2,
-      }));
+      function frameLoop() {
+        octx.clearRect(0, 0, width, height);
 
-      const animate = () => {
-        particles.forEach((p, i) => {
-          const s = state[i];
+        for (let i = 0; i < particles.length; i++) {
+          const s = particles[i];
 
           s.angle += 0.002 * spd;
 
           const x = cx + Math.cos(s.angle) * (baseRadius * aspectX);
           const y = cy + Math.sin(s.angle) * (baseRadius * aspectY);
 
-          p.style.transform = `translate(${x - half}px, ${y - half}px)`;
-        });
+          octx.save();
+          octx.globalAlpha = 1;
+          octx.fillStyle = accent;
+          octx.shadowColor = accent;
+          octx.shadowBlur = 6;
 
-        animRef.current = requestAnimationFrame(animate);
-      };
+          octx.beginPath();
+          octx.arc(x, y, half, 0, Math.PI * 2);
+          octx.fill();
+          octx.restore();
+        }
 
-      animRef.current = requestAnimationFrame(animate);
+        ctx2.clearRect(0, 0, width, height);
+        ctx2.drawImage(off, 0, 0);
+
+        animRef.current = requestAnimationFrame(frameLoop);
+      }
+
+      animRef.current = requestAnimationFrame(frameLoop);
     }
 
-    return () => cancelAnimationFrame(animRef.current);
-  }, [mounted, accent, density, radius, size, speed]);
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      if (canvasRef.current) {
+        canvasRef.current.remove();
+        canvasRef.current = null;
+      }
+    };
+  }, [accent, opacity, density, radius, size, speed, mounted]);
 
   return (
-    <>
-      <style>
-        {`
-        .wpmg-bg--orbital-ring__particle::after {
-          content:"";
-          position:absolute;
-          inset:0;
-          border-radius:50%;
-          background:${accent};
-          filter:blur(6px);
-          opacity:0.9;
-          pointer-events:none;
-        }
-      `}
-      </style>
-
-      <div
-        ref={containerRef}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-          opacity,
-        }}
-      >
-        {Array.from({length: Math.round(120 * density)}).map((_, i) => (
-          <div
-            key={i}
-            className="wpmg-bg--orbital-ring__particle"
-            style={{
-              position: 'absolute',
-              width: `${size}px`,
-              height: `${size}px`,
-              background: accent,
-              borderRadius: '50%',
-              willChange: 'transform',
-            }}
-          />
-        ))}
-      </div>
-    </>
+    <div
+      ref={containerRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        pointerEvents: "none",
+        overflow: "hidden",
+        opacity,
+      }}
+    ></div>
   );
 };
 

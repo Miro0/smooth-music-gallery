@@ -52,7 +52,7 @@ const AudioPulse = (
     let dots = [];
 
     function initDots() {
-      const count = Math.max(1, Math.floor((width * density) / 10));
+      const count = Math.floor((width * density) / 10);
       dots = [];
 
       for (let i = 0; i < count; i++) {
