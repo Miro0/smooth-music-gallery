@@ -47,6 +47,7 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4) inset;
     aspect-ratio: 16 / 9;
     max-height: calc(100% - 170px);
+    box-sizing: border-box;
 
     @media screen and (max-width: 768px) {
       aspect-ratio: 9 / 16;
@@ -75,7 +76,7 @@
 
   .swiper-pagination--wrapper {
     position: absolute;
-    bottom: 185px;
+    bottom: 183px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -129,6 +130,10 @@
     font-weight: 600;
     color: var(--wpmg-theme-accent);
     letter-spacing: 0.3px;
+    max-width: 50%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .wpmg-music-progress {
