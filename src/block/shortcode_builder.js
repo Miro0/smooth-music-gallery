@@ -13,6 +13,7 @@ import {BlockContext} from "./editor/context";
 import Edit from '../block/edit';
 import EditSidebar from "./editor/edit-sidebar";
 import config from "../../config.json";
+import './shortcode_builder.scss';
 
 function createShortcode(attributes) {
   const parts = ['[wp-music-gallery'];
@@ -28,9 +29,16 @@ function createShortcode(attributes) {
 
 const App = () => {
   const [attributes, setAttributes] = useState({
-    music: {
-      filename: 'hello.mp3',
-    }
+    anchor: 'shortcode',
+    id: 'shortcode',
+    photos: [],
+    music: {},
+    theme: 'default',
+    theme_options: {},
+    overlay: '',
+    overlay_options: {},
+    background: '',
+    background_options: {},
   });
   const [copyState, setCopyState] = useState(null);
 
@@ -48,7 +56,7 @@ const App = () => {
   };
 
   const changeAttribute = (name, value) => {
-    let newValuesToSet = {};
+    let newValuesToSet = {...attributes};
     if (name.includes('.')) {
       let [parent, child] = name.split('.');
 

@@ -3,8 +3,9 @@
 - [x] Dokończyć efekty overlay i background.
 - [x] Dodać pagination bullets - one gdzieś tam są, ale powinny być kropkami w overlayu.
 - [x] Dodać także możliwość zmiany głośności audio.
-- [ ] Dodać pozostałe motywy.
+- [x] Dodać pozostałe motywy.
 - [x] Może jakiś stop animacji jeśli jest offscreen i start jak wraca z powrotem?
+- [ ] Dodać ten builder shortcode.
 - [ ] QA działania galerii.
 - [ ] Dodać przycisk "Unlock more features", który otworzy modal z możliwością zakupu PRO assetów.
 - [ ] Listować tylko assety FREE i do których ma się dostęp.

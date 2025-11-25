@@ -1,6 +1,5 @@
-import {__experimentalVStack as VStack, BaseControl} from "@wordpress/components";
+import {BaseControl, ColorPicker} from "@wordpress/components";
 import {useBlockContext} from "../context";
-import {ColorPalette} from "@wordpress/block-editor";
 
 const Color = (
   {
@@ -18,15 +17,15 @@ const Color = (
       help={help}
       __nextHasNoMarginBottom
     >
-      <VStack spacing="4" style={{marginTop: 10}}>
-        <ColorPalette
-          clearable={false}
-          value={value}
-          onChange={(color) => changeAttribute(name, color)}
+      <div style={{marginTop: 10}}>
+        <ColorPicker
+          color={value}
+          onChangeComplete={(color) => changeAttribute(name, color.hex)}
+          disableAlpha={false}
         />
-      </VStack>
+      </div>
     </BaseControl>
-  )
-}
+  );
+};
 
 export default Color;
