@@ -171,7 +171,9 @@ export default function Edit(props) {
             <div className="wpmg-controls">
               <div className="swiper-pagination--wrapper">
                 <div className="swiper-pagination">
-                  <span className="swiper-pagination-bullet swiper-pagination-bullet-active"/>
+                  <span className="swiper-pagination-bullet swiper-pagination-bullet-active">
+                    {theme === 'pro/playlist' && photos[0]?.url?.split('/')?.pop()?.split('\\')?.pop()?.split('.')?.slice(0, -1)?.join('.')}
+                  </span>
                   {Array.from({length: photos.length - 1}).map(() => (
                     <span className="swiper-pagination-bullet"/>
                   ))}
@@ -192,15 +194,17 @@ export default function Edit(props) {
                 </div>
               </div>
 
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value="1"
-                className="wpmg-volume"
-                data-label="Volume"
-              />
+              <div className="wpmg-volume--wrapper">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.01"
+                  value="1"
+                  className="wpmg-volume"
+                  data-label="Volume"
+                />
+              </div>
               <div className="wpmg-btn--wrapper">
                 <button className="wpmg-btn wpmg-btn--small wpmg-prev" aria-label="Previous">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

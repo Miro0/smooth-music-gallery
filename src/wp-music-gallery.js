@@ -40,7 +40,7 @@ export const initWpMusicGallery = (container, index) => {
         <div class="swiper-pagination--wrapper">
           <div class="swiper-pagination"></div>
         </div>
-        
+      
         <div class="wpmg-music-meta">
           <div class="wpmg-music-title">${music?.title || music?.filename || music?.name || __('Select background music', 'wpmusicgallery')}</div>
         </div>
@@ -55,16 +55,18 @@ export const initWpMusicGallery = (container, index) => {
           </div>
         </div>
         
-        <input 
-          type="range" 
-          min="0" 
-          max="1" 
-          step="0.01" 
-          value="1" 
-          class="wpmg-volume"
-          aria-label="Volume"
-          title="Volume"
-        >
+        <div class="wpmg-volume--wrapper">
+          <input 
+            type="range" 
+            min="0" 
+            max="1" 
+            step="0.01" 
+            value="1" 
+            class="wpmg-volume"
+            aria-label="Volume"
+            title="Volume"
+          >
+        </div>
         <div class="wpmg-btn--wrapper">
           <button class="wpmg-btn wpmg-btn--small wpmg-prev" aria-label="Previous">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg>
@@ -162,10 +164,24 @@ export const initWpMusicGallery = (container, index) => {
               }
             });
           });
+
+          if (theme === 'pro/playlist') {
+            const pagination = container.querySelector('.swiper-pagination');
+            if (pagination) {
+              pagination.scrollTop = bullets[0].clientHeight * activeIndex;
+            }
+          }
         }
       }
     },
   });
+
+  if (theme === 'pro/playlist') {
+    const bullets = window.wpmg[index].swiper.pagination.bullets;
+    bullets.forEach((bullet, bulletIndex) => {
+      bullet.innerText = photos[bulletIndex].url.split('/').pop().split('\\').pop().split('.').slice(0, -1).join('.');
+    });
+  }
 
   const imgs = container.querySelectorAll('img[loading="lazy"]');
   let loadedCount = 0;
