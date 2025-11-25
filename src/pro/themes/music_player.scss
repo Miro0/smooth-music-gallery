@@ -1,15 +1,12 @@
 .wpmg-gallery.theme-music_player {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #0f0f11;
+  overflow: hidden;
   max-width: unset;
-
-  @media screen and (max-width: 768px) {
-    aspect-ratio: 9 / 16;
-  }
 
   .wpmg-bg-layer {
     position: absolute;
@@ -20,28 +17,41 @@
 
   .wpmg-overlay-layer {
     position: absolute;
-    inset: 0;
-    z-index: 4;
+    z-index: 10;
+    overflow: hidden;
     pointer-events: none;
-    border-radius: 4px;
+    border-radius: 20px;
+    top: 32px;
+    left: 32px;
+    width: calc(100% - 64px);
+    height: calc(100% - 234px);
   }
 
   .wpmg-content {
     position: relative;
     z-index: 5;
-    border-radius: 4px;
     overflow: hidden;
-    border: 12px solid #3e3e3e;
-    box-shadow:
-            0 0 20px rgba(0, 0, 0, 0.6),
-            0 0 40px rgba(0, 0, 0, 0.4) inset,
-            0 0 0 2px #bebebe
+    border-radius: 26px;
+
+    background: rgba(20, 20, 22, 0.7);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 32px;
   }
 
   .wpmg-image-container {
     width: 100%;
     height: 100%;
     position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4) inset;
+    aspect-ratio: 16 / 9;
+    max-height: calc(100% - 170px);
+
+    @media screen and (max-width: 768px) {
+      aspect-ratio: 9 / 16;
+    }
   }
 
   .swiper-wrapper {
@@ -54,129 +64,158 @@
     flex-shrink: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .swiper-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    border-radius: 16px;
+  }
+
+
+  .swiper-pagination--wrapper {
+    position: absolute;
+    bottom: 185px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: auto;
+    z-index: 10;
   }
 
   .swiper-pagination {
-    position: absolute;
-    bottom: 59px;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: #3e3e3e;
-    overflow: hidden;
-    opacity: 1 !important;
-    z-index: 20;
-
-    display: flex;
-    align-items: center;
+    display: flex !important;
+    gap: 6px;
   }
 
   .swiper-pagination-bullet {
-    flex: 1;
-    height: 100%;
-    background: transparent;
-    opacity: 1;
-    border-radius: 0;
-    margin: 0 !important;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transition: background 0.2s, transform 0.2s;
+    transform: scale(0.9);
 
     &:hover {
       cursor: pointer;
     }
   }
 
-  .swiper-pagination-bullet-active, .swiper-pagination-bullet-before-active {
-    background: #fff !important;
-    transition: background 0.2s linear;
+  .swiper-pagination-bullet-active {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1);
   }
 
   .wpmg-controls {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background: #2e2e2e;
-    box-shadow:
-            inset 0 2px 6px rgba(0, 0, 0, 0.45),
-            inset 0 -2px 4px rgba(255, 255, 255, 0.12),
-            0 2px 8px rgba(0, 0, 0, 0.25);
-    box-sizing: border-box;
-    padding: 14px 8px 10px;
     width: 100%;
-    height: 66px;
+    padding: 18px 20px 20px;
+    background: transparent;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
+    gap: 14px;
+    height: 170px;
+    box-sizing: border-box;
+  }
+
+  .wpmg-music-meta {
+    text-align: left;
+    width: 100%;
+  }
+
+  .wpmg-music-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.3px;
+  }
+
+  .wpmg-music-progress {
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .wpmg-music-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .wpmg-music-progress-fill {
+    width: 0;
+    height: 100%;
+    background: #ffffff;
+    transition: width 0.15s linear;
+  }
+
+  .wpmg-music-times {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 4px;
+    display: flex;
     justify-content: space-between;
-    gap: 12px;
-    z-index: 20;
   }
 
   .wpmg-btn--wrapper {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    height: 100%;
+    margin-top: 4px;
+    gap: 8px;
   }
 
   .wpmg-btn {
-    aspect-ratio: 1;
-    height: 100%;
-    border-radius: 4px;
-    border: none;
-    outline: none;
-
-    background: linear-gradient(#4a4a4a, #2e2e2e);
-    box-shadow:
-            0 2px 2px rgba(0,0,0,0.4),
-            inset 0 2px 3px rgba(255,255,255,0.15);
-    fill: #fff;
-
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: background 0.15s, transform 0.15s;
+    fill: #fff;
+
+    &.wpmg-fullscreen {
+      position: absolute;
+      bottom: 32px;
+      right: 32px;
+    }
+  }
+
+  .wpmg-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
     cursor: pointer;
+  }
 
-    transition: filter 0.2s, background 0.2s;
+  .wpmg-btn:active {
+    transform: scale(0.95);
+  }
 
-    &--small {
-      height: 80%;
-      border-radius: 3px;
-    }
-
-    &:hover {
-      filter: brightness(1.2);
-    }
-
-    &.is-loading::after {
-      border-color: rgba(255,255,255,0.25);
-      border-top-color: #fff;
-    }
+  .wpmg-btn--small, .wpmg-fullscreen {
+    width: 40px;
+    height: 40px;
   }
 
   .wpmg-volume {
     appearance: none;
-    width: 80px;
+    background: hsla(0, 0%, 100%, .5);
+    bottom: 50px;
     height: 4px;
-    margin-left: 12px;
-
-    background: rgba(255,255,255,0.25);
-    border-radius: 4px;
-
-    accent-color: #fff;
-    position: static;
-    transform: none;
+    left: 26px;
     outline: none;
+    position: absolute;
+    transform: rotate(-90deg);
+    width: 60px;
+    border-radius: 2px;
 
     &:hover {
       cursor: pointer;
@@ -211,21 +250,14 @@
       display: none;
     }
   }
+
   &.wpmg--fullscreen {
     .wpmg-icon--expand {
       display: none;
     }
+
     .wpmg-icon--collapse {
       display: block;
     }
-  }
-}
-
-@keyframes wpmg-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }

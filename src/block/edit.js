@@ -23,12 +23,14 @@ export default function Edit(props) {
 
   const {
     photos = [],
+    music = {},
     theme = 'default',
     size = 85,
     background_options = {},
   } = attributes;
 
   const {background_color = 'transparent'} = background_options;
+  const bgMargin = Math.floor((100 - size) / 4);
 
   const changeAttribute = (name, value) => {
     let newValuesToSet = {};
@@ -75,7 +77,12 @@ export default function Edit(props) {
               <OrbitalPulse {...props.attributes?.background_options} />
             }
           </div>
-          <div className="wpmg-content" style={{width: `${size}%`, height: `${size}%`}}>
+          <div className="wpmg-content" style={{
+            width: `${size}%`,
+            height: `${size}%`,
+            marginTop: `${bgMargin}%`,
+            marginBottom: `${bgMargin}%`,
+          }}>
             <div className="wpmg-overlay-layer">
               {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/audio_pulse' &&
                 <AudioPulse {...props.attributes?.overlay_options} />
@@ -146,12 +153,29 @@ export default function Edit(props) {
             </div>
 
             <div className="wpmg-controls">
-              <div className="swiper-pagination">
-                <span className="swiper-pagination-bullet swiper-pagination-bullet-active" />
-                {Array.from({length: photos.length - 1}).map(() => (
-                  <span className="swiper-pagination-bullet"/>
-                ))}
+              <div className="swiper-pagination--wrapper">
+                <div className="swiper-pagination">
+                  <span className="swiper-pagination-bullet swiper-pagination-bullet-active"/>
+                  {Array.from({length: photos.length - 1}).map(() => (
+                    <span className="swiper-pagination-bullet"/>
+                  ))}
+                </div>
               </div>
+
+              <div className="wpmg-music-meta">
+                <div className="wpmg-music-title">{music?.title || music?.filename || music?.name || ''}</div>
+              </div>
+
+              <div className="wpmg-music-progress">
+                <div className="wpmg-music-progress-bar">
+                  <div className="wpmg-music-progress-fill"></div>
+                </div>
+                <div className="wpmg-music-times">
+                  <span className="wpmg-music-time-current">0:00</span>
+                  <span className="wpmg-music-time-total">0:00</span>
+                </div>
+              </div>
+
               <input
                 type="range"
                 min="0"

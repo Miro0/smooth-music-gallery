@@ -10,10 +10,11 @@ export const initWpMusicGallery = (container, index) => {
 
   container.classList.add('visible-controls');
   container.classList.add(`theme-${theme.replace(/free\/|pro\//, '')}`);
+  const bgMargin = Math.floor((100 - size) / 4);
 
   container.innerHTML = `
     ${music?.url ? `<div class="wpmg-bg-layer" style="background:${background_color}"></div>` : ''}
-    <div class="wpmg-content" style="width:${size}%; height:${size}%;">
+    <div class="wpmg-content" style="width:${size}%; height:${size}%;margin-top:${bgMargin}%;margin-bottom:${bgMargin}%">
       ${music?.url ? `<div class="wpmg-overlay-layer"></div>` : ''}
       <div class="wpmg-image-container">
         <div class="swiper-wrapper">
@@ -38,6 +39,21 @@ export const initWpMusicGallery = (container, index) => {
         <div class="swiper-pagination--wrapper">
           <div class="swiper-pagination"></div>
         </div>
+        
+        <div class="wpmg-music-meta">
+          <div class="wpmg-music-title">${music?.title || music?.filename || music?.name || __('Select background music', 'wpmusicgallery')}</div>
+        </div>
+
+        <div class="wpmg-music-progress">
+          <div class="wpmg-music-progress-bar">
+            <div class="wpmg-music-progress-fill"></div>
+          </div>
+          <div class="wpmg-music-times">
+            <span class="wpmg-music-time-current">0:00</span>
+            <span class="wpmg-music-time-total">0:00</span>
+          </div>
+        </div>
+        
         <input 
           type="range" 
           min="0" 
@@ -163,6 +179,10 @@ function initControls(container, swiper, slides_duration, index) {
   const btnFullscreen = container.querySelector('.wpmg-fullscreen');
   const audio = container.querySelector('.wpmg-audio');
   const volumeSlider = container.querySelector('.wpmg-volume');
+  const bar = container.querySelector('.wpmg-music-progress-bar');
+  const fill = container.querySelector('.wpmg-music-progress-fill');
+  const current = container.querySelector('.wpmg-music-time-current');
+  const total = container.querySelector('.wpmg-music-time-total');
 
   if (audio && volumeSlider) {
     volumeSlider.value = 0.8;
@@ -171,6 +191,63 @@ function initControls(container, swiper, slides_duration, index) {
         window.wpmg[index].gain.gain.value = parseFloat(volumeSlider.value);
       }
     });
+  }
+
+  if (total) {
+    audio.addEventListener('loadedmetadata', () => {
+      total.textContent = format(audio.duration);
+    });
+  }
+
+  if (fill) {
+    audio.addEventListener('timeupdate', () => {
+      const p = (audio.currentTime / audio.duration) * 100;
+      fill.style.width = `${p}%`;
+      current.textContent = format(audio.currentTime);
+    });
+  }
+
+  if (bar) {
+    let isSeeking = false;
+
+    function updateSeek(e) {
+      const rect = bar.getBoundingClientRect();
+      const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width);
+      const pct = x / rect.width;
+
+      fill.style.width = `${pct * 100}%`;
+
+      if (audio.duration && isSeeking) {
+        const newTime = audio.duration * pct;
+        current.textContent = format(newTime);
+        audio.currentTime = newTime;
+      }
+    }
+
+    bar.addEventListener('pointerdown', (e) => {
+      isSeeking = true;
+      bar.setPointerCapture(e.pointerId);
+      updateSeek(e);
+    });
+
+    bar.addEventListener('pointermove', (e) => {
+      if (isSeeking) updateSeek(e);
+    });
+
+    bar.addEventListener('pointerup', (e) => {
+      isSeeking = false;
+      bar.releasePointerCapture(e.pointerId);
+    });
+
+    bar.addEventListener('pointerleave', () => {
+      isSeeking = false;
+    });
+  }
+
+  function format(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s < 10 ? '0' + s : s}`;
   }
 
   let playing = false;

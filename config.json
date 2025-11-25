@@ -3,8 +3,7 @@
     "free/default",
     "free/video_player",
     "pro/music_player",
-    "pro/playlist",
-    "pro/polaroid"
+    "pro/playlist"
   ],
   "backgrounds": [
     "free/ambient_glow",
