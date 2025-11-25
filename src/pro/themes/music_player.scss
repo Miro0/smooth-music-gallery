@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0f0f11;
   overflow: hidden;
   max-width: unset;
 
@@ -33,9 +32,9 @@
     overflow: hidden;
     border-radius: 26px;
 
-    background: rgba(20, 20, 22, 0.7);
+    background: var(--wpmg-theme-frame);
     backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--wpmg-theme-accent--opacity);
     padding: 32px;
   }
 
@@ -93,8 +92,9 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.35);
-    transition: background 0.2s, transform 0.2s;
+    background: var(--wpmg-theme-accent);
+    opacity: 0.35;
+    transition: opacity 0.2s, transform 0.2s;
     transform: scale(0.9);
 
     &:hover {
@@ -103,7 +103,7 @@
   }
 
   .swiper-pagination-bullet-active {
-    background: rgba(255, 255, 255, 1);
+    opacity: 1;
     transform: scale(1);
   }
 
@@ -127,7 +127,7 @@
   .wpmg-music-title {
     font-size: 20px;
     font-weight: 600;
-    color: white;
+    color: var(--wpmg-theme-accent);
     letter-spacing: 0.3px;
   }
 
@@ -139,7 +139,7 @@
   .wpmg-music-progress-bar {
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--wpmg-theme-accent--opacity-light);
     border-radius: 3px;
     overflow: hidden;
     position: relative;
@@ -149,13 +149,13 @@
   .wpmg-music-progress-fill {
     width: 0;
     height: 100%;
-    background: #ffffff;
+    background: var(--wpmg-theme-accent);
     transition: width 0.15s linear;
   }
 
   .wpmg-music-times {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--wpmg-theme-accent);
     margin-top: 4px;
     display: flex;
     justify-content: space-between;
@@ -176,13 +176,18 @@
     height: 55px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--wpmg-theme-accent--opacity);
     display: flex;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(8px);
     transition: background 0.15s, transform 0.15s;
-    fill: #fff;
+    fill: var(--wpmg-theme-accent);
+    outline: none;
+
+    &:focus, &:focus-within {
+      outline: 1px solid var(--wpmg-theme-accent);
+    }
 
     &.wpmg-fullscreen {
       position: absolute;
@@ -207,7 +212,7 @@
 
   .wpmg-volume {
     appearance: none;
-    background: hsla(0, 0%, 100%, .5);
+    background: var(--wpmg-theme-accent--opacity);
     bottom: 50px;
     height: 4px;
     left: 26px;
@@ -222,22 +227,20 @@
     }
   }
 
-  /* Chrome */
   .wpmg-volume::-webkit-slider-thumb {
     appearance: none;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ffffff;
+    background: var(--wpmg-theme-accent);
     cursor: pointer;
   }
 
-  /* Firefox */
   .wpmg-volume::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #ffffff;
+    background: var(--wpmg-theme-accent);
     cursor: pointer;
   }
 

@@ -1,4 +1,5 @@
 import {__} from '@wordpress/i18n';
+import {useEffect, useRef} from "@wordpress/element";
 import {useBlockProps, InspectorControls} from '@wordpress/block-editor';
 import EditSidebar from "./editor/edit-sidebar";
 
@@ -17,14 +18,18 @@ import Pixelate from "./editor/preview/overlays/Pixelate";
 import WaveLine from "./editor/preview/overlays/WaveLine";
 
 import config from '../../config.json';
+import {hexToRgb} from "./utils/style";
 
 export default function Edit(props) {
   const {attributes, setAttributes} = props;
+
+  const containerRef = useRef();
 
   const {
     photos = [],
     music = {},
     theme = 'default',
+    theme_options = {},
     size = 85,
     background_options = {},
   } = attributes;
@@ -48,6 +53,17 @@ export default function Edit(props) {
     setAttributes(newValuesToSet);
   };
 
+  useEffect(() => {
+    const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');
+    const themeFrameRGB = hexToRgb(theme_options?.frame_color ?? '#111111');
+
+    containerRef?.current?.style?.setProperty('--wpmg-theme-accent', theme_options?.accent ?? '#ffffff');
+    containerRef?.current?.style?.setProperty('--wpmg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
+    containerRef?.current?.style?.setProperty('--wpmg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
+    containerRef?.current?.style?.setProperty('--wpmg-theme-frame', theme_options?.frame_color ?? '#111111');
+    containerRef?.current?.style?.setProperty('--wpmg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
+  }, [theme_options]);
+
   return (
     <>
       <BlockContext.Provider value={{changeAttribute}}>
@@ -57,7 +73,7 @@ export default function Edit(props) {
       </BlockContext.Provider>
 
       <p {...useBlockProps()}>
-        <div className={`wpmg-gallery theme-${theme.replace(/free\/|pro\//, '')} visible-controls-on-hover`}>
+        <div className={`wpmg-gallery theme-${theme.replace(/free\/|pro\//, '')} visible-controls`} ref={containerRef}>
           <div
             className="wpmg-bg-layer"
             style={{

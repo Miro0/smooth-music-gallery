@@ -2,10 +2,11 @@ import Swiper from 'swiper';
 import {Pagination, Autoplay, Keyboard} from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import {hexToRgb} from "./block/utils/style";
 
 export const initWpMusicGallery = (container, index) => {
   const props = JSON.parse(container.dataset.props || '{}');
-  const {photos = [], music, theme = 'default', size = 85, slides_duration = 2, background_options} = props;
+  const {photos = [], music, theme = 'default', theme_options = {}, size = 85, slides_duration = 2, background_options} = props;
   const {background_color = 'transparent'} = background_options;
 
   container.classList.add('visible-controls');
@@ -81,9 +82,18 @@ export const initWpMusicGallery = (container, index) => {
         </button>
       </div>
     </div>
-    ${theme === 'free/video_player' ? `<style>.wpmg-gallery.theme-video_player.is-playing .swiper-pagination-bullet-active::after {transition: transform linear ${slides_duration}s;}</style>` : ''}
     ${music?.url ? `<audio class="wpmg-audio" preload="auto" loop src="${music.url}"></audio>` : ''}
   `;
+
+  const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');
+  const themeFrameRGB = hexToRgb(theme_options?.frame_color ?? '#111111');
+
+  container.style.setProperty('--wpmg-slides-duration', slides_duration);
+  container.style.setProperty('--wpmg-theme-accent', theme_options?.accent ?? '#ffffff');
+  container.style.setProperty('--wpmg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
+  container.style.setProperty('--wpmg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
+  container.style.setProperty('--wpmg-theme-frame', theme_options?.frame_color ?? '#111111');
+  container.style.setProperty('--wpmg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
 
   if (!window.wpmg) {
     window.wpmg = [];

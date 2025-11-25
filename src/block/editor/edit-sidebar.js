@@ -65,6 +65,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
     photos,
     music,
     theme = 'default',
+    theme_options = {},
     size,
     slides_duration,
     background,
@@ -111,6 +112,18 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           label={__('Theme', 'wpmusicgallery')}
           help={__('Select general gallery theme', 'wpmusicgallery')}
           placeholder={__('[Free] Default', 'wpmusicgallery')}
+        />
+
+        <Color
+          name="theme_options.accent"
+          value={theme_options?.accent ?? '#ffffff'}
+          label={__('Accent color', 'wpmusicgallery')}
+        />
+
+        <Color
+          name="theme_options.frame_color"
+          value={theme_options?.frame_color ?? '#111111'}
+          label={__('Frame color', 'wpmusicgallery')}
         />
 
         <hr/>

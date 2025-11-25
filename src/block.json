@@ -17,6 +17,9 @@
 			"type": "string",
 			"default": "default"
 		},
+		"theme_options": {
+			"type": "object"
+		},
 		"size": {
 			"type": "number"
 		},
