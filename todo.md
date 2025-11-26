@@ -5,7 +5,7 @@
 - [x] Dodać także możliwość zmiany głośności audio.
 - [x] Dodać pozostałe motywy.
 - [x] Może jakiś stop animacji jeśli jest offscreen i start jak wraca z powrotem?
-- [ ] Dodać ten builder shortcode - dopracować obsługę działania aktualizowania propsów / aktualizacji podglądu / dodać zapisywanie stanu do session storage / shortcode ze skróconymi media items / resolve po stronie render_callback.
+- [x] Dodać ten builder shortcode - dopracować obsługę działania aktualizowania propsów / aktualizacji podglądu / dodać zapisywanie stanu do session storage / shortcode ze skróconymi media items / resolve po stronie render_callback.
 - [ ] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
 - [ ] Dodać przycisk "Unlock more features", który otworzy modal z możliwością zakupu PRO assetów.
 - [ ] Listować tylko assety FREE i do których ma się dostęp.
