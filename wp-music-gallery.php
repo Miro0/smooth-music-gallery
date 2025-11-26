@@ -7,7 +7,7 @@
  * Author:              Beed Vision
  * Author URI:          https://beedvision.pl
  * License:             GPL v2 or later
- * Text Domain:         wpmusicgallery
+ * Text Domain:         wp-music-gallery
  *
  * Version:             1.0.0
  */
@@ -24,9 +24,24 @@ register_block_type(
 );
 
 function wp_music_gallery_block_render( $attributes ) {
-    $theme                = $attributes['theme'] ?? 'default';
+    $theme                = $attributes['theme'] ?? 'free/default';
     $overlay_animation    = $attributes['overlay'] ?? '';
     $background_animation = $attributes['background'] ?? '';
+
+    if ( count( $attributes['photos'] ) > 0 ) {
+        foreach ( $attributes['photos'] as $photo_key => $photo ) {
+            $attributes['photos'][ $photo_key ] = [
+                    'url' => $photo['url'] ?? wp_get_attachment_image_url( $photo['id'], 'full' ),
+            ];
+        }
+    }
+
+    if ( ! empty( $attributes['music'] ) ) {
+        $attributes['music'] = [
+                'title' => $attributes['music']['title'] ?? get_the_title( $attributes['music']['id'] ),
+                'url'   => $attributes['music']['url'] ?? wp_get_attachment_url( $attributes['music']['id'] ),
+        ];
+    }
 
     // @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
     $plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
@@ -55,7 +70,6 @@ function wp_music_gallery_block_render( $attributes ) {
                 '1.0.0'
         );
     }
-
 
     return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }
@@ -168,22 +182,59 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
     );
 } );
 
-add_shortcode( 'wp_music_gallery', function ( $attributes ) {
+add_shortcode( 'wp-music-gallery', function ( $attributes ) {
+    wp_enqueue_script(
+            'wpmg-view',
+            plugin_dir_url(__FILE__) . 'build/view.js',
+            [],
+            '1.0.0',
+            true
+    );
+
     $attributes = shortcode_atts(
             [
-                    'photos'             => [],
-                    'music'              => [],
-                    'theme'              => 'default',
-                    'size'               => 90,
+                    'photos'             => '',
+                    'music'              => '',
+                    'theme'              => 'free/default',
+                    'theme_options'      => '',
+                    'size'               => 85,
                     'slides_duration'    => 2,
                     'background'         => '',
-                    'background_options' => [],
+                    'background_options' => '',
                     'overlay'            => '',
                     'overlay_options'    => '',
             ],
             $attributes,
             'wp_music_gallery'
     );
+
+    if ( ! empty( $attributes['photos'] ) ) {
+        $photo_ids        = explode( ',', $attributes['photos'] );
+        $formatted_photos = [];
+        foreach ( $photo_ids as $photo_id ) {
+            $formatted_photos[] = [
+                    'id' => $photo_id,
+            ];
+        }
+        $attributes['photos'] = $formatted_photos;
+    }
+
+    if ( ! empty( $attributes['music'] ) ) {
+        $attributes['music'] = [ 'id' => $attributes['music'] ];
+    }
+
+    if ( ! empty( $attributes['theme_options'] ) ) {
+        $attributes['theme_options'] = json_decode( $attributes['theme_options'], true );
+    }
+
+    if ( ! empty( $attributes['background_options'] ) ) {
+        $attributes['background_options'] = json_decode( $attributes['background_options'], true );
+    }
+
+    if ( ! empty( $attributes['overlay_options'] ) ) {
+        $attributes['overlay_options'] = json_decode( $attributes['overlay_options'], true );
+    }
+
 
     return wp_music_gallery_block_render( $attributes );
 } );

@@ -73,23 +73,23 @@ export default function Edit(props) {
       </BlockContext.Provider>
 
       <p {...useBlockProps()}>
-        <div className={`wpmg-gallery theme-${theme.replace(/free\/|pro\//, '')} visible-controls`} ref={containerRef}>
+        <div className={`wpmg-gallery theme-${theme?.replace(/free\/|pro\//, '')} visible-controls`} ref={containerRef}>
           <div
             className="wpmg-bg-layer"
             style={{
               background: background_color,
             }}
           >
-            {props.attributes?.music?.filename && props.attributes?.background === 'free/ambient_glow' &&
+            {props.attributes?.background === 'free/ambient_glow' &&
               <AmbientGlow {...props.attributes?.background_options} />
             }
-            {props.attributes?.music?.filename && props.attributes?.background === 'pro/blurred_photos' &&
+            {props.attributes?.background === 'pro/blurred_photos' &&
               <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]}/>
             }
-            {props.attributes?.music?.filename && props.attributes?.background === 'pro/dust_particles' &&
+            {props.attributes?.background === 'pro/dust_particles' &&
               <DustParticles {...props.attributes?.background_options}/>
             }
-            {props.attributes?.music?.filename && props.attributes?.background === 'free/orbital_pulse' &&
+            {props.attributes?.background === 'free/orbital_pulse' &&
               <OrbitalPulse {...props.attributes?.background_options} />
             }
           </div>
@@ -100,22 +100,22 @@ export default function Edit(props) {
             marginBottom: `${bgMargin}%`,
           }}>
             <div className="wpmg-overlay-layer">
-              {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/audio_pulse' &&
+              {props.attributes?.overlay === 'pro/audio_pulse' &&
                 <AudioPulse {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.music?.filename && props.attributes?.overlay === 'free/equalizer_bars' &&
+              {props.attributes?.overlay === 'free/equalizer_bars' &&
                 <EqualizerBars {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/heartbeat_line' &&
+              {props.attributes?.overlay === 'pro/heartbeat_line' &&
                 <HeartbeatLine {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.music?.filename && props.attributes?.overlay === 'free/wave_line' &&
+              {props.attributes?.overlay === 'free/wave_line' &&
                 <WaveLine {...props.attributes?.overlay_options} />
               }
             </div>
             <div className="wpmg-image-container swiper">
               <div className="swiper-wrapper">
-                {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/color_blend' &&
+                {props.attributes?.overlay === 'pro/color_blend' &&
                   <ColorBlend {...props.attributes?.overlay_options} />
                 }
                 <div className="swiper-slide">
@@ -128,7 +128,7 @@ export default function Edit(props) {
                         decoding="async"
                         style={{objectFit: 'cover', width: '100%', height: '100%'}}
                       />
-                      {props.attributes?.music?.filename && props.attributes?.overlay === 'pro/pixelate' &&
+                      {props.attributes?.overlay === 'pro/pixelate' &&
                         <Pixelate {...props.attributes?.overlay_options} photo={photos[0]}/>
                       }
                     </>
@@ -162,7 +162,7 @@ export default function Edit(props) {
                           d="M20 5v14H4V5h16m0-2H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-7.5 10.5l-2.5 3l-1.5-2l-2.5 3h12l-3.5-4.5l-2.5 3Z"
                         />
                       </svg>
-                      <div>{__('No images added to gallery', 'wpmusicgallery')}</div>
+                      <div>{__('No images added to gallery', 'wp-music-gallery')}</div>
                     </div>
                   )}
                 </div>

@@ -16,7 +16,7 @@ const MediaUpload = (
 
   const openMedia = () => {
     const frame = wp.media({
-      title: __('Select media', 'wpmusicgallery'),
+      title: __('Select media', 'wp-music-gallery'),
       multiple: multiple,
       library: {type: allowedTypes},
     });
@@ -47,11 +47,11 @@ const MediaUpload = (
   const renderLabel = () => {
     if (multiple) {
       return value?.length
-        ? `${value.length} ${__('selected', 'wpmusicgallery')}`
-        : __('Select', 'wpmusicgallery');
+        ? `${value.length} ${__('selected', 'wp-music-gallery')}`
+        : __('Select', 'wp-music-gallery');
     }
 
-    return value?.filename ? value.filename : __('Select', 'wpmusicgallery');
+    return value?.filename ? value.filename : __('Select', 'wp-music-gallery');
   };
 
   const hasValue = multiple
@@ -71,7 +71,7 @@ const MediaUpload = (
             variant="secondary"
             isDestructive
           >
-            {__('Clear', 'wpmusicgallery')}
+            {__('Clear', 'wp-music-gallery')}
           </Button>
         )}
       </div>

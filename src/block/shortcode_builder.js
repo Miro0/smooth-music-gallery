@@ -1,5 +1,5 @@
 import {__} from '@wordpress/i18n';
-import {useState, useMemo} from '@wordpress/element';
+import {useState, useMemo, useRef, useEffect} from '@wordpress/element';
 import {
   TextareaControl,
   Button,
@@ -16,24 +16,48 @@ import config from "../../config.json";
 import './shortcode_builder.scss';
 
 function createShortcode(attributes) {
-  const parts = ['[wp-music-gallery'];
+  try {
+    if (attributes) {
+      const parts = ['[wp-music-gallery'];
 
-  Object.entries(attributes).forEach(([key, value]) => {
-    parts.push(`${key}="${value}"`);
-  })
+      Object.entries(attributes).forEach(([key, value]) => {
+        if (value !== '') {
+          if (key === 'photos') {
+            if (value?.length > 0) {
+              parts.push(`${key}='${value.map((item => item.id)).join(',')}'`);
+            }
+          } else if (key === 'music') {
+            if (value?.id) {
+              parts.push(`${key}='${value.id}'`);
+            }
+          } else if (typeof value === 'object') {
+            if (Object.keys(value).length > 0) {
+              parts.push(`${key}='${JSON.stringify(value)}'`);
+            }
+          } else {
+            parts.push(`${key}='${value}'`);
+          }
+        }
+      });
 
-  parts.push(']');
+      parts.push(']');
 
-  return parts.join(' ');
+      return parts.join(' ');
+    }
+  } catch (e) {
+    // Just omit creating shortcode and debug attributes.
+  }
+
+  return '';
 }
 
 const App = () => {
   const [attributes, setAttributes] = useState({
-    anchor: 'shortcode',
-    id: 'shortcode',
     photos: [],
     music: {},
-    theme: 'default',
+    slides_duration: 2,
+    size: 85,
+    theme: 'free/default',
     theme_options: {},
     overlay: '',
     overlay_options: {},
@@ -41,8 +65,25 @@ const App = () => {
     background_options: {},
   });
   const [copyState, setCopyState] = useState(null);
+  const [mounted, setMounted] = useState(false);
+  const textareaRef = useRef();
 
   const shortcode = useMemo(() => createShortcode(attributes), [attributes]);
+
+  useEffect(() => {
+    setMounted(true);
+
+    const storageCache = localStorage.getItem('wpmg-shortcode-builder');
+    if (storageCache) {
+      setAttributes(JSON.parse(storageCache));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('wpmg-shortcode-builder', JSON.stringify(attributes));
+    }
+  }, [attributes]);
 
   const onCopy = async () => {
     try {
@@ -50,13 +91,23 @@ const App = () => {
       setCopyState('success');
       setTimeout(() => setCopyState(null), 2000);
     } catch (e) {
-      setCopyState('error');
-      setTimeout(() => setCopyState(null), 3000);
+      try {
+        textareaRef.current.select();
+        document.execCommand('copy');
+        requestAnimationFrame(() => {
+          window.getSelection().removeAllRanges();
+        });
+        setCopyState('success');
+        setTimeout(() => setCopyState(null), 2000);
+      } catch (e) {
+        setCopyState('error');
+        setTimeout(() => setCopyState(null), 3000);
+      }
     }
   };
 
   const changeAttribute = (name, value) => {
-    let newValuesToSet = {...attributes};
+    let newValuesToSet = {};
     if (name.includes('.')) {
       let [parent, child] = name.split('.');
 
@@ -68,14 +119,17 @@ const App = () => {
       newValuesToSet = {[name]: value};
     }
 
-    setAttributes(newValuesToSet);
+    setAttributes({
+      ...attributes,
+      ...newValuesToSet
+    });
   };
 
   return (
     <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
       <Card>
         <CardHeader>
-          <strong>{__('Shortcode Builder', 'wpmusicgallery')}</strong>
+          <strong>{__('Shortcode Builder', 'wp-music-gallery')}</strong>
         </CardHeader>
         <CardBody>
           <div style={{display: 'flex', flexDirection: 'row', gap: 2}}>
@@ -91,28 +145,50 @@ const App = () => {
               </BlockContext.Provider>
             </div>
           </div>
+
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setAttributes({
+                photos: [],
+                music: {},
+                slides_duration: 2,
+                size: 85,
+                theme: 'free/default',
+                theme_options: {},
+                overlay: '',
+                overlay_options: {},
+                background: '',
+                background_options: {},
+              });
+            }}
+          >
+            {__('Clear gallery', 'wp-music-gallery')}
+          </Button>
         </CardBody>
       </Card>
 
       <Card>
         <CardHeader>
-          <strong>{__('Shortcode', 'wpmusicgallery')}</strong>
-          <small>{__('Copy and paste generated shortcode whereever You want to use it', 'wpmusicgallery')}</small>
+          <strong>{__('Shortcode', 'wp-music-gallery')}</strong>
+          <small>{__('Copy and paste generated shortcode whereever You want to use it', 'wp-music-gallery')}</small>
         </CardHeader>
         <CardBody>
           <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
             <TextareaControl
-              label={__('Shortcode', 'wpmusicgallery')}
+              ref={textareaRef}
+              label={__('Shortcode', 'wp-music-gallery')}
               value={shortcode}
               readOnly
               rows={4}
+              __nextHasNoMarginBottom
             />
 
             <Button
               variant="secondary"
               onClick={onCopy}
             >
-              {__('Kopiuj do schowka', 'wpmusicgallery')}
+              {__('Copy to clipboard', 'wp-music-gallery')}
             </Button>
 
             {copyState === 'success' && (
@@ -120,7 +196,7 @@ const App = () => {
                 status="success"
                 isDismissible={false}
               >
-                {__('Skopiowano shortcode.', 'wpmusicgallery')}
+                {__('Shortcode copied', 'wp-music-gallery')}
               </Notice>
             )}
 
@@ -129,7 +205,7 @@ const App = () => {
                 status="error"
                 isDismissible={false}
               >
-                {__('Nie udało się skopiować shortcode (brak dostępu do schowka).', 'wpmusicgallery')}
+                {__('Couldn\'t proceed with copy', 'wp-music-gallery')}
               </Notice>
             )}
           </div>

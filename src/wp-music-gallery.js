@@ -42,7 +42,7 @@ export const initWpMusicGallery = (container, index) => {
         </div>
       
         <div class="wpmg-music-meta">
-          <div class="wpmg-music-title">${music?.title || music?.filename || music?.name || __('Select background music', 'wpmusicgallery')}</div>
+          <div class="wpmg-music-title">${music?.title || music?.filename || music?.name || __('Select background music', 'wp-music-gallery')}</div>
         </div>
 
         <div class="wpmg-music-progress">
