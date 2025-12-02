@@ -6,6 +6,7 @@
 - [x] Dodać pozostałe motywy.
 - [x] Może jakiś stop animacji jeśli jest offscreen i start jak wraca z powrotem?
 - [x] Dodać ten builder shortcode - dopracować obsługę działania aktualizowania propsów / aktualizacji podglądu / dodać zapisywanie stanu do session storage / shortcode ze skróconymi media items / resolve po stronie render_callback.
+- [ ] Podmienić ładowanie assetów przez Protected CDN - sprawdzić w ogóle ten flow, bo motywy to się chyba wszystkie ładują przez Edytor.
 - [ ] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
 - [ ] Dodać przycisk "Unlock more features", który otworzy modal z możliwością zakupu PRO assetów.
 - [ ] Listować tylko assety FREE i do których ma się dostęp.

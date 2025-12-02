@@ -74,7 +74,7 @@ function wp_music_gallery_block_render( $attributes ) {
     return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }
 
-add_action( 'init', function () {
+add_action( 'admin_init', function () {
     // @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
     $cdn        = get_option( 'wpmg_use_cdn' ) === 'yes';
     $plugin_url = plugin_dir_url( __FILE__ );
