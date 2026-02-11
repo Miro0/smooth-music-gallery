@@ -1,5 +1,5 @@
-import {createAnimationStyle} from "../../block/utils/style";
-import {initAudioSource} from "../../block/utils/audio";
+import {createAnimationStyle} from "../block/utils/style";
+import {initAudioSource} from "../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));

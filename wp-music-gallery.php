@@ -49,6 +49,8 @@ function wp_music_gallery_block_render( $attributes ) {
     wp_enqueue_style(
             "wpmg-theme-$theme",
             $plugin_url . "build/$theme.css",
+//            'http://localhost:3000/cdn/admin-test/wp-music-gallery/latest/pro/audio_pulse.js',
+//            'http://localhost:3000/cdn/admin-test/wp-music-gallery/latest/pro/blurred_photos.js',
             [],
             '1.0.0'
     );

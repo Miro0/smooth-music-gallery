@@ -1,0 +1,20 @@
+{
+  "project": "WP Music Gallery",
+  "projectSlug": "wp-music-gallery",
+  "version": "1.0.0",
+  "blockBots": false,
+  "blockHeadless": false,
+  "sources": [
+    "./build/core/*.js",
+    "./build/background/*.js",
+    "./build/overlay/*.js",
+    "./build/theme/*.css"
+  ],
+  "excludes": [
+    "./build/theme/*-rtl.css"
+  ],
+  "protected": [],
+  "userSlug": "smoothcdn",
+  "plan": 3,
+  "projectId": "a72f0f39-85c6-40bd-b077-4c4b59db27ea"
+}

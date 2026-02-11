@@ -1,4 +1,4 @@
-import { initAudioSource } from "../../block/utils/audio";
+import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document

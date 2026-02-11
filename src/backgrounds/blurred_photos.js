@@ -1,5 +1,5 @@
 import Swiper from 'swiper';
-import {createAnimationStyle} from "../../block/utils/style";
+import {createAnimationStyle} from "../block/utils/style";
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
