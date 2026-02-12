@@ -20,10 +20,10 @@
     overflow: hidden;
     pointer-events: none;
     border-radius: 20px;
-    top: 32px;
-    left: 32px;
-    width: calc(100% - 64px);
-    height: calc(100% - 234px);
+    top: 12px;
+    left: 12px;
+    width: calc(100% - 24px);
+    height: calc(100% - 193px);
   }
 
   .wpmg-content {
@@ -35,7 +35,7 @@
     background: var(--wpmg-theme-frame);
     backdrop-filter: blur(14px);
     border: 1px solid var(--wpmg-theme-accent--opacity);
-    padding: 32px;
+    padding: 12px;
   }
 
   .wpmg-image-container {
@@ -45,9 +45,9 @@
     overflow: hidden;
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.4) inset;
-    aspect-ratio: 16 / 9;
     max-height: calc(100% - 170px);
     box-sizing: border-box;
+    aspect-ratio: 16 / 9;
 
     @media screen and (max-width: 768px) {
       aspect-ratio: 9 / 16;
@@ -76,7 +76,7 @@
 
   .swiper-pagination--wrapper {
     position: absolute;
-    bottom: 183px;
+    bottom: 164px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -196,7 +196,7 @@
 
     &.wpmg-fullscreen {
       position: absolute;
-      bottom: 32px;
+      bottom: 24px;
       right: 32px;
     }
   }
@@ -217,7 +217,7 @@
 
   .wpmg-volume--wrapper {
     bottom: 50px;
-    left: 26px;
+    left: 6px;
     transform: rotate(-90deg);
     width: 60px;
     position: absolute;

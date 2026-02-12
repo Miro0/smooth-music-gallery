@@ -6,11 +6,9 @@
 - [x] Dodać pozostałe motywy.
 - [x] Może jakiś stop animacji jeśli jest offscreen i start jak wraca z powrotem?
 - [x] Dodać ten builder shortcode - dopracować obsługę działania aktualizowania propsów / aktualizacji podglądu / dodać zapisywanie stanu do session storage / shortcode ze skróconymi media items / resolve po stronie render_callback.
-- [ ] Podmienić ładowanie assetów przez Protected CDN - sprawdzić w ogóle ten flow, bo motywy to się chyba wszystkie ładują przez Edytor.
+- [ ] Podmienić ładowanie assetów przez Smooth CDN - sprawdzić w ogóle ten flow, bo motywy to się chyba wszystkie ładują przez Edytor.
 - [ ] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
-- [ ] Dodać przycisk "Unlock more features", który otworzy modal z możliwością zakupu PRO assetów.
-- [ ] Listować tylko assety FREE i do których ma się dostęp.
-- [ ] Serowować assety przez protected CDN.
+- [ ] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth CDN" oraz "Pokaz przycisk w top toolbar"
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
 
 
@@ -21,3 +19,4 @@
 - [x] Restart muzyki kiedy się kończy
 - [x] Mobile swiper nie pokazujej obrazków na cały ekran, ale utrzymuje ratio
 - [ ] Przesunięcie slideów o pixel z powodu ułamkowych wielkości szerokości - występuje nadal w video player / music player motywach.
+- [ ] Widoki mobilne są bardzo słabe - trzeba może te volumy pozamieniać w przyciski toggle - to powinno trochę pomóc

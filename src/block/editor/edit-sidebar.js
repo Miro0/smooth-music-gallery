@@ -130,7 +130,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           value={size ?? 85}
           label={__('Size', 'wp-music-gallery')}
           help={__('How much space gallery takes and leaves space for background', 'wp-music-gallery')}
-          min={50}
+          min={60}
           max={90}
           step={1}
         />

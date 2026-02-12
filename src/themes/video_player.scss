@@ -36,17 +36,17 @@
       0 0 20px rgba(0, 0, 0, 0.6),
       0 0 40px rgba(0, 0, 0, 0.4) inset,
       0 0 0 2px var(--wpmg-theme-accent);
-    aspect-ratio: 16 / 9;
-
-    @media screen and (max-width: 768px) {
-      aspect-ratio: 9 / 16;
-    }
   }
 
   .wpmg-image-container {
     width: 100%;
     height: 100%;
     position: relative;
+    aspect-ratio: 16 / 9;
+
+    @media screen and (max-width: 768px) {
+      aspect-ratio: 9 / 16;
+    }
   }
 
   .swiper-wrapper {
