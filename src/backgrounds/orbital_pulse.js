@@ -29,7 +29,7 @@ const attachBackgroundAnimation = (container, index) => {
       speed = 0.2,
     } = background_options;
 
-    if (background !== "free/orbital_pulse") return;
+    if (background !== "orbital_pulse") return;
 
     const audio = container.querySelector(".wpmg-audio");
     const backgroundLayer = container.querySelector(".wpmg-bg-layer");

@@ -19,7 +19,7 @@ const attachBackgroundAnimation = (container, index) => {
     const {background, background_options = {}, photos = []} = props;
     const {blur = 10, zoom = 1.2, opacity = 0.5} = background_options;
 
-    if (background === 'pro/blurred_photos') {
+    if (background === 'blurred_photos') {
       const backgroundLayer = container.querySelector('.wpmg-bg-layer');
 
       if (backgroundLayer) {

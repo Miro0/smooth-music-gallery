@@ -27,7 +27,7 @@ const attachBackgroundAnimation = (container, index) => {
       max_size = 16,
     } = background_options;
 
-    if (background !== "pro/dust_particles") return;
+    if (background !== "dust_particles") return;
 
     const audio = container.querySelector(".wpmg-audio");
     const layer = container.querySelector(".wpmg-bg-layer");

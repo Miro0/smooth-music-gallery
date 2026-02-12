@@ -80,16 +80,16 @@ export default function Edit(props) {
               background: background_color,
             }}
           >
-            {props.attributes?.background === 'free/ambient_glow' &&
+            {props.attributes?.background === 'ambient_glow' &&
               <AmbientGlow {...props.attributes?.background_options} />
             }
-            {props.attributes?.background === 'pro/blurred_photos' &&
+            {props.attributes?.background === 'blurred_photos' &&
               <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]}/>
             }
-            {props.attributes?.background === 'pro/dust_particles' &&
+            {props.attributes?.background === 'dust_particles' &&
               <DustParticles {...props.attributes?.background_options}/>
             }
-            {props.attributes?.background === 'free/orbital_pulse' &&
+            {props.attributes?.background === 'orbital_pulse' &&
               <OrbitalPulse {...props.attributes?.background_options} />
             }
           </div>
@@ -100,22 +100,22 @@ export default function Edit(props) {
             marginBottom: `${bgMargin}%`,
           }}>
             <div className="wpmg-overlay-layer">
-              {props.attributes?.overlay === 'pro/audio_pulse' &&
+              {props.attributes?.overlay === 'audio_pulse' &&
                 <AudioPulse {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.overlay === 'free/equalizer_bars' &&
+              {props.attributes?.overlay === 'equalizer_bars' &&
                 <EqualizerBars {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.overlay === 'pro/heartbeat_line' &&
+              {props.attributes?.overlay === 'heartbeat_line' &&
                 <HeartbeatLine {...props.attributes?.overlay_options} />
               }
-              {props.attributes?.overlay === 'free/wave_line' &&
+              {props.attributes?.overlay === 'wave_line' &&
                 <WaveLine {...props.attributes?.overlay_options} />
               }
             </div>
             <div className="wpmg-image-container swiper">
               <div className="swiper-wrapper">
-                {props.attributes?.overlay === 'pro/color_blend' &&
+                {props.attributes?.overlay === 'color_blend' &&
                   <ColorBlend {...props.attributes?.overlay_options} />
                 }
                 <div className="swiper-slide">
@@ -128,7 +128,7 @@ export default function Edit(props) {
                         decoding="async"
                         style={{objectFit: 'cover', width: '100%', height: '100%'}}
                       />
-                      {props.attributes?.overlay === 'pro/pixelate' &&
+                      {props.attributes?.overlay === 'pixelate' &&
                         <Pixelate {...props.attributes?.overlay_options} photo={photos[0]}/>
                       }
                     </>
@@ -173,7 +173,7 @@ export default function Edit(props) {
               <div className="swiper-pagination--wrapper">
                 <div className="swiper-pagination">
                   <span className="swiper-pagination-bullet swiper-pagination-bullet-active">
-                    {theme === 'pro/playlist' && photos[0]?.url?.split('/')?.pop()?.split('\\')?.pop()?.split('.')?.slice(0, -1)?.join('.')}
+                    {theme === 'playlist' && photos[0]?.url?.split('/')?.pop()?.split('\\')?.pop()?.split('.')?.slice(0, -1)?.join('.')}
                   </span>
                   {Array.from({length: photos.length - 1}).map(() => (
                     <span className="swiper-pagination-bullet"/>

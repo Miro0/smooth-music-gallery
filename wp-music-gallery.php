@@ -16,6 +16,8 @@ namespace BeedVision\WPMusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
+const WP_MUSIC_GALLERY_VERSION = '1.0.0';
+
 register_block_type(
         __DIR__ . '/build'
         , [
@@ -24,7 +26,7 @@ register_block_type(
 );
 
 function wp_music_gallery_block_render( $attributes ) {
-    $theme                = $attributes['theme'] ?? 'free/default';
+    $theme                = $attributes['theme'] ?? 'default';
     $overlay_animation    = $attributes['overlay'] ?? '';
     $background_animation = $attributes['background'] ?? '';
 
@@ -43,22 +45,24 @@ function wp_music_gallery_block_render( $attributes ) {
         ];
     }
 
-    // @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
-    $plugin_url = plugin_dir_url( __FILE__ ); // OR $plugin_url = 'https://cdn.moj-serwis.com/...';
+    $serve_via_cdn = false; // @TODO
+    if ($serve_via_cdn) {
+        $plugin_url = ( 'https://wp-music-gallery.smoothcdn.com/' . WP_MUSIC_GALLERY_VERSION . '/' );
+    } else {
+        $plugin_url = ( plugin_dir_url( __FILE__ ) . 'build/' );
+    }
 
     wp_enqueue_style(
-            "wpmg-theme-$theme",
-            $plugin_url . "build/$theme.css",
-//            'http://localhost:3000/cdn/admin-test/wp-music-gallery/latest/pro/audio_pulse.js',
-//            'http://localhost:3000/cdn/admin-test/wp-music-gallery/latest/pro/blurred_photos.js',
-            [],
-            '1.0.0'
+        "wpmg-theme-$theme",
+        $plugin_url . "theme/$theme.css",
+        [],
+        '1.0.0'
     );
 
     if ( $overlay_animation ) {
         wp_enqueue_script(
                 "wpmg-overlay-animation-script-$overlay_animation",
-                $plugin_url . "build/$overlay_animation.js",
+                $plugin_url . "overlay/$overlay_animation.js",
                 [],
                 '1.0.0'
         );
@@ -67,7 +71,7 @@ function wp_music_gallery_block_render( $attributes ) {
     if ( $background_animation ) {
         wp_enqueue_script(
                 "wpmg-overlay-animation-script-$background_animation",
-                $plugin_url . "build/$background_animation.js",
+                $plugin_url . "background/$background_animation.js",
                 [],
                 '1.0.0'
         );
@@ -77,26 +81,27 @@ function wp_music_gallery_block_render( $attributes ) {
 }
 
 add_action( 'admin_init', function () {
-    // @TODO Front assets should be served via Protected CDN. They should come from local when there's DEV flag only.
-    $cdn        = get_option( 'wpmg_use_cdn' ) === 'yes';
-    $plugin_url = plugin_dir_url( __FILE__ );
-    $cdn_base   = 'https://cdn.twojcdn.com/wpmg/';
-    $base       = $cdn ? $cdn_base : $plugin_url . 'build/';
+    $serve_via_cdn = false; // @TODO
+    if ($serve_via_cdn) {
+        $plugin_url = ( 'https://wp-music-gallery.smoothcdn.com/' . WP_MUSIC_GALLERY_VERSION . '/' );
+    } else {
+        $plugin_url = ( plugin_dir_url( __FILE__ ) . 'build/' );
+    }
 
     $config = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
 
     foreach ( $config['themes'] as $theme ) {
-        wp_register_style( "wpmg-theme-$theme", $base . "$theme.css", [], '1.0.0' );
+        wp_register_style( "wpmg-theme-$theme", $plugin_url . "theme/$theme.css", [], '1.0.0' );
     }
 
     wp_register_style(
-            'wpmg-editor',
-            false,
-            array_merge(
-                    array_map( function ( $t ) {
-                        return "wpmg-theme-$t";
-                    }, $config['themes'] ),
-            )
+        'wpmg-editor',
+        false,
+        array_merge(
+                array_map( function ( $t ) {
+                    return "wpmg-theme-$t";
+                }, $config['themes'] ),
+        )
     );
 } );
 
@@ -135,7 +140,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
     $base   = plugin_dir_url( __FILE__ ) . 'build/';
     $config = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
     foreach ( $config['themes'] as $theme ) {
-        wp_enqueue_style( "wpmg-theme-$theme", $base . "$theme.css", [], '1.0.0' );
+        wp_enqueue_style( "wpmg-theme-$theme", $base . "theme/$theme.css", [], '1.0.0' );
     }
     wp_enqueue_style(
             'wpmg-editor',
@@ -197,7 +202,7 @@ add_shortcode( 'wp-music-gallery', function ( $attributes ) {
             [
                     'photos'             => '',
                     'music'              => '',
-                    'theme'              => 'free/default',
+                    'theme'              => 'default',
                     'theme_options'      => '',
                     'size'               => 85,
                     'slides_duration'    => 2,

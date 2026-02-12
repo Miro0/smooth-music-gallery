@@ -1,22 +1,22 @@
 {
   "themes": [
-    "free/default",
-    "free/video_player",
-    "pro/music_player",
-    "pro/playlist"
+    "default",
+    "video_player",
+    "music_player",
+    "playlist"
   ],
   "backgrounds": [
-    "free/ambient_glow",
-    "free/orbital_pulse",
-    "pro/blurred_photos",
-    "pro/dust_particles"
+    "ambient_glow",
+    "orbital_pulse",
+    "blurred_photos",
+    "dust_particles"
   ],
   "overlays": [
-    "free/equalizer_bars",
-    "free/wave_line",
-    "pro/audio_pulse",
-    "pro/color_blend",
-    "pro/heartbeat_line",
-    "pro/pixelate"
+    "equalizer_bars",
+    "wave_line",
+    "audio_pulse",
+    "color_blend",
+    "heartbeat_line",
+    "pixelate"
   ]
 }

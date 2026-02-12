@@ -28,7 +28,7 @@ const attachOverlayAnimation = (container, index) => {
       size = 8
     } = overlay_options;
 
-    if (overlay !== "pro/audio_pulse") return;
+    if (overlay !== "audio_pulse") return;
 
     const audio = container.querySelector(".wpmg-audio");
     const overlayLayer = container.querySelector(".wpmg-overlay-layer");

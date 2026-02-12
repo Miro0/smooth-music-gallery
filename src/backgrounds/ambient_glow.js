@@ -36,7 +36,7 @@ const attachBackgroundAnimation = (container, index) => {
     const {background, background_options = {}} = props;
     const {accent = '#ffffff', intensity = 1} = background_options;
 
-    if (background === 'free/ambient_glow') {
+    if (background === 'ambient_glow') {
       const audio = container.querySelector('.wpmg-audio');
       const backgroundLayer = container.querySelector('.wpmg-bg-layer');
 

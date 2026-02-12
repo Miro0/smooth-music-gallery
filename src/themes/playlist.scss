@@ -38,6 +38,10 @@
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06),
     0 4px 18px rgba(0, 0, 0, 0.45);
     border: 4px solid rgba(0, 0, 0, 0.6);
+
+    @media screen and (max-width: 768px) {
+      aspect-ratio: 9 / 16;
+    }
   }
 
   .wpmg-image-container {
@@ -47,10 +51,6 @@
     margin: 24px;
     overflow: hidden;
     border-radius: 12px;
-
-    @media screen and (max-width: 768px) {
-      aspect-ratio: 9 / 16;
-    }
   }
 
   .swiper-wrapper {

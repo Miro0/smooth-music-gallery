@@ -27,7 +27,7 @@ const attachOverlayAnimation = (container, index) => {
     line_height = 4,
   } = overlay_options;
 
-  if (overlay !== "free/wave_line") return;
+  if (overlay !== "wave_line") return;
 
   const audio = container.querySelector(".wpmg-audio");
   const overlayLayer = container.querySelector(".wpmg-overlay-layer");

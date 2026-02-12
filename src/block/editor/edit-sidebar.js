@@ -74,12 +74,9 @@ export default function EditSidebar({attributes, setAttributes, config}) {
     overlay_options,
   } = attributes;
 
-  // @TODO Handle theme PRO blockage.
-  // @TODO Handle per animation specific settings + PRO blockage.
-  // @TODO Probably easiest to ping Powered CDN to check pro assets and if fails - show error below Powered by... - check should be done once per Editor session or rarer.
   return (
     <>
-      {/*<p style={{ paddingRight: '16px', paddingLeft: '52px' }}>Powered by <a href="https://protectedcdn.com" target="_blank">Protected CDN</a></p>*/}
+      <p style={{ paddingRight: '16px', paddingLeft: '52px' }}>Powered by <a href="https://smoothcdn.com" target="_blank">Smooth CDN</a></p>
 
       <PanelBody
         title={__('Gallery', 'wp-music-gallery')}
@@ -111,7 +108,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           options={config.themes}
           label={__('Theme', 'wp-music-gallery')}
           help={__('Select general gallery theme', 'wp-music-gallery')}
-          placeholder={__('[Free] Default', 'wp-music-gallery')}
+          placeholder={__('Default', 'wp-music-gallery')}
         />
 
         <Color
@@ -163,7 +160,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
 
         {overlay && (
           <>
-            {overlay === 'pro/color_blend' && (
+            {overlay === 'color_blend' && (
               <>
                 <PanelBody
                   title={__('Presets', 'wp-music-gallery')}
@@ -196,7 +193,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               </>
             )}
 
-            {overlay !== 'pro/pixelate' && (
+            {overlay !== 'pixelate' && (
               <Color
                 name="overlay_options.accent"
                 value={overlay_options?.accent ?? '#ffffff'}
@@ -204,7 +201,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               />
             )}
 
-            {overlay !== 'pro/color_blend' && overlay !== 'pro/pixelate' && (
+            {overlay !== 'color_blend' && overlay !== 'pixelate' && (
               <Range
                 name="overlay_options.opacity"
                 value={overlay_options?.opacity ?? 0.5}
@@ -215,7 +212,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               />
             )}
 
-            {overlay === 'free/equalizer_bars' && (
+            {overlay === 'equalizer_bars' && (
               <>
                 <Range
                   name="overlay_options.bars"
@@ -238,7 +235,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               </>
             )}
 
-            {(overlay === 'free/wave_line' || overlay === 'pro/heartbeat_line') && (
+            {(overlay === 'wave_line' || overlay === 'heartbeat_line') && (
               <>
                 <Range
                   name="overlay_options.position"
@@ -269,7 +266,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               </>
             )}
 
-            {(overlay === 'pro/heartbeat_line') && (
+            {(overlay === 'heartbeat_line') && (
               <>
                 <Range
                   name="overlay_options.smoothness"
@@ -292,7 +289,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               </>
             )}
 
-            {overlay === 'pro/audio_pulse' && (
+            {overlay === 'audio_pulse' && (
               <>
                 <Range
                   name="overlay_options.intensity"
@@ -333,7 +330,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               </>
             )}
 
-            {overlay === 'pro/color_blend' && (
+            {overlay === 'color_blend' && (
               <>
                 <Select
                   name="overlay_options.blend_mode"
@@ -361,7 +358,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
               </>
             )}
 
-            {overlay === 'pro/pixelate' && (
+            {overlay === 'pixelate' && (
               <>
                 <Range
                   name="overlay_options.max_size"
@@ -397,7 +394,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           label={__('Background color', 'wp-music-gallery')}
         />
 
-        {background && background !== 'pro/blurred_photos' && (
+        {background && background !== 'blurred_photos' && (
           <Color
             name="background_options.accent"
             value={background_options?.accent}
@@ -405,7 +402,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           />
         )}
 
-        {background === 'free/ambient_glow' && (
+        {background === 'ambient_glow' && (
           <>
             <Range
               name="background_options.intensity"
@@ -419,7 +416,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           </>
         )}
 
-        {background === 'free/orbital_pulse' && (
+        {background === 'orbital_pulse' && (
           <>
             <Range
               name="background_options.intensity"
@@ -476,7 +473,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           </>
         )}
 
-        {background === 'pro/blurred_photos' && (
+        {background === 'blurred_photos' && (
           <>
             <Range
               name="background_options.blur"
@@ -505,7 +502,7 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           </>
         )}
 
-        {background === 'pro/dust_particles' && (
+        {background === 'dust_particles' && (
           <>
             <Range
               name="background_options.density"

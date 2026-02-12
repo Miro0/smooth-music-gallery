@@ -21,7 +21,7 @@ const attachOverlayAnimation = (container, index) => {
 
     const barsRatio = window.innerWidth < 768 ? 0.5 : 1;
 
-    if (overlay === 'free/equalizer_bars') {
+    if (overlay === 'equalizer_bars') {
       const audio = container.querySelector('.wpmg-audio');
       const overlayLayer = container.querySelector('.wpmg-overlay-layer');
 

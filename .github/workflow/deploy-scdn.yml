@@ -1,0 +1,32 @@
+name: Upload assets to Smooth CDN
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  upload-assets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Smooth CDN CLI
+        run: npm install -g @smoothcdn/cli
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Upload assets to Smooth CDN
+        env:
+          SCDN_TOKEN: ${{ secrets.SCDN_TOKEN }}
+        run: |
+          scdn create-version
+          scdn push
+          scdn publish-version

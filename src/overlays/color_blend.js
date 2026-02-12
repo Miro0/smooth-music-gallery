@@ -19,7 +19,7 @@ const attachOverlayAnimation = (container, index) => {
     const {overlay, overlay_options = {}} = props;
     const {accent = '#ffffff', blend_mode = 'multiply'} = overlay_options;
 
-    if (overlay === 'pro/color_blend') {
+    if (overlay === 'color_blend') {
       const audio = container.querySelector('.wpmg-audio');
       const imageLayer = container.querySelector('.wpmg-image-container');
 

@@ -28,7 +28,7 @@ const attachOverlayAnimation = (container, index) => {
     smoothness = 0.5,
   } = overlay_options;
 
-  if (overlay !== "pro/heartbeat_line") return;
+  if (overlay !== "heartbeat_line") return;
 
   const audio = container.querySelector(".wpmg-audio");
   const overlayLayer = container.querySelector(".wpmg-overlay-layer");

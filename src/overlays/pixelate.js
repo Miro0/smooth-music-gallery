@@ -18,7 +18,7 @@ const attachOverlayAnimation = (container, index) => {
   const { overlay, overlay_options = {} } = props;
   const { max_size = 20 } = overlay_options;
 
-  if (overlay !== "pro/pixelate") return;
+  if (overlay !== "pixelate") return;
 
   const audio = container.querySelector(".wpmg-audio");
   if (!audio) return;

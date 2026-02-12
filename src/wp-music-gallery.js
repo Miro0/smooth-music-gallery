@@ -165,7 +165,7 @@ export const initWpMusicGallery = (container, index) => {
             });
           });
 
-          if (theme === 'pro/playlist') {
+          if (theme === 'playlist') {
             const pagination = container.querySelector('.swiper-pagination');
             if (pagination) {
               pagination.scrollTop = bullets[0].clientHeight * activeIndex;
@@ -176,7 +176,7 @@ export const initWpMusicGallery = (container, index) => {
     },
   });
 
-  if (theme === 'pro/playlist') {
+  if (theme === 'playlist') {
     const bullets = window.wpmg[index].swiper.pagination.bullets;
     bullets.forEach((bullet, bulletIndex) => {
       bullet.innerText = photos[bulletIndex].url.split('/').pop().split('\\').pop().split('.').slice(0, -1).join('.');

@@ -5,10 +5,12 @@
   "blockBots": false,
   "blockHeadless": false,
   "sources": [
+    "./build/view.js",
     "./build/core/*.js",
     "./build/background/*.js",
     "./build/overlay/*.js",
-    "./build/theme/*.css"
+    "./build/theme/*.css",
+    "./assets/"
   ],
   "excludes": [
     "./build/theme/*-rtl.css"
