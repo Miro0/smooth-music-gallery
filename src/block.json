@@ -47,6 +47,5 @@
 	},
 	"textdomain": "wpmusicgallery",
 	"editorScript": "file:./index.js",
-	"editorStyle": "wpmg-editor",
-	"viewScript": "file:./view.js"
+	"editorStyle": "wpmg-editor"
 }
