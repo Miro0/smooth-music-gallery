@@ -11,7 +11,6 @@
 - [x] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth CDN" oraz "Pokaz przycisk w top toolbar"
 - [ ] Strona główna w WP Music Gallery. Jakieś info o Smooth CDN?
 - [ ] Fajnie by było dodać jakieś pliki audio - najlepiej tylko serwowane z Smooth CDN
-- [ ] Fullscreen - czy nie powinien ukrywać ramki galerii i pokazywać tylko contain image container i tło jako background? Zostawić tylko przycisk fullscreen z motywu oraz pagination. Albo może tylko duży size ustawić?
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
 
 
@@ -22,5 +21,6 @@
 - [x] Restart muzyki kiedy się kończy
 - [x] Mobile swiper nie pokazujej obrazków na cały ekran, ale utrzymuje ratio
 - [ ] Przesunięcie slideów o pixel z powodu ułamkowych wielkości szerokości - występuje nadal w video player / music player motywach.
-- [ ] Widoki mobilne są bardzo słabe - trzeba może te volumy pozamieniać w przyciski toggle - to powinno trochę pomóc
-- [ ] Resize nie działa na wszystkich efektach - pozostaje stary rozmiar canvas
+- [ ] Widoki mobilne - większy obszar rysowania, na playlist ukryć przyciski wstecz/dalej albo zmniejszyć przyciski
+- [ ] Resize nie działa na Pixelate oraz Dust Particles
+- [ ] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
