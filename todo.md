@@ -9,8 +9,9 @@
 - [x] Podmienić ładowanie assetów przez Smooth CDN - sprawdzić w ogóle ten flow, bo motywy to się chyba wszystkie ładują przez Edytor.
 - [x] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
 - [x] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth CDN" oraz "Pokaz przycisk w top toolbar"
-- [ ] Strona główna w WP Music Gallery. Jakieś info o Smooth CDN?
-- [ ] Fajnie by było dodać jakieś pliki audio - najlepiej tylko serwowane z Smooth CDN
+- [x] Strona główna w WP Music Gallery. Jakieś info o Smooth CDN?
+- [ ] pickery obrazków oraz music - nie pokazują wybranych elementów
+- [ ] pickery kierujące na Smooth CDN? Tutaj trzeba by mieć ten Asset Picker + obrazko + pliki audio
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
 
 
@@ -27,3 +28,4 @@
 - [ ] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
 - [ ] Poprawić mobilny widok motywi playlist
 - [ ] Włączyć z powrotem poprawione efekty i motyw
+- [ ] pickery kierujące na Smooth CDN z możliwością skierowania na własny Smooth CDN
