@@ -13,8 +13,7 @@ export const initAudioSource = (audio, index) => {
     window.wpmg[index].gain = ctx.createGain();
   }
   const gain = window.wpmg[index].gain;
-  // gain.gain.value = 0.8;
-  gain.gain.value = 0; // @DEBUG
+  gain.gain.value = 0.8;
 
   const analyser = ctx.createAnalyser();
   analyser.fftSize = 256;

@@ -1,4 +1,3 @@
-import Swiper from 'swiper';
 import {createAnimationStyle} from "../block/utils/style";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -64,6 +63,10 @@ const attachBackgroundAnimation = (container, index) => {
           </div>
         `;
 
+        const initialSlide = container.querySelector(`.${blurredPhotosClass} img[data-bg-index="0"]`);
+        if (initialSlide) {
+          initialSlide.classList.add('visible');
+        }
 
         window.wpmg[index].onSlideChange = (newIndex) => {
           const imgs = container.querySelectorAll(`.${blurredPhotosClass} img`);

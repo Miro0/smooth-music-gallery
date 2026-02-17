@@ -2,8 +2,7 @@
   "themes": [
     "default",
     "video_player",
-    "music_player",
-    "playlist"
+    "music_player"
   ],
   "backgrounds": [
     "ambient_glow",
@@ -15,8 +14,6 @@
     "equalizer_bars",
     "wave_line",
     "audio_pulse",
-    "color_blend",
-    "heartbeat_line",
-    "pixelate"
+    "heartbeat_line"
   ]
 }

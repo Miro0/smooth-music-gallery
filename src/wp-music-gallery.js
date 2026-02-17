@@ -1,8 +1,8 @@
 import Swiper from 'swiper';
 import {Pagination, Autoplay, Keyboard} from 'swiper/modules';
+import {hexToRgb} from "./block/utils/style";
 import 'swiper/css';
 import 'swiper/css/pagination';
-import {hexToRgb} from "./block/utils/style";
 
 export const initWpMusicGallery = (container, index) => {
   const props = JSON.parse(container.dataset.props || '{}');
@@ -90,6 +90,7 @@ export const initWpMusicGallery = (container, index) => {
   const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');
   const themeFrameRGB = hexToRgb(theme_options?.frame_color ?? '#111111');
 
+  container.style.setProperty('--screen-ratio', window.innerWidth / window.innerHeight);
   container.style.setProperty('--wpmg-slides-duration', slides_duration);
   container.style.setProperty('--wpmg-theme-accent', theme_options?.accent ?? '#ffffff');
   container.style.setProperty('--wpmg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
@@ -192,6 +193,10 @@ export const initWpMusicGallery = (container, index) => {
         window.wpmg[index].swiper.update();
       }
     });
+  });
+
+  window.addEventListener('resize', () => {
+    container.style.setProperty('--screen-ratio', window.innerWidth / window.innerHeight);
   });
 
   initControls(container, window.wpmg[index].swiper, slides_duration, index);

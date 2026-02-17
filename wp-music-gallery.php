@@ -148,7 +148,7 @@ add_action( 'admin_init', function () {
 
     add_settings_field(
             'show_toolbar_builder',
-            __( 'Show "Create Shortcode Builder" in top toolbar', 'wp-music-gallery' ),
+            __( 'Show "Create Music Gallery" in top toolbar', 'wp-music-gallery' ),
             __NAMESPACE__ . '\\wp_music_gallery_field_show_toolbar',
             'wp_music_gallery',
             'wp_music_gallery_main'
@@ -191,7 +191,7 @@ function wp_music_gallery_field_show_toolbar() {
 function wp_music_gallery_render_shortcode_builder_page() {
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'WP Music Gallery – Shortcode Builder', 'wp-music-gallery' ); ?></h1>
+        <h1><?php esc_html_e( 'WP Music Gallery - Shortcode Builder', 'wp-music-gallery' ); ?></h1>
 
         <div id="wpmg-builder-root"></div>
     </div>
@@ -201,7 +201,7 @@ function wp_music_gallery_render_shortcode_builder_page() {
 function wp_music_gallery_render_settings_page() {
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'WP Music Gallery Settings', 'wp-music-gallery' ); ?></h1>
+        <h1><?php esc_html_e( 'WP Music Gallery - Settings', 'wp-music-gallery' ); ?></h1>
 
         <form method="post" action="options.php">
             <?php
@@ -214,6 +214,103 @@ function wp_music_gallery_render_settings_page() {
     <?php
 }
 
+function wp_music_gallery_render_main_page() {
+    ?>
+    <div class="wrap wp-music-gallery-admin">
+        <h1><?php esc_html_e( 'WP Music Gallery', 'wp-music-gallery' ); ?></h1>
+
+        <img
+            src="https://wp-music-gallery.smoothcdn.com/1.0.0/baner-1544x500.png"
+            alt="WP Music Gallery banner"
+            loading="lazy"
+            decoding="async"
+            width="1544"
+            height="500"
+            style="width: 100%; height: auto;"
+        />
+
+        <!-- Intro -->
+        <div class="card" style="max-width: unset">
+            <h1 style="margin-top:0;">Welcome to WP Music Gallery</h1>
+
+            <p>
+                Create beautiful, audio-reactive music galleries directly inside WordPress.
+                WP Music Gallery lets you combine playlists, visuals and smooth animations
+                into a modern listening experience — without coding.
+            </p>
+
+            <p>
+                Optimised for performance and fully compatible with
+                <strong>Smooth CDN</strong> for fast, global asset delivery.
+            </p>
+
+            <p style="margin-top:16px;">
+                <a href="<?php echo admin_url('admin.php?page=wp_music_gallery--builder'); ?>"
+                   class="button button-secondary button-large">
+                    Open Shortcode Builder
+                </a>
+
+                <a href="<?php echo admin_url('admin.php?page=wp_music_gallery--settings'); ?>"
+                   class="button button-secondary button-large"
+                   style="margin-left:8px;">
+                    Settings
+                </a>
+            </p>
+        </div>
+
+        <!-- Features -->
+        <div style="display:flex; flex-direction: row; gap:16px; margin-top:24px; flex-wrap: wrap;">
+
+            <div class="card" style="width: calc((100% / 3) - 11px);">
+                <h2>Audio-Reactive Visuals</h2>
+                <p>
+                    Dynamic backgrounds, overlays and themes that respond to music
+                    and create an immersive gallery experience.
+                </p>
+            </div>
+
+            <div class="card" style="width: calc((100% / 3) - 11px);">
+                <h2>Fast & Lightweight</h2>
+                <p>
+                    Carefully optimised scripts and assets ensure smooth playback
+                    and excellent performance on all devices.
+                </p>
+            </div>
+
+            <div class="card" style="width: calc((100% / 3) - 11px);">
+                <h2>Smooth CDN Ready</h2>
+                <p>
+                    Serve gallery assets via Smooth CDN for global speed,
+                    caching and reliable delivery in production environments.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Smooth CDN Promo -->
+        <div class="card" style="margin-top:44px; padding-top: 16px; max-width: unset; border-left:6px solid #0086d1;">
+            <h2 style="margin-top:0;">Powered by Smooth CDN</h2>
+
+            <p>
+                Smooth CDN is a developer-first asset delivery platform designed for
+                modern WordPress plugins and web applications.
+            </p>
+
+            <p>
+                Host images, audio and gallery assets globally, reduce load times
+                and keep your media pipeline simple.
+            </p>
+
+            <p>
+                <a href="https://smoothcdn.com" target="_blank" class="button button-primary">
+                    Learn more about Smooth CDN
+                </a>
+            </p>
+        </div>
+    </div>
+    <?php
+}
+
 add_action( 'admin_menu', function () {
 
     // Parent menu
@@ -222,7 +319,7 @@ add_action( 'admin_menu', function () {
             __( 'WP Music Gallery', 'wp-music-gallery' ),
             'manage_options',
             'wp_music_gallery',
-            '__return_null',
+            __NAMESPACE__ . '\\wp_music_gallery_render_main_page',
             'dashicons-format-audio',
             58
     );
@@ -258,7 +355,7 @@ add_action( 'admin_bar_menu', function ( $wp_admin_bar ) {
     $wp_admin_bar->add_node( [
             'id'     => 'wp-music-gallery-builder',
             'parent' => 'new-content',
-            'title'  => __( 'Shortcode Builder', 'wp-music-gallery' ),
+            'title'  => __( 'Music Gallery', 'wp-music-gallery' ),
             'href'   => admin_url( 'admin.php?page=wp_music_gallery--builder' ),
             'meta'   => [ 'class' => 'wp-music-gallery-toolbar' ],
     ] );

@@ -13,10 +13,12 @@
     "./assets/"
   ],
   "excludes": [
-    "./build/theme/*-rtl.css"
+    "./build/theme/*-rtl.css",
+    "./build/theme/playlist*",
+    "./build/overlay/color_blend*"
   ],
   "protected": [],
   "userSlug": "smoothcdn",
-  "plan": 1,
+  "plan": 2,
   "projectId": "a72f0f39-85c6-40bd-b077-4c4b59db27ea"
 }

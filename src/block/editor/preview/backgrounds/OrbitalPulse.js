@@ -16,7 +16,11 @@ const OrbitalPulse = (
   const offscreenRef = useRef(null);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setTimeout(() => {
+      setMounted(true);
+    }, 100);
+  }, []);
 
   useEffect(() => {
     if (!mounted) return;

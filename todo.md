@@ -20,7 +20,10 @@
 - [x] Sprawdzić ogólne działanie na screenresize / fullscreen toggle. Animacje często mają stan wykalkulowany i się nie aktualizują odpowiednio po zmianach.
 - [x] Restart muzyki kiedy się kończy
 - [x] Mobile swiper nie pokazujej obrazków na cały ekran, ale utrzymuje ratio
-- [ ] Przesunięcie slideów o pixel z powodu ułamkowych wielkości szerokości - występuje nadal w video player / music player motywach.
-- [ ] Widoki mobilne - większy obszar rysowania, na playlist ukryć przyciski wstecz/dalej albo zmniejszyć przyciski
+- [x] Przesunięcie slideów o pixel z powodu ułamkowych wielkości szerokości - występuje nadal w video player / music player motywach.
+
+# 1.1
 - [ ] Resize nie działa na Pixelate oraz Dust Particles
 - [ ] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
+- [ ] Poprawić mobilny widok motywi playlist
+- [ ] Włączyć z powrotem poprawione efekty i motyw
