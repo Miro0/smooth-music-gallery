@@ -10,6 +10,7 @@
 - [x] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
 - [x] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth CDN" oraz "Pokaz przycisk w top toolbar"
 - [x] Strona główna w WP Music Gallery. Jakieś info o Smooth CDN?
+- [ ] odtwarzanie jednej galerii powinno automatycznie stopować inne instancje - mała funkcja, ale przydatna przy wielu galeriach
 - [ ] pickery obrazków oraz music - nie pokazują wybranych elementów
 - [ ] pickery kierujące na Smooth CDN? Tutaj trzeba by mieć ten Asset Picker + obrazko + pliki audio
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
