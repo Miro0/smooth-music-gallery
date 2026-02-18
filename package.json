@@ -10,6 +10,8 @@
     "build:themes": "wp-scripts build src/themes/*.js --output-path=build/theme",
     "build:shortcode_builder": "wp-scripts build src/block/shortcode_builder.js --output-path=build/admin",
     "build": "yarn build:app && yarn build:core && yarn build:backgrounds && yarn build:overlays && yarn build:themes && yarn build:shortcode_builder",
+    "zip:prod": "yarn build && bash scripts/create-prod-zip.sh",
+    "zip:prod:only": "bash scripts/create-prod-zip.sh",
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",
