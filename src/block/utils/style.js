@@ -20,7 +20,7 @@ function injectHashedStyle(id, cssText) {
 }
 
 export function createAnimationStyle(name, cssBuilder) {
-  const className = `wpmg-${name}-${hash(name + Math.random())}`;
+  const className = `mg-${name}-${hash(name + Math.random())}`;
 
   const css = cssBuilder(className);
   injectHashedStyle(`style-${className}`, css);

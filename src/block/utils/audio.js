@@ -1,18 +1,18 @@
 export const initAudioSource = (audio, index) => {
-  if (!window?.wpmg[index]?.ctx) {
-    window.wpmg[index].ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!window?.mg[index]?.ctx) {
+    window.mg[index].ctx = new (window.AudioContext || window.webkitAudioContext)();
   }
-  const ctx = window.wpmg[index].ctx;
+  const ctx = window.mg[index].ctx;
 
-  if (!window?.wpmg[index]?.source) {
-    window.wpmg[index].source = ctx.createMediaElementSource(audio);
+  if (!window?.mg[index]?.source) {
+    window.mg[index].source = ctx.createMediaElementSource(audio);
   }
-  const source = window.wpmg[index].source;
+  const source = window.mg[index].source;
 
-  if (!window?.wpmg[index]?.gain) {
-    window.wpmg[index].gain = ctx.createGain();
+  if (!window?.mg[index]?.gain) {
+    window.mg[index].gain = ctx.createGain();
   }
-  const gain = window.wpmg[index].gain;
+  const gain = window.mg[index].gain;
   gain.gain.value = 0.8;
 
   const analyser = ctx.createAnalyser();
@@ -22,10 +22,10 @@ export const initAudioSource = (audio, index) => {
 
   source.connect(analyser);
 
-  if (!window?.wpmg[index].audioConnected) {
+  if (!window?.mg[index].audioConnected) {
     source.connect(gain);
     gain.connect(ctx.destination);
-    window.wpmg[index].audioConnected = true;
+    window.mg[index].audioConnected = true;
   }
 
   return [analyser, ctx, data];

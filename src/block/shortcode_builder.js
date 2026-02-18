@@ -20,7 +20,7 @@ function createShortcode(attributes) {
     if (attributes) {
       const selectedPhotos = attributes?.photos_source === 'smoothcdn' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
       const currentMusic = attributes?.music_source === 'smoothcdn' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
-      const parts = ['[wp-music-gallery'];
+      const parts = ['[music-gallery'];
 
       Object.entries(attributes).forEach(([key, value]) => {
         if (key === 'photos_cdn' || key === 'music_cdn' || key === 'photos_source' || key === 'music_source') {
@@ -91,7 +91,7 @@ const App = () => {
   useEffect(() => {
     setMounted(true);
 
-    const storageCache = localStorage.getItem('wpmg-shortcode-builder');
+    const storageCache = localStorage.getItem('mg-shortcode-builder');
     if (storageCache) {
       setAttributes(JSON.parse(storageCache));
     }
@@ -99,7 +99,7 @@ const App = () => {
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem('wpmg-shortcode-builder', JSON.stringify(attributes));
+      localStorage.setItem('mg-shortcode-builder', JSON.stringify(attributes));
     }
   }, [attributes]);
 
@@ -147,7 +147,7 @@ const App = () => {
     <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
       <Card>
         <CardHeader>
-          <strong>{__('Shortcode Builder', 'wp-music-gallery')}</strong>
+          <strong>{__('Shortcode Builder', 'music-gallery')}</strong>
         </CardHeader>
         <CardBody>
           <div style={{display: 'flex', flexDirection: 'row', gap: 2}}>
@@ -185,21 +185,21 @@ const App = () => {
               });
             }}
           >
-            {__('Clear gallery', 'wp-music-gallery')}
+            {__('Clear gallery', 'music-gallery')}
           </Button>
         </CardBody>
       </Card>
 
       <Card>
         <CardHeader>
-          <strong>{__('Shortcode', 'wp-music-gallery')}</strong>
-          <small>{__('Copy and paste generated shortcode whereever You want to use it', 'wp-music-gallery')}</small>
+          <strong>{__('Shortcode', 'music-gallery')}</strong>
+          <small>{__('Copy and paste generated shortcode whereever You want to use it', 'music-gallery')}</small>
         </CardHeader>
         <CardBody>
           <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
             <TextareaControl
               ref={textareaRef}
-              label={__('Shortcode', 'wp-music-gallery')}
+              label={__('Shortcode', 'music-gallery')}
               value={shortcode}
               readOnly
               rows={4}
@@ -210,7 +210,7 @@ const App = () => {
               variant="secondary"
               onClick={onCopy}
             >
-              {__('Copy to clipboard', 'wp-music-gallery')}
+              {__('Copy to clipboard', 'music-gallery')}
             </Button>
 
             {copyState === 'success' && (
@@ -218,7 +218,7 @@ const App = () => {
                 status="success"
                 isDismissible={false}
               >
-                {__('Shortcode copied', 'wp-music-gallery')}
+                {__('Shortcode copied', 'music-gallery')}
               </Notice>
             )}
 
@@ -227,7 +227,7 @@ const App = () => {
                 status="error"
                 isDismissible={false}
               >
-                {__('Couldn\'t proceed with copy', 'wp-music-gallery')}
+                {__('Couldn\'t proceed with copy', 'music-gallery')}
               </Notice>
             )}
           </div>
@@ -238,7 +238,7 @@ const App = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  const root = document.getElementById('wpmg-builder-root');
+  const root = document.getElementById('mg-builder-root');
   if (!root) return;
 
   const {createRoot} = wp.element || {};

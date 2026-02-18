@@ -1,6 +1,6 @@
 {
-  "project": "WP Music Gallery",
-  "projectSlug": "wp-music-gallery",
+  "project": "Music Gallery",
+  "projectSlug": "music-gallery",
   "version": "1.0.0",
   "blockBots": false,
   "blockHeadless": false,

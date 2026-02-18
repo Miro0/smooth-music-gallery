@@ -9,7 +9,7 @@ const EqualizerBars = ({bars = 32, accent = '#ffffff', opacity = 0.5, max_height
     if (!container) return;
 
     const elements = Array.from(
-      container.querySelectorAll('.wpmg-overlay--equalizer-bar')
+      container.querySelectorAll('.mg-overlay--equalizer-bar')
     );
 
     const state = elements.map(() => ({
@@ -70,7 +70,7 @@ const EqualizerBars = ({bars = 32, accent = '#ffffff', opacity = 0.5, max_height
       {Array.from({length: bars}).map((_, i) => (
         <div
           key={i}
-          className="wpmg-overlay--equalizer-bar"
+          className="mg-overlay--equalizer-bar"
           style={{
             backgroundColor: accent,
             flex: 1,

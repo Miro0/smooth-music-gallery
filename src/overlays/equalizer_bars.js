@@ -2,18 +2,18 @@ import {createAnimationStyle} from "../block/utils/style";
 import {initAudioSource} from "../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
+  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
+  if (!window?.mg) {
+    window.mg = [];
   }
 
-  if (!window?.wpmg[index]) {
-    window.wpmg[index] = { initOverlay: attachOverlayAnimation, source: null };
-  } else if (!window?.wpmg[index]?.initialized) {
-    window.wpmg[index].initOverlay = attachOverlayAnimation;
+  if (!window?.mg[index]) {
+    window.mg[index] = { initOverlay: attachOverlayAnimation, source: null };
+  } else if (!window?.mg[index]?.initialized) {
+    window.mg[index].initOverlay = attachOverlayAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
     const {overlay, overlay_options = {}} = props;
@@ -22,11 +22,11 @@ const attachOverlayAnimation = (container, index) => {
     const barsRatio = window.innerWidth < 768 ? 0.5 : 1;
 
     if (overlay === 'equalizer_bars') {
-      const audio = container.querySelector('.wpmg-audio');
-      const overlayLayer = container.querySelector('.wpmg-overlay-layer');
+      const audio = container.querySelector('.mg-audio');
+      const overlayLayer = container.querySelector('.mg-overlay-layer');
 
       if (overlayLayer && audio) {
-        const equalizerClass = createAnimationStyle('wpmg-overlay--equalizer-bars', (c) => `
+        const equalizerClass = createAnimationStyle('mg-overlay--equalizer-bars', (c) => `
           .${c} {
             position: absolute;
             bottom: 0;
@@ -40,7 +40,7 @@ const attachOverlayAnimation = (container, index) => {
             opacity: 0.2;
             gap: 3px;
           }
-          .${c} .wpmg-overlay--equalizer-bar {
+          .${c} .mg-overlay--equalizer-bar {
             flex: 1;
             height: 95%;
             background: #ffffff;
@@ -55,12 +55,12 @@ const attachOverlayAnimation = (container, index) => {
 
         overlayLayer.innerHTML = `
           <div class="${equalizerClass}" data-bars="${bars * barsRatio}" style="opacity:${opacity}; height: ${max_height}%">
-            ${`<div class="wpmg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
+            ${`<div class="mg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
           </div>
         `;
 
         const barNodes = Array.from(
-          overlayLayer.querySelectorAll('.wpmg-overlay--equalizer-bar')
+          overlayLayer.querySelectorAll('.mg-overlay--equalizer-bar')
         );
 
         const barHeights = new Array(barNodes.length).fill(0);

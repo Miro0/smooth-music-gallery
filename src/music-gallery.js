@@ -4,7 +4,7 @@ import {hexToRgb} from "./block/utils/style";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-export const initWpMusicGallery = (container, index) => {
+export const initMusicGallery = (container, index) => {
   const props = JSON.parse(container.dataset.props || '{}');
   const {photos = [], music, theme = 'default', theme_options = {}, size = 85, slides_duration = 2, background_options} = props;
   const {background_color = 'transparent'} = background_options;
@@ -14,10 +14,10 @@ export const initWpMusicGallery = (container, index) => {
   const bgMargin = Math.floor((100 - size) / 4);
 
   container.innerHTML = `
-    ${music?.url ? `<div class="wpmg-bg-layer" style="background:${background_color}"></div>` : ''}
-    <div class="wpmg-content" style="width:${size}%; height:${size}%;margin-top:${bgMargin}%;margin-bottom:${bgMargin}%">
-      ${music?.url ? `<div class="wpmg-overlay-layer"></div>` : ''}
-      <div class="wpmg-image-container">
+    ${music?.url ? `<div class="mg-bg-layer" style="background:${background_color}"></div>` : ''}
+    <div class="mg-content" style="width:${size}%; height:${size}%;margin-top:${bgMargin}%;margin-bottom:${bgMargin}%">
+      ${music?.url ? `<div class="mg-overlay-layer"></div>` : ''}
+      <div class="mg-image-container">
         <div class="swiper-wrapper">
           ${photos
     .map(
@@ -36,86 +36,86 @@ export const initWpMusicGallery = (container, index) => {
     .join('')}
         </div>
       </div>
-      <div class="wpmg-controls">
+      <div class="mg-controls">
         <div class="swiper-pagination--wrapper">
           <div class="swiper-pagination"></div>
         </div>
       
-        <div class="wpmg-music-meta">
-          <div class="wpmg-music-title">${music?.title || music?.filename || music?.name || 'Select background music'}</div>
+        <div class="mg-music-meta">
+          <div class="mg-music-title">${music?.title || music?.filename || music?.name || 'Select background music'}</div>
         </div>
 
-        <div class="wpmg-music-progress">
-          <div class="wpmg-music-progress-bar">
-            <div class="wpmg-music-progress-fill"></div>
+        <div class="mg-music-progress">
+          <div class="mg-music-progress-bar">
+            <div class="mg-music-progress-fill"></div>
           </div>
-          <div class="wpmg-music-times">
-            <span class="wpmg-music-time-current">0:00</span>
-            <span class="wpmg-music-time-total">0:00</span>
+          <div class="mg-music-times">
+            <span class="mg-music-time-current">0:00</span>
+            <span class="mg-music-time-total">0:00</span>
           </div>
         </div>
         
-        <div class="wpmg-volume--wrapper">
+        <div class="mg-volume--wrapper">
           <input 
             type="range" 
             min="0" 
             max="1" 
             step="0.01" 
             value="1" 
-            class="wpmg-volume"
+            class="mg-volume"
             aria-label="Volume"
             title="Volume"
           >
         </div>
-        <div class="wpmg-btn--wrapper">
-          <button class="wpmg-btn wpmg-btn--small wpmg-prev" aria-label="Previous">
+        <div class="mg-btn--wrapper">
+          <button class="mg-btn mg-btn--small mg-prev" aria-label="Previous">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg>
           </button>
-          <button class="wpmg-btn wpmg-play" aria-label="Play / Pause">
+          <button class="mg-btn mg-play" aria-label="Play / Pause">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
           </button>
-          <button class="wpmg-btn wpmg-btn--small wpmg-next" aria-label="Next">
+          <button class="mg-btn mg-btn--small mg-next" aria-label="Next">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg>
           </button>
         </div>
-        <button class="wpmg-btn wpmg-fullscreen" aria-label="Fullscreen">
-          <svg class="wpmg-icon--expand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>
-          <svg class="wpmg-icon--collapse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>
+        <button class="mg-btn mg-fullscreen" aria-label="Fullscreen">
+          <svg class="mg-icon--expand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>
+          <svg class="mg-icon--collapse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>
         </button>
       </div>
     </div>
-    ${music?.url ? `<audio class="wpmg-audio" preload="auto" loop src="${music.url}"></audio>` : ''}
+    ${music?.url ? `<audio class="mg-audio" preload="auto" loop src="${music.url}"></audio>` : ''}
   `;
 
   const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');
   const themeFrameRGB = hexToRgb(theme_options?.frame_color ?? '#111111');
 
   container.style.setProperty('--screen-ratio', window.innerWidth / window.innerHeight);
-  container.style.setProperty('--wpmg-slides-duration', slides_duration);
-  container.style.setProperty('--wpmg-theme-accent', theme_options?.accent ?? '#ffffff');
-  container.style.setProperty('--wpmg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
-  container.style.setProperty('--wpmg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
-  container.style.setProperty('--wpmg-theme-frame', theme_options?.frame_color ?? '#111111');
-  container.style.setProperty('--wpmg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
+  container.style.setProperty('--mg-slides-duration', slides_duration);
+  container.style.setProperty('--mg-theme-accent', theme_options?.accent ?? '#ffffff');
+  container.style.setProperty('--mg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
+  container.style.setProperty('--mg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
+  container.style.setProperty('--mg-theme-frame', theme_options?.frame_color ?? '#111111');
+  container.style.setProperty('--mg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
 
-  if (!window.wpmg) {
-    window.wpmg = [];
+  if (!window.mg) {
+    window.mg = [];
   }
 
-  if (window.wpmg[index]) {
-    window.wpmg[index].initialized = true;
+  if (window.mg[index]) {
+    window.mg[index].initialized = true;
   } else {
-    window.wpmg[index] = {initialized: true, source: null};
+    window.mg[index] = {initialized: true, source: null};
   }
 
-  if (window.wpmg[index]?.initOverlay) {
-    window.wpmg[index].initOverlay(container, index);
+  if (window.mg[index]?.initOverlay) {
+    window.mg[index].initOverlay(container, index);
   }
-  if (window.wpmg[index]?.initBackground) {
-    window.wpmg[index].initBackground(container, index);
+  if (window.mg[index]?.initBackground) {
+    window.mg[index].initBackground(container, index);
   }
 
-  window.wpmg[index].swiper = new Swiper(container.querySelector('.wpmg-image-container'), {
+  window.mg[index].swiper = new Swiper(container.querySelector('.mg-image-container'), {
     modules: [Pagination, Autoplay, Keyboard],
 
     loop: true,
@@ -139,17 +139,17 @@ export const initWpMusicGallery = (container, index) => {
 
     on: {
       imagesReady() {
-        window.wpmg[index].swiper.update();
+        window.mg[index].swiper.update();
       },
       realIndexChange() {
-        const activeIndex = window.wpmg[index].swiper.realIndex;
+        const activeIndex = window.mg[index].swiper.realIndex;
 
-        if (window.wpmg[index]?.onSlideChange) {
-          window.wpmg[index]?.onSlideChange(activeIndex);
+        if (window.mg[index]?.onSlideChange) {
+          window.mg[index]?.onSlideChange(activeIndex);
         }
 
-        if (window.wpmg[index]?.swiper) {
-          const bullets = window.wpmg[index].swiper.pagination.bullets;
+        if (window.mg[index]?.swiper) {
+          const bullets = window.mg[index].swiper.pagination.bullets;
 
           bullets.forEach((bullet) => {
             bullet.classList.remove('swiper-pagination-bullet-active');
@@ -178,7 +178,7 @@ export const initWpMusicGallery = (container, index) => {
   });
 
   if (theme === 'playlist') {
-    const bullets = window.wpmg[index].swiper.pagination.bullets;
+    const bullets = window.mg[index].swiper.pagination.bullets;
     bullets.forEach((bullet, bulletIndex) => {
       bullet.innerText = photos[bulletIndex].url.split('/').pop().split('\\').pop().split('.').slice(0, -1).join('.');
     });
@@ -190,7 +190,7 @@ export const initWpMusicGallery = (container, index) => {
     img.addEventListener('load', () => {
       loadedCount++;
       if (loadedCount === imgs.length) {
-        window.wpmg[index].swiper.update();
+        window.mg[index].swiper.update();
       }
     });
   });
@@ -199,27 +199,27 @@ export const initWpMusicGallery = (container, index) => {
     container.style.setProperty('--screen-ratio', window.innerWidth / window.innerHeight);
   });
 
-  initControls(container, window.wpmg[index].swiper, slides_duration, index);
+  initControls(container, window.mg[index].swiper, slides_duration, index);
 };
 
 function initControls(container, swiper, slides_duration, index) {
-  const content = container.querySelector('.wpmg-content');
-  const btnPlay = container.querySelector('.wpmg-play');
-  const btnPrev = container.querySelector('.wpmg-prev');
-  const btnNext = container.querySelector('.wpmg-next');
-  const btnFullscreen = container.querySelector('.wpmg-fullscreen');
-  const audio = container.querySelector('.wpmg-audio');
-  const volumeSlider = container.querySelector('.wpmg-volume');
-  const bar = container.querySelector('.wpmg-music-progress-bar');
-  const fill = container.querySelector('.wpmg-music-progress-fill');
-  const current = container.querySelector('.wpmg-music-time-current');
-  const total = container.querySelector('.wpmg-music-time-total');
+  const content = container.querySelector('.mg-content');
+  const btnPlay = container.querySelector('.mg-play');
+  const btnPrev = container.querySelector('.mg-prev');
+  const btnNext = container.querySelector('.mg-next');
+  const btnFullscreen = container.querySelector('.mg-fullscreen');
+  const audio = container.querySelector('.mg-audio');
+  const volumeSlider = container.querySelector('.mg-volume');
+  const bar = container.querySelector('.mg-music-progress-bar');
+  const fill = container.querySelector('.mg-music-progress-fill');
+  const current = container.querySelector('.mg-music-time-current');
+  const total = container.querySelector('.mg-music-time-total');
 
   if (audio && volumeSlider) {
     volumeSlider.value = 0.8;
     volumeSlider.addEventListener('input', () => {
-      if (window.wpmg[index].gain) {
-        window.wpmg[index].gain.gain.value = parseFloat(volumeSlider.value);
+      if (window.mg[index].gain) {
+        window.mg[index].gain.gain.value = parseFloat(volumeSlider.value);
       }
     });
   }
@@ -300,14 +300,14 @@ function initControls(container, swiper, slides_duration, index) {
     container.classList.remove('is-playing');
   };
   const pauseOtherInstances = () => {
-    window.wpmg?.forEach((instance, instanceIndex) => {
+    window.mg?.forEach((instance, instanceIndex) => {
       if (instanceIndex !== index && typeof instance?.pause === 'function') {
         instance.pause();
       }
     });
   };
 
-  window.wpmg[index].pause = pausePlayback;
+  window.mg[index].pause = pausePlayback;
 
   window.addEventListener('pointermove', (event) => {
     if (container.classList.contains('visible-controls')) return;
@@ -364,10 +364,10 @@ function initControls(container, swiper, slides_duration, index) {
     btnFullscreen.addEventListener('click', () => {
       if (!document.fullscreenElement) {
         container.requestFullscreen();
-        container.classList.add('wpmg--fullscreen');
+        container.classList.add('mg--fullscreen');
       } else {
         document.exitFullscreen();
-        container.classList.remove('wpmg--fullscreen');
+        container.classList.remove('mg--fullscreen');
       }
 
       const activeBullet = container.querySelector('.swiper-pagination-bullet-active');

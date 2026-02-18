@@ -11,7 +11,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
     if (!container) return;
 
     const lights = Array.from(
-      container.querySelectorAll('.wpmg-bg--ambient-light')
+      container.querySelectorAll('.mg-bg--ambient-light')
     );
 
     const state = lights.map(() => ({
@@ -56,7 +56,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
       zIndex: 40,
     }}>
       <div
-        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__tl"
+        className="mg-bg--ambient-light mg-bg--ambient-light__tl"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,
@@ -70,7 +70,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
         }}
       />
       <div
-        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__ri"
+        className="mg-bg--ambient-light mg-bg--ambient-light__ri"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,
@@ -84,7 +84,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
         }}
       />
       <div
-        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__bl"
+        className="mg-bg--ambient-light mg-bg--ambient-light__bl"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,
@@ -98,7 +98,7 @@ const AmbientGlow = ({accent = '#ffffff', intensity = 1}) => {
         }}
       />
       <div
-        className="wpmg-bg--ambient-light wpmg-bg--ambient-light__br"
+        className="mg-bg--ambient-light mg-bg--ambient-light__br"
         style={{
           position: 'absolute',
           width: `${0.5 * intensity * 100}%`,

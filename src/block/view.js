@@ -1,5 +1,5 @@
-import {initWpMusicGallery} from "../wp-music-gallery";
+import {initMusicGallery} from "../music-gallery";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => initWpMusicGallery(gallery, index));
+  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => initMusicGallery(gallery, index));
 });

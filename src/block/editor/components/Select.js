@@ -26,7 +26,7 @@ const Select = (
     const formattedTheme = capitalizeWords(item.replace(/_/g, ' '));
 
     return {
-      label: __(formattedTheme, 'wp-music-gallery'),
+      label: __(formattedTheme, 'music-gallery'),
       value: item,
     }
   });

@@ -2,19 +2,19 @@ import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .querySelectorAll(".wpmg-gallery")
+    .querySelectorAll(".mg-gallery")
     .forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
 const attachBackgroundAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
+  if (!window?.mg) {
+    window.mg = [];
   }
 
-  if (!window.wpmg[index]) {
-    window.wpmg[index] = { initBackground: attachBackgroundAnimation, source: null };
-  } else if (!window.wpmg[index]?.initialized) {
-    window.wpmg[index].initBackground = attachBackgroundAnimation;
+  if (!window.mg[index]) {
+    window.mg[index] = { initBackground: attachBackgroundAnimation, source: null };
+  } else if (!window.mg[index]?.initialized) {
+    window.mg[index].initBackground = attachBackgroundAnimation;
   } else {
     // Tu dopiero lecimy z właściwą animacją
     const props = JSON.parse(container.dataset.props || "{}");
@@ -29,8 +29,8 @@ const attachBackgroundAnimation = (container, index) => {
 
     if (background !== "dust_particles") return;
 
-    const audio = container.querySelector(".wpmg-audio");
-    const layer = container.querySelector(".wpmg-bg-layer");
+    const audio = container.querySelector(".mg-audio");
+    const layer = container.querySelector(".mg-bg-layer");
     if (!audio || !layer) return;
 
     let isVisible = true;

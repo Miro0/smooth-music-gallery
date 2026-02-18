@@ -2,26 +2,26 @@ import {createAnimationStyle} from "../block/utils/style";
 import {initAudioSource} from "../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
+  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
+  if (!window?.mg) {
+    window.mg = [];
   }
 
-  if (!window?.wpmg[index]) {
-    window.wpmg[index] = {initOverlay: attachOverlayAnimation, source: null};
-  } else if (!window?.wpmg[index]?.initialized) {
-    window.wpmg[index].initOverlay = attachOverlayAnimation;
+  if (!window?.mg[index]) {
+    window.mg[index] = {initOverlay: attachOverlayAnimation, source: null};
+  } else if (!window?.mg[index]?.initialized) {
+    window.mg[index].initOverlay = attachOverlayAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
     const {overlay, overlay_options = {}} = props;
     const {accent = '#ffffff', blend_mode = 'multiply'} = overlay_options;
 
     if (overlay === 'color_blend') {
-      const audio = container.querySelector('.wpmg-audio');
-      const imageLayer = container.querySelector('.wpmg-image-container');
+      const audio = container.querySelector('.mg-audio');
+      const imageLayer = container.querySelector('.mg-image-container');
 
       if (imageLayer && audio) {
         const imageLayerClass = createAnimationStyle('imageLayer', (c) => `
@@ -32,7 +32,7 @@ const attachOverlayAnimation = (container, index) => {
             overflow: hidden;
           }
           
-          .${c} .wpmg-overlay--color-blend__layer {
+          .${c} .mg-overlay--color-blend__layer {
             position: absolute;
             inset: 0;
             background: ${accent};
@@ -43,14 +43,14 @@ const attachOverlayAnimation = (container, index) => {
           }
         `);
 
-        if (!imageLayer.querySelector('.wpmg-overlay--color-blend__layer')) {
+        if (!imageLayer.querySelector('.mg-overlay--color-blend__layer')) {
           const overlayRoot = document.createElement('div');
           overlayRoot.className = imageLayerClass;
-          overlayRoot.innerHTML = `<div class="wpmg-overlay--color-blend__layer"></div>`;
+          overlayRoot.innerHTML = `<div class="mg-overlay--color-blend__layer"></div>`;
           imageLayer.appendChild(overlayRoot);
         }
 
-        const layer = container.querySelector('.wpmg-overlay--color-blend__layer');
+        const layer = container.querySelector('.mg-overlay--color-blend__layer');
         if (!layer) return;
 
         const [analyser, ctx, data] = initAudioSource(audio, index);

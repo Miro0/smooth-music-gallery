@@ -1,28 +1,28 @@
 import {createAnimationStyle} from "../block/utils/style";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
+  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
 const attachBackgroundAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
+  if (!window?.mg) {
+    window.mg = [];
   }
 
-  if (!window?.wpmg[index]) {
-    window.wpmg[index] = {initBackground: attachBackgroundAnimation, source: null};
-  } else if (!window?.wpmg[index]?.initialized) {
-    window.wpmg[index].initBackground = attachBackgroundAnimation;
+  if (!window?.mg[index]) {
+    window.mg[index] = {initBackground: attachBackgroundAnimation, source: null};
+  } else if (!window?.mg[index]?.initialized) {
+    window.mg[index].initBackground = attachBackgroundAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
     const {background, background_options = {}, photos = []} = props;
     const {blur = 10, zoom = 1.2, opacity = 0.5} = background_options;
 
     if (background === 'blurred_photos') {
-      const backgroundLayer = container.querySelector('.wpmg-bg-layer');
+      const backgroundLayer = container.querySelector('.mg-bg-layer');
 
       if (backgroundLayer) {
-        const blurredPhotosClass = createAnimationStyle('wpmg-bg--blurred-photos', (c) => `
+        const blurredPhotosClass = createAnimationStyle('mg-bg--blurred-photos', (c) => `
           .${c} {
             position: absolute;
             inset: 0;
@@ -68,7 +68,7 @@ const attachBackgroundAnimation = (container, index) => {
           initialSlide.classList.add('visible');
         }
 
-        window.wpmg[index].onSlideChange = (newIndex) => {
+        window.mg[index].onSlideChange = (newIndex) => {
           const imgs = container.querySelectorAll(`.${blurredPhotosClass} img`);
 
           imgs.forEach(img => img.classList.remove('visible'));

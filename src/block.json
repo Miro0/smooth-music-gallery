@@ -1,9 +1,9 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "beedvision/wp-music-gallery",
+	"name": "beedvision/music-gallery",
 	"version": "1.0.0",
-	"title": "WP Music Gallery",
+	"title": "Music Gallery",
 	"category": "widgets",
 	"description": "Powerful Gutenberg block that allows adding photo galleries with music and animations.",
 	"attributes": {
@@ -59,7 +59,7 @@
 		"html": false,
 		"align": [ "wide", "full" ]
 	},
-	"textdomain": "wpmusicgallery",
+	"textdomain": "musicgallery",
 	"editorScript": "file:./index.js",
-	"editorStyle": "wpmg-editor"
+	"editorStyle": "mg-editor"
 }

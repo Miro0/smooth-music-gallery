@@ -51,7 +51,7 @@ const MediaUpload = (
     }
 
     const frame = wp.media({
-      title: __('Select media', 'wp-music-gallery'),
+      title: __('Select media', 'music-gallery'),
       multiple: multiple,
       library: {type: allowedTypes},
     });
@@ -116,11 +116,11 @@ const MediaUpload = (
   const renderLabel = () => {
     if (multiple) {
       return value?.length
-        ? `${value.length} ${__('selected', 'wp-music-gallery')}`
-        : __('Select', 'wp-music-gallery');
+        ? `${value.length} ${__('selected', 'music-gallery')}`
+        : __('Select', 'music-gallery');
     }
 
-    return value?.filename || value?.name || value?.url || __('Select', 'wp-music-gallery');
+    return value?.filename || value?.name || value?.url || __('Select', 'music-gallery');
   };
 
   const hasValue = multiple
@@ -149,7 +149,7 @@ const MediaUpload = (
             variant="secondary"
             isDestructive
           >
-            {__('Clear', 'wp-music-gallery')}
+            {__('Clear', 'music-gallery')}
           </Button>
         )}
       </div>
@@ -157,7 +157,7 @@ const MediaUpload = (
         <AssetPickerDialog
           open={smoothCdnOpen}
           onOpenChange={setSmoothCdnOpen}
-          title={__('Select assets', 'wp-music-gallery')}
+          title={__('Select assets', 'music-gallery')}
         >
           <div className="flex max-h-[82vh] min-h-[360px] w-full flex-col gap-4">
             <AssetPickerBrowser

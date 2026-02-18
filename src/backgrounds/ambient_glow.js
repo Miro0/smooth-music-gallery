@@ -2,7 +2,7 @@ import {createAnimationStyle, hexToRgb} from "../block/utils/style";
 import {initAudioSource} from "../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.wpmg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
+  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
 function avgRange(data, start, end) {
@@ -23,29 +23,29 @@ function avgRange(data, start, end) {
 
 
 const attachBackgroundAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
+  if (!window?.mg) {
+    window.mg = [];
   }
 
-  if (!window?.wpmg[index]) {
-    window.wpmg[index] = { initBackground: attachBackgroundAnimation, source: null };
-  } else if (!window?.wpmg[index]?.initialized) {
-    window.wpmg[index].initBackground = attachBackgroundAnimation;
+  if (!window?.mg[index]) {
+    window.mg[index] = { initBackground: attachBackgroundAnimation, source: null };
+  } else if (!window?.mg[index]?.initialized) {
+    window.mg[index].initBackground = attachBackgroundAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || '{}');
     const {background, background_options = {}} = props;
     const {accent = '#ffffff', intensity = 1} = background_options;
 
     if (background === 'ambient_glow') {
-      const audio = container.querySelector('.wpmg-audio');
-      const backgroundLayer = container.querySelector('.wpmg-bg-layer');
+      const audio = container.querySelector('.mg-audio');
+      const backgroundLayer = container.querySelector('.mg-bg-layer');
 
       if (backgroundLayer && audio) {
-        const ambientClass = createAnimationStyle('wpmg-bg--ambient', (c) => `
+        const ambientClass = createAnimationStyle('mg-bg--ambient', (c) => `
           .${c} {
             position:absolute;inset:0;pointer-events:none;z-index:40;
           }
-          .${c} .wpmg-bg--ambient-light {
+          .${c} .mg-bg--ambient-light {
             position:absolute;
             width:${0.5 * intensity * 100}%;
             height:${0.5 * intensity * 100}%;
@@ -54,22 +54,22 @@ const attachBackgroundAnimation = (container, index) => {
             transition:opacity .12s linear,transform .12s linear;
             background:radial-gradient(circle,var(--glow-color) 0%, transparent 90%);
           }
-          .${c} .wpmg-bg--ambient-light__tl {top:2.5%;left:-2.5%;}
-          .${c} .wpmg-bg--ambient-light__tr {top:2.5%;right:-2.5%;}
-          .${c} .wpmg-bg--ambient-light__bl {bottom:2.5%;left:-2.5%;}
-          .${c} .wpmg-bg--ambient-light__br {bottom:2.5%;right:-2.5%;}
+          .${c} .mg-bg--ambient-light__tl {top:2.5%;left:-2.5%;}
+          .${c} .mg-bg--ambient-light__tr {top:2.5%;right:-2.5%;}
+          .${c} .mg-bg--ambient-light__bl {bottom:2.5%;left:-2.5%;}
+          .${c} .mg-bg--ambient-light__br {bottom:2.5%;right:-2.5%;}
         `);
 
         backgroundLayer.innerHTML = `
           <div class="${ambientClass}">
-            <div class="wpmg-bg--ambient-light wpmg-bg--ambient-light__tl"></div>
-            <div class="wpmg-bg--ambient-light wpmg-bg--ambient-light__tr"></div>
-            <div class="wpmg-bg--ambient-light wpmg-bg--ambient-light__bl"></div>
-            <div class="wpmg-bg--ambient-light wpmg-bg--ambient-light__br"></div>
+            <div class="mg-bg--ambient-light mg-bg--ambient-light__tl"></div>
+            <div class="mg-bg--ambient-light mg-bg--ambient-light__tr"></div>
+            <div class="mg-bg--ambient-light mg-bg--ambient-light__bl"></div>
+            <div class="mg-bg--ambient-light mg-bg--ambient-light__br"></div>
           </div>`;
 
         const ambient = backgroundLayer.querySelector(`.${ambientClass}`);
-        const lights = ambient.querySelectorAll('.wpmg-bg--ambient-light');
+        const lights = ambient.querySelectorAll('.mg-bg--ambient-light');
 
         const rgb = hexToRgb(accent);
         const baseColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
@@ -98,10 +98,10 @@ const attachBackgroundAnimation = (container, index) => {
           smoothMid = smoothMid * (1 - smoothing) + mid * smoothing;
           smoothHigh = smoothHigh * (1 - smoothing) + high * smoothing;
 
-          ambient.querySelector('.wpmg-bg--ambient-light__tl').style.opacity = 0.2 + smoothMid * intensity;
-          ambient.querySelector('.wpmg-bg--ambient-light__tr').style.opacity = 0.2 + smoothHigh * intensity;
-          ambient.querySelector('.wpmg-bg--ambient-light__bl').style.opacity = 0.2 + smoothBass * intensity;
-          ambient.querySelector('.wpmg-bg--ambient-light__br').style.opacity = 0.2 + smoothHigh * intensity;
+          ambient.querySelector('.mg-bg--ambient-light__tl').style.opacity = 0.2 + smoothMid * intensity;
+          ambient.querySelector('.mg-bg--ambient-light__tr').style.opacity = 0.2 + smoothHigh * intensity;
+          ambient.querySelector('.mg-bg--ambient-light__bl').style.opacity = 0.2 + smoothBass * intensity;
+          ambient.querySelector('.mg-bg--ambient-light__br').style.opacity = 0.2 + smoothHigh * intensity;
 
           animFrame = requestAnimationFrame(animate);
         }

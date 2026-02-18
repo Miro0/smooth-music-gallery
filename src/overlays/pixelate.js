@@ -2,15 +2,15 @@ import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .querySelectorAll(".wpmg-gallery")
+    .querySelectorAll(".mg-gallery")
     .forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
-  if (!window?.wpmg) window.wpmg = [];
+  if (!window?.mg) window.mg = [];
 
-  if (!window.wpmg[index]) {
-    window.wpmg[index] = { initOverlay: attachOverlayAnimation, source: null };
+  if (!window.mg[index]) {
+    window.mg[index] = { initOverlay: attachOverlayAnimation, source: null };
     return;
   }
 
@@ -20,14 +20,14 @@ const attachOverlayAnimation = (container, index) => {
 
   if (overlay !== "pixelate") return;
 
-  const audio = container.querySelector(".wpmg-audio");
+  const audio = container.querySelector(".mg-audio");
   if (!audio) return;
 
-  const imgs = [...container.querySelectorAll(".wpmg-image-container img")];
+  const imgs = [...container.querySelectorAll(".mg-image-container img")];
   if (!imgs.length) return;
 
   const items = [];
-  const overlayLayer = container.querySelector(".wpmg-overlay-layer");
+  const overlayLayer = container.querySelector(".mg-overlay-layer");
 
   let isVisible = true;
   const observer = new IntersectionObserver(
@@ -211,7 +211,7 @@ const attachOverlayAnimation = (container, index) => {
 
     const pixelSize = 2 + Math.pow(avg / 255, 1.4) * max_size;
 
-    const activeIndex = window?.wpmg[index]?.swiper?.realIndex || window?.wpmg[index]?.swiper?.activeIndex || 0;
+    const activeIndex = window?.mg[index]?.swiper?.realIndex || window?.mg[index]?.swiper?.activeIndex || 0;
 
     items.forEach(((item) => {
       if (item?.parent?.dataset?.swiperSlideIndex !== undefined && parseInt(activeIndex) === parseInt(item?.parent?.dataset?.swiperSlideIndex)) {

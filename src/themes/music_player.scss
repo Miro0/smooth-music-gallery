@@ -1,4 +1,4 @@
-.wpmg-gallery.theme-music_player {
+.mg-gallery.theme-music_player {
   position: relative;
   width: 100%;
   display: flex;
@@ -7,14 +7,14 @@
   overflow: hidden;
   max-width: unset;
 
-  .wpmg-bg-layer {
+  .mg-bg-layer {
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
   }
 
-  .wpmg-overlay-layer {
+  .mg-overlay-layer {
     position: absolute;
     z-index: 10;
     overflow: hidden;
@@ -26,19 +26,19 @@
     height: calc(100% - 193px);
   }
 
-  .wpmg-content {
+  .mg-content {
     position: relative;
     z-index: 5;
     overflow: hidden;
     border-radius: 26px;
 
-    background: var(--wpmg-theme-frame);
+    background: var(--mg-theme-frame);
     backdrop-filter: blur(14px);
-    border: 1px solid var(--wpmg-theme-accent--opacity);
+    border: 1px solid var(--mg-theme-accent--opacity);
     padding: 12px;
   }
 
-  .wpmg-image-container {
+  .mg-image-container {
     position: relative;
     overflow: hidden;
     border-radius: 20px;
@@ -92,7 +92,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--wpmg-theme-accent);
+    background: var(--mg-theme-accent);
     opacity: 0.35;
     transition: opacity 0.2s, transform 0.2s;
     transform: scale(0.9);
@@ -107,7 +107,7 @@
     transform: scale(1);
   }
 
-  .wpmg-controls {
+  .mg-controls {
     width: 100%;
     padding: 18px 20px 20px;
     background: transparent;
@@ -119,15 +119,15 @@
     box-sizing: border-box;
   }
 
-  .wpmg-music-meta {
+  .mg-music-meta {
     text-align: left;
     width: 100%;
   }
 
-  .wpmg-music-title {
+  .mg-music-title {
     font-size: 20px;
     font-weight: 600;
-    color: var(--wpmg-theme-accent);
+    color: var(--mg-theme-accent);
     letter-spacing: 0.3px;
     max-width: 50%;
     white-space: nowrap;
@@ -135,37 +135,37 @@
     text-overflow: ellipsis;
   }
 
-  .wpmg-music-progress {
+  .mg-music-progress {
     width: 100%;
     margin-top: 6px;
   }
 
-  .wpmg-music-progress-bar {
+  .mg-music-progress-bar {
     width: 100%;
     height: 6px;
-    background: var(--wpmg-theme-accent--opacity-light);
+    background: var(--mg-theme-accent--opacity-light);
     border-radius: 3px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
   }
 
-  .wpmg-music-progress-fill {
+  .mg-music-progress-fill {
     width: 0;
     height: 100%;
-    background: var(--wpmg-theme-accent);
+    background: var(--mg-theme-accent);
     transition: width 0.15s linear;
   }
 
-  .wpmg-music-times {
+  .mg-music-times {
     font-size: 12px;
-    color: var(--wpmg-theme-accent);
+    color: var(--mg-theme-accent);
     margin-top: 4px;
     display: flex;
     justify-content: space-between;
   }
 
-  .wpmg-btn--wrapper {
+  .mg-btn--wrapper {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -175,46 +175,46 @@
     gap: 8px;
   }
 
-  .wpmg-btn {
+  .mg-btn {
     width: 55px;
     height: 55px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--wpmg-theme-accent--opacity);
+    border: 1px solid var(--mg-theme-accent--opacity);
     display: flex;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(8px);
     transition: background 0.15s, transform 0.15s;
-    fill: var(--wpmg-theme-accent);
+    fill: var(--mg-theme-accent);
     outline: none;
 
     &:focus, &:focus-within {
-      outline: 1px solid var(--wpmg-theme-accent);
+      outline: 1px solid var(--mg-theme-accent);
     }
 
-    &.wpmg-fullscreen {
+    &.mg-fullscreen {
       position: absolute;
       bottom: 24px;
       right: 32px;
     }
   }
 
-  .wpmg-btn:hover {
+  .mg-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     cursor: pointer;
   }
 
-  .wpmg-btn:active {
+  .mg-btn:active {
     transform: scale(0.95);
   }
 
-  .wpmg-btn--small, .wpmg-fullscreen {
+  .mg-btn--small, .mg-fullscreen {
     width: 40px;
     height: 40px;
   }
 
-  .wpmg-volume--wrapper {
+  .mg-volume--wrapper {
     bottom: 50px;
     left: 6px;
     transform: rotate(-90deg);
@@ -225,9 +225,9 @@
     justify-content: center;
   }
 
-  .wpmg-volume {
+  .mg-volume {
     appearance: none;
-    background: var(--wpmg-theme-accent--opacity);
+    background: var(--mg-theme-accent--opacity);
     width: 100%;
     height: 4px;
     outline: none;
@@ -238,45 +238,45 @@
     }
   }
 
-  .wpmg-volume::-webkit-slider-thumb {
+  .mg-volume::-webkit-slider-thumb {
     appearance: none;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--wpmg-theme-accent);
+    background: var(--mg-theme-accent);
     cursor: pointer;
   }
 
-  .wpmg-volume::-moz-range-thumb {
+  .mg-volume::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--wpmg-theme-accent);
+    background: var(--mg-theme-accent);
     cursor: pointer;
   }
 
-  &:not(.wpmg--fullscreen) {
-    .wpmg-icon--expand {
+  &:not(.mg--fullscreen) {
+    .mg-icon--expand {
       display: block;
     }
 
-    .wpmg-icon--collapse {
+    .mg-icon--collapse {
       display: none;
     }
   }
 
-  &.wpmg--fullscreen {
-    .wpmg-icon--expand {
+  &.mg--fullscreen {
+    .mg-icon--expand {
       display: none;
     }
 
-    .wpmg-icon--collapse {
+    .mg-icon--collapse {
       display: block;
     }
   }
 
   @media screen and (max-width: 500px) {
-    .wpmg-prev, .wpmg-next {
+    .mg-prev, .mg-next {
       display: none;
     }
   }

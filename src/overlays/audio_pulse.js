@@ -2,19 +2,19 @@ import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .querySelectorAll(".wpmg-gallery")
+    .querySelectorAll(".mg-gallery")
     .forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
-  if (!window?.wpmg) {
-    window.wpmg = [];
+  if (!window?.mg) {
+    window.mg = [];
   }
 
-  if (!window?.wpmg[index]) {
-    window.wpmg[index] = { initOverlay: attachOverlayAnimation, source: null };
-  } else if (!window?.wpmg[index]?.initialized) {
-    window.wpmg[index].initOverlay = attachOverlayAnimation;
+  if (!window?.mg[index]) {
+    window.mg[index] = { initOverlay: attachOverlayAnimation, source: null };
+  } else if (!window?.mg[index]?.initialized) {
+    window.mg[index].initOverlay = attachOverlayAnimation;
   } else {
     const props = JSON.parse(container.dataset.props || "{}");
     const { overlay, overlay_options = {} } = props;
@@ -30,8 +30,8 @@ const attachOverlayAnimation = (container, index) => {
 
     if (overlay !== "audio_pulse") return;
 
-    const audio = container.querySelector(".wpmg-audio");
-    const overlayLayer = container.querySelector(".wpmg-overlay-layer");
+    const audio = container.querySelector(".mg-audio");
+    const overlayLayer = container.querySelector(".mg-overlay-layer");
     if (!overlayLayer || !audio) return;
 
     let isVisible = true;
