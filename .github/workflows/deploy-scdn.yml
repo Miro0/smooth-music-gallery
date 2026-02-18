@@ -19,7 +19,7 @@ jobs:
           cache: "yarn"
 
       - name: Install Smooth CDN CLI
-        run: yarn install --global @smoothcdn/cli
+        run: yarn global add @smoothcdn/cli
 
       - name: Install dependencies
         run: yarn
