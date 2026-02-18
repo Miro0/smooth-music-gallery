@@ -13,9 +13,7 @@
     "./assets/"
   ],
   "excludes": [
-    "./build/theme/*-rtl.css",
-    "./build/theme/playlist*",
-    "./build/overlay/color_blend*"
+    "./build/theme/*-rtl.css"
   ],
   "protected": [],
   "userSlug": "smoothcdn",
