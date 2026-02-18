@@ -42,7 +42,6 @@ cp "$PLUGIN_MAIN_FILE" "$STAGE_DIR/"
 cp "$ROOT_DIR/readme.txt" "$STAGE_DIR/"
 cp "$ROOT_DIR/config.json" "$STAGE_DIR/"
 cp -R "$ROOT_DIR/build" "$STAGE_DIR/"
-cp -R "$ROOT_DIR/assets" "$STAGE_DIR/"
 
 if [[ -d "$ROOT_DIR/languages" ]]; then
   cp -R "$ROOT_DIR/languages" "$STAGE_DIR/"
