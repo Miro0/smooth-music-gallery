@@ -1,7 +1,6 @@
 <?php
 /*
  * Plugin Name:         Smooth Music Gallery
- * Plugin URI:          https://smoothcdn.com/music-gallery
  * Description:         Powerful Gutenberg block that allows adding photo galleries with music and animations.
  * Requires at least:   5.6
  * Author:              Smooth CDN
