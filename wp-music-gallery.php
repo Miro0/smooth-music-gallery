@@ -37,6 +37,87 @@ function wp_music_gallery_get_base_url() {
     return $base_url;
 }
 
+function wp_music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation ) {
+    $base_url = wp_music_gallery_get_base_url();
+
+    wp_enqueue_script(
+            'wpmg-view',
+            $base_url . 'view.js',
+            [],
+            WP_MUSIC_GALLERY_VERSION,
+    );
+
+    wp_enqueue_style(
+            "wpmg-theme-$theme",
+            $base_url . "theme/$theme.css",
+            [],
+            WP_MUSIC_GALLERY_VERSION
+    );
+
+    if ( $overlay_animation ) {
+        wp_enqueue_script(
+                "wpmg-overlay-animation-script-$overlay_animation",
+                $base_url . "overlay/$overlay_animation.js",
+                [],
+                WP_MUSIC_GALLERY_VERSION
+        );
+    }
+
+    if ( $background_animation ) {
+        wp_enqueue_script(
+                "wpmg-overlay-animation-script-$background_animation",
+                $base_url . "background/$background_animation.js",
+                [],
+                WP_MUSIC_GALLERY_VERSION
+        );
+    }
+}
+
+function wp_music_gallery_enqueue_editor_support_assets() {
+    wp_enqueue_media();
+    wp_enqueue_script( 'media-views' );
+    wp_enqueue_style( 'media-views' );
+}
+
+function wp_music_gallery_is_block_editor_screen() {
+    if ( ! function_exists( 'get_current_screen' ) ) {
+        return false;
+    }
+
+    $screen = get_current_screen();
+    if ( ! $screen ) {
+        return false;
+    }
+
+    if ( method_exists( $screen, 'is_block_editor' ) ) {
+        return $screen->is_block_editor();
+    }
+
+    return false;
+}
+
+function wp_music_gallery_should_enqueue_front_assets() {
+    if ( is_admin() ) {
+        return false;
+    }
+
+    if ( function_exists( 'wp_is_serving_rest_request' ) && wp_is_serving_rest_request() ) {
+        $context = isset( $_REQUEST['context'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['context'] ) ) : '';
+        if ( $context === 'edit' ) {
+            return false;
+        }
+
+        $rest_route  = isset( $_REQUEST['rest_route'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['rest_route'] ) ) : '';
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        if ( strpos( $rest_route, 'block-renderer' ) !== false || strpos( $request_uri, 'block-renderer' ) !== false ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 function wp_music_gallery_block_render( $attributes ) {
     $theme                = $attributes['theme'] ?? 'default';
     $overlay_animation    = $attributes['overlay'] ?? '';
@@ -77,38 +158,8 @@ function wp_music_gallery_block_render( $attributes ) {
         ];
     }
 
-    $base_url = wp_music_gallery_get_base_url();
-
-    wp_enqueue_script(
-            'wpmg-view',
-            $base_url . 'view.js',
-            [],
-            WP_MUSIC_GALLERY_VERSION,
-    );
-
-    wp_enqueue_style(
-            "wpmg-theme-$theme",
-            $base_url . "theme/$theme.css",
-            [],
-            WP_MUSIC_GALLERY_VERSION
-    );
-
-    if ( $overlay_animation ) {
-        wp_enqueue_script(
-                "wpmg-overlay-animation-script-$overlay_animation",
-                $base_url . "overlay/$overlay_animation.js",
-                [],
-                WP_MUSIC_GALLERY_VERSION
-        );
-    }
-
-    if ( $background_animation ) {
-        wp_enqueue_script(
-                "wpmg-overlay-animation-script-$background_animation",
-                $base_url . "background/$background_animation.js",
-                [],
-                WP_MUSIC_GALLERY_VERSION
-        );
+    if ( wp_music_gallery_should_enqueue_front_assets() ) {
+        wp_music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation );
     }
 
     return '<div class="wpmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
@@ -383,6 +434,10 @@ add_action( 'admin_bar_menu', function ( $wp_admin_bar ) {
 }, 100 );
 
 add_action( 'admin_enqueue_scripts', function ( $hook ) {
+    if ( wp_music_gallery_is_block_editor_screen() ) {
+        wp_music_gallery_enqueue_editor_support_assets();
+    }
+
     if ( $hook !== 'wp-music-gallery_page_wp_music_gallery--builder' ) {
         return;
     }
@@ -403,9 +458,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
     );
     wp_enqueue_style( 'wpmg-shortcode-builder', $base . 'admin/shortcode_builder.css' );
 
-    wp_enqueue_media();
-    wp_enqueue_script( 'media-views' );
-    wp_enqueue_style( 'media-views' );
+    wp_music_gallery_enqueue_editor_support_assets();
 
     wp_enqueue_style( 'wp-color-picker' );
     wp_enqueue_script( 'wp-color-picker' );
@@ -437,6 +490,10 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
             WP_MUSIC_GALLERY_VERSION,
             true
     );
+} );
+
+add_action( 'enqueue_block_editor_assets', function () {
+    wp_music_gallery_enqueue_editor_support_assets();
 } );
 
 add_shortcode( 'wp-music-gallery', function ( $attributes ) {

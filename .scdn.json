@@ -5,6 +5,9 @@
   "blockBots": false,
   "blockHeadless": false,
   "sources": [
+    "./build/index.js",
+    "./build/index.css",
+    "./build/view.css",
     "./build/view.js",
     "./build/core/*.js",
     "./build/background/*.js",
