@@ -10,8 +10,22 @@
 		"photos": {
 			"type": "array"
 		},
+		"photos_cdn": {
+			"type": "array"
+		},
 		"music": {
 			"type": "object"
+		},
+		"music_cdn": {
+			"type": "object"
+		},
+		"photos_source": {
+			"type": "string",
+			"default": "wp"
+		},
+		"music_source": {
+			"type": "string",
+			"default": "wp"
 		},
 		"theme": {
 			"type": "string",

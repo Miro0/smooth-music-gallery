@@ -18,17 +18,31 @@ import './shortcode_builder.scss';
 function createShortcode(attributes) {
   try {
     if (attributes) {
+      const selectedPhotos = attributes?.photos_source === 'smoothcdn' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
+      const currentMusic = attributes?.music_source === 'smoothcdn' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
       const parts = ['[wp-music-gallery'];
 
       Object.entries(attributes).forEach(([key, value]) => {
+        if (key === 'photos_cdn' || key === 'music_cdn' || key === 'photos_source' || key === 'music_source') {
+          return;
+        }
+
         if (value !== '') {
           if (key === 'photos') {
-            if (value?.length > 0) {
-              parts.push(`${key}='${value.map((item => item.id)).join(',')}'`);
+            if (selectedPhotos.length > 0) {
+              const photos = selectedPhotos
+                .map((item) => item?.id || item?.url)
+                .filter(Boolean)
+                .join(',');
+
+              if (photos) {
+                parts.push(`${key}='${photos}'`);
+              }
             }
           } else if (key === 'music') {
-            if (value?.id) {
-              parts.push(`${key}='${value.id}'`);
+            const music = currentMusic?.id || currentMusic?.url;
+            if (music) {
+              parts.push(`${key}='${music}'`);
             }
           } else if (typeof value === 'object') {
             if (Object.keys(value).length > 0) {
@@ -54,7 +68,11 @@ function createShortcode(attributes) {
 const App = () => {
   const [attributes, setAttributes] = useState({
     photos: [],
+    photos_cdn: [],
+    photos_source: 'wp',
     music: {},
+    music_cdn: {},
+    music_source: 'wp',
     slides_duration: 2,
     size: 85,
     theme: 'default',
@@ -151,7 +169,11 @@ const App = () => {
             onClick={() => {
               setAttributes({
                 photos: [],
+                photos_cdn: [],
+                photos_source: 'wp',
                 music: {},
+                music_cdn: {},
+                music_source: 'wp',
                 slides_duration: 2,
                 size: 85,
                 theme: 'default',

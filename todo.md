@@ -14,7 +14,8 @@
 - [x] Resize nie działa na Pixelate oraz Dust Particles
 - [x] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
 - [x] pickery obrazków oraz music - nie pokazują wybranych elementów
-- [ ] pickery kierujące na Smooth CDN? Tutaj trzeba by mieć ten Asset Picker + obrazko + pliki audio
+- [x] pickery kierujące na Smooth CDN
+- [ ] dodać jakieś assety - obrazki oraz pliku muzyczne - do projektu Assets
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
 
 
@@ -28,5 +29,4 @@
 
 # 1.1
 - [ ] Poprawić mobilny widok motywi playlist
-- [ ] Włączyć z powrotem poprawione efekty i motyw
-- [ ] pickery kierujące na Smooth CDN z możliwością skierowania na własny Smooth CDN
+- [ ] Włączyć z powrotem poprawiony motyw

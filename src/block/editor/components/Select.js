@@ -15,6 +15,21 @@ const Select = (
   }
 ) => {
   const {changeAttribute} = useBlockContext();
+  const formatOptions = options.map((item) => {
+    if (typeof item === 'object' && item?.value) {
+      return {
+        label: item.label,
+        value: item.value,
+      };
+    }
+
+    const formattedTheme = capitalizeWords(item.replace(/_/g, ' '));
+
+    return {
+      label: __(formattedTheme, 'wp-music-gallery'),
+      value: item,
+    }
+  });
 
   return (
     <BaseControl
@@ -24,14 +39,7 @@ const Select = (
     >
       <ComboboxControl
         value={value}
-        options={options.map((item) => {
-          const formattedTheme = capitalizeWords(item.replace(/_/g, ' '));
-
-          return {
-            label: __(formattedTheme, 'wp-music-gallery'),
-            value: item,
-          }
-        })}
+        options={formatOptions}
         onChange={(value) => changeAttribute(name, value)}
         placeholder={placeholder}
         __next40pxDefaultSize

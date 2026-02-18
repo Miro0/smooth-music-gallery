@@ -63,7 +63,11 @@ const blendModePresets = [
 export default function EditSidebar({attributes, setAttributes, config}) {
   const {
     photos,
+    photos_cdn = [],
+    photos_source = 'wp',
     music,
+    music_cdn = {},
+    music_source = 'wp',
     theme = 'default',
     theme_options = {},
     size,
@@ -76,28 +80,52 @@ export default function EditSidebar({attributes, setAttributes, config}) {
 
   return (
     <>
-      <p style={{ paddingRight: '16px', paddingLeft: '52px' }}>Powered by <a href="https://smoothcdn.com" target="_blank">Smooth CDN</a></p>
+      <p style={{ paddingRight: '16px', paddingLeft: '52px', paddingBottom: '12px' }}>Powered by <a style={{ color: '#0ea5e9' }} href="https://smoothcdn.com" target="_blank">Smooth CDN</a></p>
 
       <PanelBody
         title={__('Gallery', 'wp-music-gallery')}
         initialOpen={false}
       >
+        <Select
+          name="photos_source"
+          value={photos_source}
+          options={[
+            {label: __('Media Library', 'wp-music-gallery'), value: 'wp'},
+            {label: __('Smooth CDN assets', 'wp-music-gallery'), value: 'smoothcdn'},
+          ]}
+          label={__('Images source', 'wp-music-gallery')}
+          help={__('Choose where images should be selected from', 'wp-music-gallery')}
+        />
+
         <MediaUpload
-          name="photos"
-          value={photos}
+          name={photos_source === 'smoothcdn' ? 'photos_cdn' : 'photos'}
+          value={photos_source === 'smoothcdn' ? photos_cdn : photos}
           label={__('Images', 'wp-music-gallery')}
           help={__('Select image to be used in gallery. Hold SHIFT to select multiple images', 'wp-music-gallery')}
           multiple={true}
+          source={photos_source === 'smoothcdn' ? 'smoothcdn' : 'wp'}
         />
 
         <hr/>
 
+        <Select
+          name="music_source"
+          value={music_source}
+          options={[
+            {label: __('Media Library', 'wp-music-gallery'), value: 'wp'},
+            {label: __('Smooth CDN assets', 'wp-music-gallery'), value: 'smoothcdn'},
+          ]}
+          label={__('Music source', 'wp-music-gallery')}
+          help={__('Choose where background music should be selected from', 'wp-music-gallery')}
+        />
+
         <MediaUpload
-          name="music"
-          value={music}
+          name={music_source === 'smoothcdn' ? 'music_cdn' : 'music'}
+          value={music_source === 'smoothcdn' ? music_cdn : music}
           label={__('Background music', 'wp-music-gallery')}
           help={__('Select music to be played as a background in gallery', 'wp-music-gallery')}
           allowedTypes={['audio']}
+          source={music_source === 'smoothcdn' ? 'smoothcdn' : 'wp'}
         />
 
         <hr/>

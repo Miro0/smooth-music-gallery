@@ -42,7 +42,7 @@ export const initWpMusicGallery = (container, index) => {
         </div>
       
         <div class="wpmg-music-meta">
-          <div class="wpmg-music-title">${music?.title || music?.filename || music?.name || __('Select background music', 'wp-music-gallery')}</div>
+          <div class="wpmg-music-title">${music?.title || music?.filename || music?.name || 'Select background music'}</div>
         </div>
 
         <div class="wpmg-music-progress">
@@ -224,13 +224,13 @@ function initControls(container, swiper, slides_duration, index) {
     });
   }
 
-  if (total) {
+  if (audio && total) {
     audio.addEventListener('loadedmetadata', () => {
       total.textContent = format(audio.duration);
     });
   }
 
-  if (fill) {
+  if (audio && fill) {
     audio.addEventListener('timeupdate', () => {
       const p = (audio.currentTime / audio.duration) * 100;
       fill.style.width = `${p}%`;

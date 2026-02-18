@@ -27,12 +27,18 @@ export default function Edit(props) {
 
   const {
     photos = [],
+    photos_cdn = [],
+    photos_source = 'wp',
     music = {},
+    music_cdn = {},
+    music_source = 'wp',
     theme = 'default',
     theme_options = {},
     size = 85,
     background_options = {},
   } = attributes;
+  const selectedPhotos = photos_source === 'smoothcdn' ? photos_cdn : photos;
+  const currentMusic = music_source === 'smoothcdn' ? music_cdn : music;
 
   const {background_color = 'transparent'} = background_options;
   const bgMargin = Math.floor((100 - size) / 4);
@@ -84,7 +90,7 @@ export default function Edit(props) {
               <AmbientGlow {...props.attributes?.background_options} />
             }
             {props.attributes?.background === 'blurred_photos' &&
-              <BlurredPhotos {...props.attributes?.background_options} photo={photos[0]}/>
+              <BlurredPhotos {...props.attributes?.background_options} photo={selectedPhotos[0]}/>
             }
             {props.attributes?.background === 'dust_particles' &&
               <DustParticles {...props.attributes?.background_options}/>
@@ -119,17 +125,17 @@ export default function Edit(props) {
                   <ColorBlend {...props.attributes?.overlay_options} />
                 }
                 <div className="swiper-slide">
-                  {photos[0]?.url ? (
+                  {selectedPhotos[0]?.url ? (
                     <>
                       <img
-                        alt={photos[0]?.alt ?? 'WP Music Gallery preview'}
-                        src={photos[0].url}
+                        alt={selectedPhotos[0]?.alt ?? 'WP Music Gallery preview'}
+                        src={selectedPhotos[0].url}
                         loading="lazy"
                         decoding="async"
                         style={{objectFit: 'cover', width: '100%', height: '100%'}}
                       />
                       {props.attributes?.overlay === 'pixelate' &&
-                        <Pixelate {...props.attributes?.overlay_options} photo={photos[0]}/>
+                        <Pixelate {...props.attributes?.overlay_options} photo={selectedPhotos[0]}/>
                       }
                     </>
                   ) : (
@@ -173,16 +179,16 @@ export default function Edit(props) {
               <div className="swiper-pagination--wrapper">
                 <div className="swiper-pagination">
                   <span className="swiper-pagination-bullet swiper-pagination-bullet-active">
-                    {theme === 'playlist' && photos[0]?.url?.split('/')?.pop()?.split('\\')?.pop()?.split('.')?.slice(0, -1)?.join('.')}
+                    {theme === 'playlist' && selectedPhotos[0]?.url?.split('/')?.pop()?.split('\\')?.pop()?.split('.')?.slice(0, -1)?.join('.')}
                   </span>
-                  {Array.from({length: photos.length - 1}).map(() => (
+                  {Array.from({length: selectedPhotos.length - 1}).map(() => (
                     <span className="swiper-pagination-bullet"/>
                   ))}
                 </div>
               </div>
 
               <div className="wpmg-music-meta">
-                <div className="wpmg-music-title">{music?.title || music?.filename || music?.name || ''}</div>
+                <div className="wpmg-music-title">{currentMusic?.title || currentMusic?.filename || currentMusic?.name || ''}</div>
               </div>
 
               <div className="wpmg-music-progress">
