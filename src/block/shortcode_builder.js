@@ -20,7 +20,7 @@ function createShortcode(attributes) {
     if (attributes) {
       const selectedPhotos = attributes?.photos_source === 'smoothcdn' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
       const currentMusic = attributes?.music_source === 'smoothcdn' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
-      const parts = ['[music-gallery'];
+      const parts = ['[smooth-music-gallery'];
 
       Object.entries(attributes).forEach(([key, value]) => {
         if (key === 'photos_cdn' || key === 'music_cdn' || key === 'photos_source' || key === 'music_source') {
@@ -147,7 +147,7 @@ const App = () => {
     <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
       <Card>
         <CardHeader>
-          <strong>{__('Shortcode Builder', 'music-gallery')}</strong>
+          <strong>{__('Shortcode Builder', 'smooth-music-gallery')}</strong>
         </CardHeader>
         <CardBody>
           <div style={{display: 'flex', flexDirection: 'row', gap: 2}}>
@@ -185,21 +185,21 @@ const App = () => {
               });
             }}
           >
-            {__('Clear gallery', 'music-gallery')}
+            {__('Clear gallery', 'smooth-music-gallery')}
           </Button>
         </CardBody>
       </Card>
 
       <Card>
         <CardHeader>
-          <strong>{__('Shortcode', 'music-gallery')}</strong>
-          <small>{__('Copy and paste generated shortcode whereever You want to use it', 'music-gallery')}</small>
+          <strong>{__('Shortcode', 'smooth-music-gallery')}</strong>
+          <small>{__('Copy and paste generated shortcode whereever You want to use it', 'smooth-music-gallery')}</small>
         </CardHeader>
         <CardBody>
           <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
             <TextareaControl
               ref={textareaRef}
-              label={__('Shortcode', 'music-gallery')}
+              label={__('Shortcode', 'smooth-music-gallery')}
               value={shortcode}
               readOnly
               rows={4}
@@ -210,7 +210,7 @@ const App = () => {
               variant="secondary"
               onClick={onCopy}
             >
-              {__('Copy to clipboard', 'music-gallery')}
+              {__('Copy to clipboard', 'smooth-music-gallery')}
             </Button>
 
             {copyState === 'success' && (
@@ -218,7 +218,7 @@ const App = () => {
                 status="success"
                 isDismissible={false}
               >
-                {__('Shortcode copied', 'music-gallery')}
+                {__('Shortcode copied', 'smooth-music-gallery')}
               </Notice>
             )}
 
@@ -227,7 +227,7 @@ const App = () => {
                 status="error"
                 isDismissible={false}
               >
-                {__('Couldn\'t proceed with copy', 'music-gallery')}
+                {__('Couldn\'t proceed with copy', 'smooth-music-gallery')}
               </Notice>
             )}
           </div>

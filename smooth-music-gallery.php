@@ -1,13 +1,13 @@
 <?php
 /*
- * Plugin Name:         Music Gallery
- * Plugin URI:          https://musicgallery.com
- * Description:         Powerful Gutenberg blog that allows adding photo galleries with music and animations.
+ * Plugin Name:         Smooth Music Gallery
+ * Plugin URI:          https://smoothcdn.com/music-gallery
+ * Description:         Powerful Gutenberg block that allows adding photo galleries with music and animations.
  * Requires at least:   5.6
  * Author:              Smooth CDN
  * Author URI:          https://smoothcdn.com
  * License:             GPL v2 or later
- * Text Domain:         music-gallery
+ * Text Domain:         smooth-music-gallery
  *
  * Version:             1.0.0
  */
@@ -21,12 +21,12 @@ const MUSIC_GALLERY_VERSION = '1.0.0';
 register_block_type(
         __DIR__ . '/build'
         , [
-                'render_callback' => __NAMESPACE__ . '\\music_gallery_block_render',
+                'render_callback' => __NAMESPACE__ . '\\smooth_music_gallery_block_render',
         ]
 );
 
-function music_gallery_get_base_url() {
-    $opts          = music_gallery_get_options();
+function smooth_music_gallery_get_base_url() {
+    $opts          = smooth_music_gallery_get_options();
     $serve_via_cdn = $opts['serve_via_cdn'];
     if ( $serve_via_cdn ) {
         $base_url = ( 'https://music-gallery.smoothcdn.com/' . MUSIC_GALLERY_VERSION . '/' );
@@ -37,8 +37,8 @@ function music_gallery_get_base_url() {
     return $base_url;
 }
 
-function music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation ) {
-    $base_url = music_gallery_get_base_url();
+function smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation ) {
+    $base_url = smooth_music_gallery_get_base_url();
 
     wp_enqueue_script(
             'mg-view',
@@ -76,13 +76,13 @@ function music_gallery_enqueue_front_assets( $theme, $overlay_animation, $backgr
     }
 }
 
-function music_gallery_enqueue_editor_support_assets() {
+function smooth_music_gallery_enqueue_editor_support_assets() {
     wp_enqueue_media();
     wp_enqueue_script( 'media-views' );
     wp_enqueue_style( 'media-views' );
 }
 
-function music_gallery_is_block_editor_screen() {
+function smooth_music_gallery_is_block_editor_screen() {
     if ( ! function_exists( 'get_current_screen' ) ) {
         return false;
     }
@@ -99,7 +99,7 @@ function music_gallery_is_block_editor_screen() {
     return false;
 }
 
-function music_gallery_should_enqueue_front_assets() {
+function smooth_music_gallery_should_enqueue_front_assets() {
     if ( is_admin() ) {
         return false;
     }
@@ -111,7 +111,7 @@ function music_gallery_should_enqueue_front_assets() {
     return true;
 }
 
-function music_gallery_block_render( $attributes ) {
+function smooth_music_gallery_block_render( $attributes ) {
     $theme                = $attributes['theme'] ?? 'default';
     $overlay_animation    = $attributes['overlay'] ?? '';
     $background_animation = $attributes['background'] ?? '';
@@ -151,15 +151,15 @@ function music_gallery_block_render( $attributes ) {
         ];
     }
 
-    if ( music_gallery_should_enqueue_front_assets() ) {
-        music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation );
+    if ( smooth_music_gallery_should_enqueue_front_assets() ) {
+        smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation );
     }
 
     return '<div class="mg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }
 
 add_action( 'admin_init', function () {
-    $base_url = music_gallery_get_base_url();
+    $base_url = smooth_music_gallery_get_base_url();
 
     $config = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
 
@@ -179,8 +179,8 @@ add_action( 'admin_init', function () {
     );
 
     register_setting(
-            'music_gallery_settings',
-            'music_gallery_options',
+            'smooth_music_gallery_settings',
+            'smooth_music_gallery_options',
             [
                     'type'              => 'array',
                     'sanitize_callback' => function ( $input ) {
@@ -197,32 +197,32 @@ add_action( 'admin_init', function () {
     );
 
     add_settings_section(
-            'music_gallery_main',
-            __( 'General Settings', 'music-gallery' ),
+            'smooth_music_gallery_main',
+            __( 'General Settings', 'smooth-music-gallery' ),
             '__return_null',
-            'music_gallery'
+            'smooth_music_gallery'
     );
 
     add_settings_field(
             'serve_via_cdn',
-            __( 'Serve gallery assets via Smooth CDN', 'music-gallery' ),
-            __NAMESPACE__ . '\\music_gallery_field_serve_via_cdn',
-            'music_gallery',
-            'music_gallery_main'
+            __( 'Serve gallery assets via Smooth CDN', 'smooth-music-gallery' ),
+            __NAMESPACE__ . '\\smooth_music_gallery_field_serve_via_cdn',
+            'smooth_music_gallery',
+            'smooth_music_gallery_main'
     );
 
     add_settings_field(
             'show_toolbar_builder',
-            __( 'Show "Create Music Gallery" in top toolbar', 'music-gallery' ),
-            __NAMESPACE__ . '\\music_gallery_field_show_toolbar',
-            'music_gallery',
-            'music_gallery_main'
+            __( 'Show "Create Smooth Music Gallery" in top toolbar', 'smooth-music-gallery' ),
+            __NAMESPACE__ . '\\smooth_music_gallery_field_show_toolbar',
+            'smooth_music_gallery',
+            'smooth_music_gallery_main'
     );
 } );
 
-function music_gallery_get_options() {
+function smooth_music_gallery_get_options() {
     return wp_parse_args(
-            get_option( 'music_gallery_options', [] ),
+            get_option( 'smooth_music_gallery_options', [] ),
             [
                     'serve_via_cdn'        => false,
                     'show_toolbar_builder' => true,
@@ -230,48 +230,48 @@ function music_gallery_get_options() {
     );
 }
 
-function music_gallery_field_serve_via_cdn() {
-    $opts = music_gallery_get_options();
+function smooth_music_gallery_field_serve_via_cdn() {
+    $opts = smooth_music_gallery_get_options();
     ?>
     <label>
-        <input type="checkbox" name="music_gallery_options[serve_via_cdn]"
+        <input type="checkbox" name="smooth_music_gallery_options[serve_via_cdn]"
                value="1" <?php checked( $opts['serve_via_cdn'] ); ?> />
-        <?php esc_html_e( 'Enable Smooth CDN delivery for gallery assets.', 'music-gallery' ); ?>
+        <?php esc_html_e( 'Enable Smooth CDN delivery for gallery assets.', 'smooth-music-gallery' ); ?>
     </label>
     <?php
 }
 
-function music_gallery_field_show_toolbar() {
-    $opts = music_gallery_get_options();
+function smooth_music_gallery_field_show_toolbar() {
+    $opts = smooth_music_gallery_get_options();
     ?>
     <label>
-        <input type="checkbox" name="music_gallery_options[show_toolbar_builder]"
+        <input type="checkbox" name="smooth_music_gallery_options[show_toolbar_builder]"
                value="1" <?php checked( $opts['show_toolbar_builder'] ); ?> />
-        <?php esc_html_e( 'Display quick access in the WordPress top admin bar.', 'music-gallery' ); ?>
+        <?php esc_html_e( 'Display quick access in the WordPress top admin bar.', 'smooth-music-gallery' ); ?>
     </label>
     <?php
 }
 
 
-function music_gallery_render_shortcode_builder_page() {
+function smooth_music_gallery_render_shortcode_builder_page() {
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Music Gallery - Shortcode Builder', 'music-gallery' ); ?></h1>
+        <h1><?php esc_html_e( 'Smooth Music Gallery - Shortcode Builder', 'smooth-music-gallery' ); ?></h1>
 
         <div id="mg-builder-root"></div>
     </div>
     <?php
 }
 
-function music_gallery_render_settings_page() {
+function smooth_music_gallery_render_settings_page() {
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Music Gallery - Settings', 'music-gallery' ); ?></h1>
+        <h1><?php esc_html_e( 'Smooth Music Gallery - Settings', 'smooth-music-gallery' ); ?></h1>
 
         <form method="post" action="options.php">
             <?php
-            settings_fields( 'music_gallery_settings' );
-            do_settings_sections( 'music_gallery' );
+            settings_fields( 'smooth_music_gallery_settings' );
+            do_settings_sections( 'smooth_music_gallery' );
             submit_button();
             ?>
         </form>
@@ -279,14 +279,14 @@ function music_gallery_render_settings_page() {
     <?php
 }
 
-function music_gallery_render_main_page() {
+function smooth_music_gallery_render_main_page() {
     ?>
-    <div class="wrap music-gallery-admin">
-        <h1><?php esc_html_e( 'Music Gallery', 'music-gallery' ); ?></h1>
+    <div class="wrap smooth-music-gallery-admin">
+        <h1><?php esc_html_e( 'Smooth Music Gallery', 'smooth-music-gallery' ); ?></h1>
 
         <img
             src="https://music-gallery.smoothcdn.com/latest/baner-1544x500.png"
-            alt="Music Gallery banner"
+            alt="Smooth Music Gallery banner"
             loading="lazy"
             decoding="async"
             width="1544"
@@ -296,11 +296,11 @@ function music_gallery_render_main_page() {
 
         <!-- Intro -->
         <div class="card" style="max-width: unset">
-            <h1 style="margin-top:0;">Welcome to Music Gallery</h1>
+            <h1 style="margin-top:0;">Welcome to Smooth Music Gallery</h1>
 
             <p>
                 Create beautiful, audio-reactive music galleries directly inside WordPress.
-                Music Gallery lets you combine playlists, visuals and smooth animations
+                Smooth Music Gallery lets you combine playlists, visuals and smooth animations
                 into a modern listening experience — without coding.
             </p>
 
@@ -310,12 +310,12 @@ function music_gallery_render_main_page() {
             </p>
 
             <p style="margin-top:16px;">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=music_gallery--builder' ) ); ?>"
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=smooth_music_gallery--builder' ) ); ?>"
                    class="button button-secondary button-large">
                     Open Shortcode Builder
                 </a>
 
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=music_gallery--settings' ) ); ?>"
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page=smooth_music_gallery--settings' ) ); ?>"
                    class="button button-secondary button-large"
                    style="margin-left:8px;">
                     Settings
@@ -380,59 +380,59 @@ add_action( 'admin_menu', function () {
 
     // Parent menu
     add_menu_page(
-            __( 'Music Gallery', 'music-gallery' ),
-            __( 'Music Gallery', 'music-gallery' ),
+            __( 'Smooth Music Gallery', 'smooth-music-gallery' ),
+            __( 'Smooth Music Gallery', 'smooth-music-gallery' ),
             'manage_options',
-            'music_gallery',
-            __NAMESPACE__ . '\\music_gallery_render_main_page',
+            'smooth_music_gallery',
+            __NAMESPACE__ . '\\smooth_music_gallery_render_main_page',
             'dashicons-format-audio',
             58
     );
 
     // Shortcode Builder
     add_submenu_page(
-            'music_gallery',
-            __( 'Shortcode Builder', 'music-gallery' ),
-            __( 'Shortcode Builder', 'music-gallery' ),
+            'smooth_music_gallery',
+            __( 'Shortcode Builder', 'smooth-music-gallery' ),
+            __( 'Shortcode Builder', 'smooth-music-gallery' ),
             'manage_options',
-            'music_gallery--builder',
-            __NAMESPACE__ . '\\music_gallery_render_shortcode_builder_page'
+            'smooth_music_gallery--builder',
+            __NAMESPACE__ . '\\smooth_music_gallery_render_shortcode_builder_page'
     );
 
     // Settings
     add_submenu_page(
-            'music_gallery',
-            __( 'Settings', 'music-gallery' ),
-            __( 'Settings', 'music-gallery' ),
+            'smooth_music_gallery',
+            __( 'Settings', 'smooth-music-gallery' ),
+            __( 'Settings', 'smooth-music-gallery' ),
             'manage_options',
-            'music_gallery--settings',
-            __NAMESPACE__ . '\\music_gallery_render_settings_page'
+            'smooth_music_gallery--settings',
+            __NAMESPACE__ . '\\smooth_music_gallery_render_settings_page'
     );
 } );
 
 add_action( 'admin_bar_menu', function ( $wp_admin_bar ) {
-    $opts = music_gallery_get_options();
+    $opts = smooth_music_gallery_get_options();
 
     if ( ! $opts['show_toolbar_builder'] ) {
         return;
     }
 
     $wp_admin_bar->add_node( [
-            'id'     => 'music-gallery-builder',
+            'id'     => 'smooth-music-gallery-builder',
             'parent' => 'new-content',
-            'title'  => __( 'Music Gallery', 'music-gallery' ),
-            'href'   => admin_url( 'admin.php?page=music_gallery--builder' ),
-            'meta'   => [ 'class' => 'music-gallery-toolbar' ],
+            'title'  => __( 'Smooth Music Gallery', 'smooth-music-gallery' ),
+            'href'   => admin_url( 'admin.php?page=smooth_music_gallery--builder' ),
+            'meta'   => [ 'class' => 'smooth-music-gallery-toolbar' ],
     ] );
 
 }, 100 );
 
 add_action( 'admin_enqueue_scripts', function ( $hook ) {
-    if ( music_gallery_is_block_editor_screen() ) {
-        music_gallery_enqueue_editor_support_assets();
+    if ( smooth_music_gallery_is_block_editor_screen() ) {
+        smooth_music_gallery_enqueue_editor_support_assets();
     }
 
-    if ( $hook !== 'music-gallery_page_music_gallery--builder' ) {
+    if ( $hook !== 'smooth-music-gallery_page_smooth_music_gallery--builder' ) {
         return;
     }
 
@@ -453,7 +453,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
     );
     wp_enqueue_style( 'mg-shortcode-builder', $base . 'admin/shortcode_builder.css', [], MUSIC_GALLERY_VERSION );
 
-    music_gallery_enqueue_editor_support_assets();
+    smooth_music_gallery_enqueue_editor_support_assets();
 
     wp_enqueue_style( 'wp-color-picker' );
     wp_enqueue_script( 'wp-color-picker' );
@@ -499,10 +499,10 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 } );
 
 add_action( 'enqueue_block_editor_assets', function () {
-    music_gallery_enqueue_editor_support_assets();
+    smooth_music_gallery_enqueue_editor_support_assets();
 } );
 
-add_shortcode( 'music-gallery', function ( $attributes ) {
+add_shortcode( 'smooth-music-gallery', function ( $attributes ) {
     $attributes = shortcode_atts(
             [
                     'photos'             => '',
@@ -521,7 +521,7 @@ add_shortcode( 'music-gallery', function ( $attributes ) {
                     'overlay_options'    => '',
             ],
             $attributes,
-            'music_gallery'
+            'smooth_music_gallery'
     );
 
     if ( ! empty( $attributes['photos'] ) ) {
@@ -594,5 +594,5 @@ add_shortcode( 'music-gallery', function ( $attributes ) {
     }
 
 
-    return music_gallery_block_render( $attributes );
+    return smooth_music_gallery_block_render( $attributes );
 } );

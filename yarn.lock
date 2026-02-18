@@ -2516,10 +2516,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@smoothcdn/asset-picker@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@smoothcdn/asset-picker/-/asset-picker-1.0.6.tgz#d7fd3c770280ec0e58099e6b4a0bcc5899517ab8"
-  integrity sha512-WlH7WinNAvzBUA41bxGKhNjWXVLcrLygj+3T9uVmR9IQ9A9wO9oxYcgAcyFaXp5oe0dj6g9Khdwv1QzvRE3YeA==
+"@smoothcdn/asset-picker@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@smoothcdn/asset-picker/-/asset-picker-1.0.7.tgz#4cd91de505cb618f172799c670df463b563ece82"
+  integrity sha512-EFnDKfJ5VEPvhRq8mjhpxaW7bxwzO2JphQC7yJBsDZApt/M+x/gxANhvuBMdqBQQdJ3g0inPREb+UbNNAMIh9A==
   dependencies:
     lucide-react "^0.574.0"
 

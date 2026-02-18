@@ -1,9 +1,9 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "beedvision/music-gallery",
+	"name": "beedvision/smooth-music-gallery",
 	"version": "1.0.0",
-	"title": "Music Gallery",
+	"title": "Smooth Music Gallery",
 	"category": "widgets",
 	"description": "Powerful Gutenberg block that allows adding photo galleries with music and animations.",
 	"attributes": {

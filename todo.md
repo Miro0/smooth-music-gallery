@@ -9,7 +9,7 @@
 - [x] Podmienić ładowanie assetów przez Smooth CDN - sprawdzić w ogóle ten flow, bo motywy to się chyba wszystkie ładują przez Edytor.
 - [x] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
 - [x] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth CDN" oraz "Pokaz przycisk w top toolbar"
-- [x] Strona główna w Music Gallery. Jakieś info o Smooth CDN?
+- [x] Strona główna w Smooth Music Gallery. Jakieś info o Smooth CDN?
 - [x] odtwarzanie jednej galerii powinno automatycznie stopować inne instancje - mała funkcja, ale przydatna przy wielu galeriach
 - [x] Resize nie działa na Pixelate oraz Dust Particles
 - [x] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)

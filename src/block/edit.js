@@ -128,7 +128,7 @@ export default function Edit(props) {
                   {selectedPhotos[0]?.url ? (
                     <>
                       <img
-                        alt={selectedPhotos[0]?.alt ?? 'Music Gallery preview'}
+                        alt={selectedPhotos[0]?.alt ?? 'Smooth Music Gallery preview'}
                         src={selectedPhotos[0].url}
                         loading="lazy"
                         decoding="async"
@@ -168,7 +168,7 @@ export default function Edit(props) {
                           d="M20 5v14H4V5h16m0-2H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-7.5 10.5l-2.5 3l-1.5-2l-2.5 3h12l-3.5-4.5l-2.5 3Z"
                         />
                       </svg>
-                      <div>{__('No images added to gallery', 'music-gallery')}</div>
+                      <div>{__('No images added to gallery', 'smooth-music-gallery')}</div>
                     </div>
                   )}
                 </div>

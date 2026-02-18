@@ -1,4 +1,4 @@
-=== Music Gallery ===
+=== Smooth Music Gallery ===
 Contributors: smoothcdn
 Tags: gallery, music, audio, gutenberg, shortcode
 Requires at least: 5.6
@@ -12,7 +12,7 @@ Create modern photo galleries with background music, visual themes, and audio-re
 
 == Description ==
 
-Music Gallery lets you build immersive photo galleries enhanced with background music and animated visual effects.
+Smooth Music Gallery lets you build immersive photo galleries enhanced with background music and animated visual effects.
 
 You can use it in two ways:
 
@@ -33,7 +33,7 @@ Main features:
 
 1. Upload the plugin folder to `/wp-content/plugins/`, or install it from the WordPress Plugins screen.
 2. Activate the plugin through the `Plugins` screen in WordPress.
-3. Use the `Music Gallery` block in Gutenberg, or open `Music Gallery -> Shortcode Builder` in wp-admin.
+3. Use the `Smooth Music Gallery` block in Gutenberg, or open `Smooth Music Gallery -> Shortcode Builder` in wp-admin.
 
 == Frequently Asked Questions ==
 
