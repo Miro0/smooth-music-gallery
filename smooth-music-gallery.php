@@ -197,7 +197,7 @@ add_action( 'admin_init', function () {
 
     add_settings_section(
             'smooth_music_gallery_main',
-            __( 'General Settings', 'smooth-music-gallery' ),
+            __( 'Plugin Settings', 'smooth-music-gallery' ),
             '__return_null',
             'smooth_music_gallery'
     );
@@ -255,8 +255,6 @@ function smooth_music_gallery_field_show_toolbar() {
 function smooth_music_gallery_render_shortcode_builder_page() {
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Smooth Music Gallery - Shortcode Builder', 'smooth-music-gallery' ); ?></h1>
-
         <div id="mg-builder-root"></div>
     </div>
     <?php
@@ -265,8 +263,6 @@ function smooth_music_gallery_render_shortcode_builder_page() {
 function smooth_music_gallery_render_settings_page() {
     ?>
     <div class="wrap">
-        <h1><?php esc_html_e( 'Smooth Music Gallery - Settings', 'smooth-music-gallery' ); ?></h1>
-
         <form method="post" action="options.php">
             <?php
             settings_fields( 'smooth_music_gallery_settings' );
@@ -281,10 +277,8 @@ function smooth_music_gallery_render_settings_page() {
 function smooth_music_gallery_render_main_page() {
     ?>
     <div class="wrap smooth-music-gallery-admin">
-        <h1><?php esc_html_e( 'Smooth Music Gallery', 'smooth-music-gallery' ); ?></h1>
-
         <img
-            src="https://music-gallery.smoothcdn.com/latest/baner-1544x500.png"
+            src="https://music-gallery.smoothcdn.com/latest/baner-1544x500.svg"
             alt="Smooth Music Gallery banner"
             loading="lazy"
             decoding="async"
@@ -323,7 +317,7 @@ function smooth_music_gallery_render_main_page() {
         </div>
 
         <!-- Features -->
-        <div style="display:flex; flex-direction: row; gap:16px; margin-top:24px; flex-wrap: wrap;">
+        <div style="display:flex; flex-direction: row; gap:16px; flex-wrap: wrap;">
 
             <div class="card" style="width: calc((100% / 3) - 11px);">
                 <h2>Audio-Reactive Visuals</h2>
@@ -352,7 +346,7 @@ function smooth_music_gallery_render_main_page() {
         </div>
 
         <!-- Smooth CDN Promo -->
-        <div class="card" style="margin-top:44px; padding-top: 16px; max-width: unset; border-left:6px solid #0086d1;">
+        <div class="card" style="margin-top:20px; padding-top: 16px; max-width: unset; border-left:6px solid #0086d1;">
             <h2 style="margin-top:0;">Powered by Smooth CDN</h2>
 
             <p>
