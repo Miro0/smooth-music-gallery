@@ -10,8 +10,10 @@
 - [x] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
 - [x] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth CDN" oraz "Pokaz przycisk w top toolbar"
 - [x] Strona główna w WP Music Gallery. Jakieś info o Smooth CDN?
-- [ ] odtwarzanie jednej galerii powinno automatycznie stopować inne instancje - mała funkcja, ale przydatna przy wielu galeriach
-- [ ] pickery obrazków oraz music - nie pokazują wybranych elementów
+- [x] odtwarzanie jednej galerii powinno automatycznie stopować inne instancje - mała funkcja, ale przydatna przy wielu galeriach
+- [x] Resize nie działa na Pixelate oraz Dust Particles
+- [x] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
+- [x] pickery obrazków oraz music - nie pokazują wybranych elementów
 - [ ] pickery kierujące na Smooth CDN? Tutaj trzeba by mieć ten Asset Picker + obrazko + pliki audio
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
 
@@ -25,8 +27,6 @@
 - [x] Przesunięcie slideów o pixel z powodu ułamkowych wielkości szerokości - występuje nadal w video player / music player motywach.
 
 # 1.1
-- [ ] Resize nie działa na Pixelate oraz Dust Particles
-- [ ] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
 - [ ] Poprawić mobilny widok motywi playlist
 - [ ] Włączyć z powrotem poprawione efekty i motyw
 - [ ] pickery kierujące na Smooth CDN z możliwością skierowania na własny Smooth CDN

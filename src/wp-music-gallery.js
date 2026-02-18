@@ -283,6 +283,31 @@ function initControls(container, swiper, slides_duration, index) {
 
   let playing = false;
   let controlsTimeout = null;
+  const pausePlayback = () => {
+    if (!playing) {
+      return;
+    }
+
+    playing = false;
+    swiper.autoplay.stop();
+    audio?.pause();
+
+    btnPlay?.classList.remove("is-loading");
+    if (btnPlay) {
+      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+    }
+
+    container.classList.remove('is-playing');
+  };
+  const pauseOtherInstances = () => {
+    window.wpmg?.forEach((instance, instanceIndex) => {
+      if (instanceIndex !== index && typeof instance?.pause === 'function') {
+        instance.pause();
+      }
+    });
+  };
+
+  window.wpmg[index].pause = pausePlayback;
 
   window.addEventListener('pointermove', (event) => {
     if (container.classList.contains('visible-controls')) return;
@@ -306,18 +331,11 @@ function initControls(container, swiper, slides_duration, index) {
   if (btnPlay) {
     btnPlay.addEventListener('click', async () => {
       if (playing) {
-        playing = false;
-
-        swiper.autoplay.stop();
-        audio?.pause();
-        // audio.currentTime = 0; // Time reset.
-
-        btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
-
-        container.classList.remove('is-playing');
+        pausePlayback();
         return;
       }
 
+      pauseOtherInstances();
       playing = true;
 
       container.classList.add('is-playing');
@@ -374,4 +392,3 @@ function initControls(container, swiper, slides_duration, index) {
     });
   }
 }
-

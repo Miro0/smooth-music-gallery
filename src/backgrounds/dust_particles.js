@@ -52,18 +52,37 @@ const attachBackgroundAnimation = (container, index) => {
 
     const ctx2 = canvas.getContext("2d");
 
+    let particles = [];
+    let lastWidth = 0;
+    let lastHeight = 0;
     function resize() {
       const r = layer.getBoundingClientRect();
       if (!r.width || !r.height) {
         requestAnimationFrame(resize);
         return;
       }
+
+      if (lastWidth && lastHeight) {
+        const scaleX = r.width / lastWidth;
+        const scaleY = r.height / lastHeight;
+        particles.forEach((p) => {
+          p.x *= scaleX;
+          p.y *= scaleY;
+        });
+      }
+
       canvas.width = r.width;
       canvas.height = r.height;
+      lastWidth = r.width;
+      lastHeight = r.height;
     }
     resize();
     window.addEventListener("resize", resize);
     document.addEventListener("fullscreenchange", resize);
+    const resizeObserver =
+      window.ResizeObserver &&
+      new ResizeObserver(() => resize());
+    resizeObserver?.observe(layer);
 
     function makeTextureForSize(size) {
       const texSize = size * 4;
@@ -96,7 +115,7 @@ const attachBackgroundAnimation = (container, index) => {
     const rect = layer.getBoundingClientRect();
     const count = Math.floor(240 * density);
 
-    const particles = new Array(count).fill(0).map(() => {
+    particles = new Array(count).fill(0).map(() => {
       const size = min_size + Math.random() * (max_size - min_size);
       return {
         x: Math.random() * (rect.width || 1),
@@ -190,6 +209,7 @@ const attachBackgroundAnimation = (container, index) => {
       observer.disconnect();
       window.removeEventListener("resize", resize);
       document.removeEventListener("fullscreenchange", resize);
+      resizeObserver?.disconnect();
       if (canvas.parentNode) {
         canvas.parentNode.removeChild(canvas);
       }

@@ -50,6 +50,7 @@ const ColorBlend = ({accent = '#ffffff', blend_mode = 'multiply'}) => {
           mixBlendMode: blend_mode,
           transition: 'background 0.15s linear, mix-blend-mode 0.15s linear',
           willChange: 'opacity, background, mix-blend-mode',
+          zIndex: 10
         }}
       />
     </div>

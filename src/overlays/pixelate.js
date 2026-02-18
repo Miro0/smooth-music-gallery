@@ -27,6 +27,7 @@ const attachOverlayAnimation = (container, index) => {
   if (!imgs.length) return;
 
   const items = [];
+  const overlayLayer = container.querySelector(".wpmg-overlay-layer");
 
   let isVisible = true;
   const observer = new IntersectionObserver(
@@ -36,6 +37,38 @@ const attachOverlayAnimation = (container, index) => {
     { threshold: 0.1 }
   );
   observer.observe(container);
+
+  const syncItemSize = (item) => {
+    const rect = item.parent.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+    const dpr = window.devicePixelRatio || 1;
+
+    if (!w || !h) return;
+
+    const nextWidth = Math.max(1, Math.round(w * dpr));
+    const nextHeight = Math.max(1, Math.round(h * dpr));
+
+    if (item.canvas.width !== nextWidth || item.canvas.height !== nextHeight) {
+      item.canvas.width = nextWidth;
+      item.canvas.height = nextHeight;
+      item.canvas.style.width = w + "px";
+      item.canvas.style.height = h + "px";
+      item.ctx.imageSmoothingEnabled = false;
+      item.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    if (item.off && item.octx && (item.off.width !== nextWidth || item.off.height !== nextHeight)) {
+      item.off.width = nextWidth;
+      item.off.height = nextHeight;
+      item.octx = item.off.getContext("2d", { alpha: true });
+      item.octx.imageSmoothingEnabled = false;
+      item.octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  };
+  const syncAllCanvasSizes = () => {
+    items.forEach((item) => syncItemSize(item));
+  };
 
   imgs.forEach((img) => {
     const parent = img.parentElement;
@@ -56,7 +89,7 @@ const attachOverlayAnimation = (container, index) => {
         off = new OffscreenCanvas(rect.width * dpr, rect.height * dpr);
         octx = off.getContext("2d", { alpha: true });
         octx.imageSmoothingEnabled = false;
-        octx.scale(dpr, dpr);
+        octx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
 
       const canvas = document.createElement("canvas");
@@ -72,7 +105,7 @@ const attachOverlayAnimation = (container, index) => {
 
       const ctx = canvas.getContext("2d");
       ctx.imageSmoothingEnabled = false;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       parent.style.position = "relative";
       parent.appendChild(canvas);
@@ -85,6 +118,8 @@ const attachOverlayAnimation = (container, index) => {
         off,
         octx
       });
+
+      syncItemSize(items[items.length - 1]);
     }
 
     if (!img.complete || img.naturalWidth === 0) {
@@ -102,6 +137,14 @@ const attachOverlayAnimation = (container, index) => {
   const tctx = tmp.getContext("2d");
   tctx.imageSmoothingEnabled = false;
 
+  window.addEventListener("resize", syncAllCanvasSizes);
+  document.addEventListener("fullscreenchange", syncAllCanvasSizes);
+  const resizeObserver =
+    window.ResizeObserver &&
+    overlayLayer &&
+    new ResizeObserver(() => syncAllCanvasSizes());
+  resizeObserver?.observe(overlayLayer);
+
   let animFrame;
 
   function drawPixel(item, pixelSize) {
@@ -111,6 +154,8 @@ const attachOverlayAnimation = (container, index) => {
     const h = rect.height;
 
     if (w === 0 || h === 0) return;
+
+    syncItemSize(item);
 
     const sw = img.naturalWidth;
     const sh = img.naturalHeight;

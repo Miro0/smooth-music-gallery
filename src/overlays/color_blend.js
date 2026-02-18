@@ -38,15 +38,17 @@ const attachOverlayAnimation = (container, index) => {
             background: ${accent};
             opacity: 0.1;
             mix-blend-mode: ${blend_mode};
+            pointer-events: none;
             will-change: opacity, background;
           }
         `);
 
-        imageLayer.innerHTML += `
-          <div class="${imageLayerClass}">
-            <div class="wpmg-overlay--color-blend__layer"></div>
-          </div>
-        `;
+        if (!imageLayer.querySelector('.wpmg-overlay--color-blend__layer')) {
+          const overlayRoot = document.createElement('div');
+          overlayRoot.className = imageLayerClass;
+          overlayRoot.innerHTML = `<div class="wpmg-overlay--color-blend__layer"></div>`;
+          imageLayer.appendChild(overlayRoot);
+        }
 
         const layer = container.querySelector('.wpmg-overlay--color-blend__layer');
         if (!layer) return;

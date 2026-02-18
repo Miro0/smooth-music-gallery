@@ -21,6 +21,19 @@ const MediaUpload = (
       library: {type: allowedTypes},
     });
 
+    frame.on('open', () => {
+      const selection = frame.state().get('selection');
+      const selectedIds = multiple
+        ? (Array.isArray(value) ? value.map((item) => item?.id).filter(Boolean) : [])
+        : (value?.id ? [value.id] : []);
+
+      selectedIds.forEach((id) => {
+        const attachment = wp.media.attachment(id);
+        attachment.fetch();
+        selection.add(attachment);
+      });
+    });
+
     frame.on('select', () => {
       const selection = frame.state().get('selection');
 

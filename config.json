@@ -14,6 +14,8 @@
     "equalizer_bars",
     "wave_line",
     "audio_pulse",
-    "heartbeat_line"
+    "heartbeat_line",
+    "pixelate",
+    "color_blend"
   ]
 }
