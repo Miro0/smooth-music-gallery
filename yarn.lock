@@ -2516,10 +2516,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@smoothcdn/asset-picker@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@smoothcdn/asset-picker/-/asset-picker-1.0.7.tgz#4cd91de505cb618f172799c670df463b563ece82"
-  integrity sha512-EFnDKfJ5VEPvhRq8mjhpxaW7bxwzO2JphQC7yJBsDZApt/M+x/gxANhvuBMdqBQQdJ3g0inPREb+UbNNAMIh9A==
+"@smoothcdn/asset-picker@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@smoothcdn/asset-picker/-/asset-picker-1.0.8.tgz#8b74433f676b486fae8cb46222b45ebc1a79563d"
+  integrity sha512-e8a2hRllObMw6pkeb/Xk6r9osSAHYVl948sxrbLF14Jcsnbr7SvWAZPk/mZAQCgSV4XnrXGbeUrQR7tQ+njWGg==
   dependencies:
     lucide-react "^0.574.0"
 
@@ -11266,10 +11266,10 @@ svgo@^3.0.2, svgo@^3.2.0:
     csso "^5.0.5"
     picocolors "^1.0.0"
 
-swiper@^12.0.3:
-  version "12.0.3"
-  resolved "https://registry.npmjs.org/swiper/-/swiper-12.0.3.tgz"
-  integrity sha512-BHd6U1VPEIksrXlyXjMmRWO0onmdNPaTAFduzqR3pgjvi7KfmUCAm/0cj49u2D7B0zNjMw02TSeXfinC1hDCXg==
+swiper@^12.1.2:
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-12.1.2.tgz#39eaad0c088def66a7eb8f6bae1439384586ab90"
+  integrity sha512-4gILrI3vXZqoZh71I1PALqukCFgk+gpOwe1tOvz5uE9kHtl2gTDzmYflYCwWvR4LOvCrJi6UEEU+gnuW5BtkgQ==
 
 symbol-tree@^3.2.4:
   version "3.2.4"

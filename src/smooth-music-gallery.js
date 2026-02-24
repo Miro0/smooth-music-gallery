@@ -84,7 +84,7 @@ export const initMusicGallery = (container, index) => {
         </button>
       </div>
     </div>
-    ${music?.url ? `<audio class="mg-audio" preload="auto" loop src="${music.url}"></audio>` : ''}
+    ${music?.url ? `<audio class="mg-audio" preload="auto" crossorigin="anonymous" loop src="${music.url}"></audio>` : ''}
   `;
 
   const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');

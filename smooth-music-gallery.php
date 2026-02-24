@@ -8,14 +8,14 @@
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.0.0
+ * Version:             1.0.1
  */
 
 namespace BeedVision\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-const MUSIC_GALLERY_VERSION = '1.0.0';
+const MUSIC_GALLERY_VERSION = '1.0.1';
 
 register_block_type(
         __DIR__ . '/build'
