@@ -1,4 +1,4 @@
-.mg-gallery.theme-music_player {
+.smoothmg-gallery.theme-music_player {
   position: relative;
   width: 100%;
   display: flex;
@@ -7,14 +7,14 @@
   overflow: hidden;
   max-width: unset;
 
-  .mg-bg-layer {
+  .smoothmg-bg-layer {
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
   }
 
-  .mg-overlay-layer {
+  .smoothmg-overlay-layer {
     position: absolute;
     z-index: 10;
     overflow: hidden;
@@ -26,19 +26,19 @@
     height: calc(100% - 193px);
   }
 
-  .mg-content {
+  .smoothmg-content {
     position: relative;
     z-index: 5;
     overflow: hidden;
     border-radius: 26px;
 
-    background: var(--mg-theme-frame);
+    background: var(--smoothmg-theme-frame);
     backdrop-filter: blur(14px);
-    border: 1px solid var(--mg-theme-accent--opacity);
+    border: 1px solid var(--smoothmg-theme-accent--opacity);
     padding: 12px;
   }
 
-  .mg-image-container {
+  .smoothmg-image-container {
     position: relative;
     overflow: hidden;
     border-radius: 20px;
@@ -92,7 +92,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--mg-theme-accent);
+    background: var(--smoothmg-theme-accent);
     opacity: 0.35;
     transition: opacity 0.2s, transform 0.2s;
     transform: scale(0.9);
@@ -107,7 +107,7 @@
     transform: scale(1);
   }
 
-  .mg-controls {
+  .smoothmg-controls {
     width: 100%;
     padding: 18px 20px 20px;
     background: transparent;
@@ -119,15 +119,15 @@
     box-sizing: border-box;
   }
 
-  .mg-music-meta {
+  .smoothmg-music-meta {
     text-align: left;
     width: 100%;
   }
 
-  .mg-music-title {
+  .smoothmg-music-title {
     font-size: 20px;
     font-weight: 600;
-    color: var(--mg-theme-accent);
+    color: var(--smoothmg-theme-accent);
     letter-spacing: 0.3px;
     max-width: 50%;
     white-space: nowrap;
@@ -135,37 +135,37 @@
     text-overflow: ellipsis;
   }
 
-  .mg-music-progress {
+  .smoothmg-music-progress {
     width: 100%;
     margin-top: 6px;
   }
 
-  .mg-music-progress-bar {
+  .smoothmg-music-progress-bar {
     width: 100%;
     height: 6px;
-    background: var(--mg-theme-accent--opacity-light);
+    background: var(--smoothmg-theme-accent--opacity-light);
     border-radius: 3px;
     overflow: hidden;
     position: relative;
     cursor: pointer;
   }
 
-  .mg-music-progress-fill {
+  .smoothmg-music-progress-fill {
     width: 0;
     height: 100%;
-    background: var(--mg-theme-accent);
+    background: var(--smoothmg-theme-accent);
     transition: width 0.15s linear;
   }
 
-  .mg-music-times {
+  .smoothmg-music-times {
     font-size: 12px;
-    color: var(--mg-theme-accent);
+    color: var(--smoothmg-theme-accent);
     margin-top: 4px;
     display: flex;
     justify-content: space-between;
   }
 
-  .mg-btn--wrapper {
+  .smoothmg-btn--wrapper {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -175,46 +175,46 @@
     gap: 8px;
   }
 
-  .mg-btn {
+  .smoothmg-btn {
     width: 55px;
     height: 55px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--mg-theme-accent--opacity);
+    border: 1px solid var(--smoothmg-theme-accent--opacity);
     display: flex;
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(8px);
     transition: background 0.15s, transform 0.15s;
-    fill: var(--mg-theme-accent);
+    fill: var(--smoothmg-theme-accent);
     outline: none;
 
     &:focus, &:focus-within {
-      outline: 1px solid var(--mg-theme-accent);
+      outline: 1px solid var(--smoothmg-theme-accent);
     }
 
-    &.mg-fullscreen {
+    &.smoothmg-fullscreen {
       position: absolute;
       bottom: 24px;
       right: 32px;
     }
   }
 
-  .mg-btn:hover {
+  .smoothmg-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     cursor: pointer;
   }
 
-  .mg-btn:active {
+  .smoothmg-btn:active {
     transform: scale(0.95);
   }
 
-  .mg-btn--small, .mg-fullscreen {
+  .smoothmg-btn--small, .smoothmg-fullscreen {
     width: 40px;
     height: 40px;
   }
 
-  .mg-volume--wrapper {
+  .smoothmg-volume--wrapper {
     bottom: 50px;
     left: 6px;
     transform: rotate(-90deg);
@@ -225,9 +225,9 @@
     justify-content: center;
   }
 
-  .mg-volume {
+  .smoothmg-volume {
     appearance: none;
-    background: var(--mg-theme-accent--opacity);
+    background: var(--smoothmg-theme-accent--opacity);
     width: 100%;
     height: 4px;
     outline: none;
@@ -238,45 +238,45 @@
     }
   }
 
-  .mg-volume::-webkit-slider-thumb {
+  .smoothmg-volume::-webkit-slider-thumb {
     appearance: none;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--mg-theme-accent);
+    background: var(--smoothmg-theme-accent);
     cursor: pointer;
   }
 
-  .mg-volume::-moz-range-thumb {
+  .smoothmg-volume::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--mg-theme-accent);
+    background: var(--smoothmg-theme-accent);
     cursor: pointer;
   }
 
-  &:not(.mg--fullscreen) {
-    .mg-icon--expand {
+  &:not(.smoothmg--fullscreen) {
+    .smoothmg-icon--expand {
       display: block;
     }
 
-    .mg-icon--collapse {
+    .smoothmg-icon--collapse {
       display: none;
     }
   }
 
-  &.mg--fullscreen {
-    .mg-icon--expand {
+  &.smoothmg--fullscreen {
+    .smoothmg-icon--expand {
       display: none;
     }
 
-    .mg-icon--collapse {
+    .smoothmg-icon--collapse {
       display: block;
     }
   }
 
   @media screen and (max-width: 500px) {
-    .mg-prev, .mg-next {
+    .smoothmg-prev, .smoothmg-next {
       display: none;
     }
   }

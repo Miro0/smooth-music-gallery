@@ -91,7 +91,7 @@ const App = () => {
   useEffect(() => {
     setMounted(true);
 
-    const storageCache = localStorage.getItem('mg-shortcode-builder');
+    const storageCache = localStorage.getItem('smoothmg-shortcode-builder');
     if (storageCache) {
       setAttributes(JSON.parse(storageCache));
     }
@@ -99,7 +99,7 @@ const App = () => {
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem('mg-shortcode-builder', JSON.stringify(attributes));
+      localStorage.setItem('smoothmg-shortcode-builder', JSON.stringify(attributes));
     }
   }, [attributes]);
 
@@ -238,7 +238,7 @@ const App = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  const root = document.getElementById('mg-builder-root');
+  const root = document.getElementById('smoothmg-builder-root');
   if (!root) return;
 
   const {createRoot} = wp.element || {};

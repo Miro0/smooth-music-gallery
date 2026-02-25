@@ -1,7 +1,7 @@
 {
   "name": "music-control",
   "version": "1.0.1",
-  "description": "Powerful Gutenberg block that allows adding photo galleries with music and animations.",
+  "description": "Powerful Gutenberg block for photo galleries with music and animations, plus a built-in Shortcode Builder.",
   "scripts": {
     "build:app": "wp-scripts build src/block/index.js src/block/view.js --output-path=build",
     "build:core": "wp-scripts build src/smooth-music-gallery.js --output-path=build/core",

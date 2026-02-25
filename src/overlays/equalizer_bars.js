@@ -2,7 +2,7 @@ import {createAnimationStyle} from "../block/utils/style";
 import {initAudioSource} from "../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
+  document.querySelectorAll('.smoothmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
@@ -22,11 +22,11 @@ const attachOverlayAnimation = (container, index) => {
     const barsRatio = window.innerWidth < 768 ? 0.5 : 1;
 
     if (overlay === 'equalizer_bars') {
-      const audio = container.querySelector('.mg-audio');
-      const overlayLayer = container.querySelector('.mg-overlay-layer');
+      const audio = container.querySelector('.smoothmg-audio');
+      const overlayLayer = container.querySelector('.smoothmg-overlay-layer');
 
       if (overlayLayer && audio) {
-        const equalizerClass = createAnimationStyle('mg-overlay--equalizer-bars', (c) => `
+        const equalizerClass = createAnimationStyle('smoothmg-overlay--equalizer-bars', (c) => `
           .${c} {
             position: absolute;
             bottom: 0;
@@ -40,7 +40,7 @@ const attachOverlayAnimation = (container, index) => {
             opacity: 0.2;
             gap: 3px;
           }
-          .${c} .mg-overlay--equalizer-bar {
+          .${c} .smoothmg-overlay--equalizer-bar {
             flex: 1;
             height: 95%;
             background: #ffffff;
@@ -55,12 +55,12 @@ const attachOverlayAnimation = (container, index) => {
 
         overlayLayer.innerHTML = `
           <div class="${equalizerClass}" data-bars="${bars * barsRatio}" style="opacity:${opacity}; height: ${max_height}%">
-            ${`<div class="mg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
+            ${`<div class="smoothmg-overlay--equalizer-bar" style="background-color:${accent}"></div>`.repeat(bars * barsRatio)}
           </div>
         `;
 
         const barNodes = Array.from(
-          overlayLayer.querySelectorAll('.mg-overlay--equalizer-bar')
+          overlayLayer.querySelectorAll('.smoothmg-overlay--equalizer-bar')
         );
 
         const barHeights = new Array(barNodes.length).fill(0);

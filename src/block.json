@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"title": "Smooth Music Gallery",
 	"category": "widgets",
-	"description": "Powerful Gutenberg block that allows adding photo galleries with music and animations.",
+	"description": "Powerful Gutenberg block for photo galleries with music and animations, plus a built-in Shortcode Builder.",
 	"attributes": {
 		"photos": {
 			"type": "array"
@@ -61,5 +61,5 @@
 	},
 	"textdomain": "musicgallery",
 	"editorScript": "file:./index.js",
-	"editorStyle": "mg-editor"
+	"editorStyle": "smoothmg-editor"
 }

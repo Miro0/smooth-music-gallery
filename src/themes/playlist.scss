@@ -1,4 +1,4 @@
-.mg-gallery.theme-playlist {
+.smoothmg-gallery.theme-playlist {
   position: relative;
   width: 100%;
   display: flex;
@@ -7,14 +7,14 @@
   max-width: unset;
   overflow: hidden;
 
-  .mg-bg-layer {
+  .smoothmg-bg-layer {
     position: absolute;
     inset: 0;
     z-index: 1;
     pointer-events: none;
   }
 
-  .mg-overlay-layer {
+  .smoothmg-overlay-layer {
     position: absolute;
     width: calc(100% - 48px);
     height: calc(100% - 113px);
@@ -26,12 +26,12 @@
     overflow: hidden;
   }
 
-  .mg-content {
+  .smoothmg-content {
     position: relative;
     z-index: 5;
     overflow: hidden;
     padding-bottom: 65px;
-    background: var(--mg-theme-frame);
+    background: var(--smoothmg-theme-frame);
 
     border-radius: 18px;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06),
@@ -43,7 +43,7 @@
     }
   }
 
-  .mg-image-container {
+  .smoothmg-image-container {
     width: round(down, calc(100% - 24px), 1px);
     height: round(down, calc(100% - 24px), 1px);
     position: relative;
@@ -96,7 +96,7 @@
 
   .swiper-pagination-bullet {
     font-size: 12px;
-    color: var(--mg-theme-accent);
+    color: var(--smoothmg-theme-accent);
     font-family: monospace;
     width: 100%;
     white-space: nowrap;
@@ -112,7 +112,7 @@
     box-sizing: border-box;
   }
 
-  .mg-controls {
+  .smoothmg-controls {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -124,12 +124,12 @@
     align-items: center;
     justify-content: space-between;
     z-index: 20;
-    background: var(--mg-theme-frame);
+    background: var(--smoothmg-theme-frame);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     border-top: 4px solid rgba(0, 0, 0, 0.6);
   }
 
-  .mg-btn--wrapper {
+  .smoothmg-btn--wrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -142,7 +142,7 @@
     order: 1;
   }
 
-  .mg-btn {
+  .smoothmg-btn {
     width: 60px;
     min-width: 60px;
     height: 60px;
@@ -152,8 +152,8 @@
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     padding: 0;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background: var(--mg-theme-frame);
-    fill: var(--mg-theme-accent);
+    background: var(--smoothmg-theme-frame);
+    fill: var(--smoothmg-theme-accent);
 
     display: flex;
     align-items: center;
@@ -165,7 +165,7 @@
       z-index: 2;
     }
 
-    &.mg-fullscreen {
+    &.smoothmg-fullscreen {
       padding: 12px;
       order: 3;
     }
@@ -202,7 +202,7 @@
     }
   }
 
-  .mg-volume--wrapper {
+  .smoothmg-volume--wrapper {
     height: 100%;
     //width: calc(100% - 256px);
     width: calc(50% - 148px);
@@ -212,15 +212,15 @@
     align-items: center;
     justify-content: center;
     border-right: 4px solid rgba(0, 0, 0, 0.6);
-    background: var(--mg-theme-frame);
+    background: var(--smoothmg-theme-frame);
   }
 
-  .mg-volume {
+  .smoothmg-volume {
     appearance: none;
     height: 4px;
     width: 100%;
-    accent-color: var(--mg-theme-accent);
-    background: var(--mg-theme-accent--opacity-light);
+    accent-color: var(--smoothmg-theme-accent);
+    background: var(--smoothmg-theme-accent--opacity-light);
     position: static;
     transform: none;
     outline: none;
@@ -231,53 +231,53 @@
   }
 
   /* Chrome */
-  .mg-volume::-webkit-slider-thumb {
+  .smoothmg-volume::-webkit-slider-thumb {
     appearance: none;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--mg-theme-accent);
+    background: var(--smoothmg-theme-accent);
     cursor: pointer;
   }
 
   /* Firefox */
-  .mg-volume::-moz-range-thumb {
+  .smoothmg-volume::-moz-range-thumb {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--mg-theme-accent);
+    background: var(--smoothmg-theme-accent);
     cursor: pointer;
   }
 
-  &:not(.mg--fullscreen) {
-    .mg-icon--expand {
+  &:not(.smoothmg--fullscreen) {
+    .smoothmg-icon--expand {
       display: block;
     }
 
-    .mg-icon--collapse {
+    .smoothmg-icon--collapse {
       display: none;
     }
   }
 
-  &.mg--fullscreen {
-    .mg-icon--expand {
+  &.smoothmg--fullscreen {
+    .smoothmg-icon--expand {
       display: none;
     }
 
-    .mg-icon--collapse {
+    .smoothmg-icon--collapse {
       display: block;
     }
   }
 
-  .mg-music-meta {
+  .smoothmg-music-meta {
     display: none;
   }
 
-  .mg-music-progress {
+  .smoothmg-music-progress {
     display: none;
   }
 
-  @keyframes mg-spin {
+  @keyframes smoothmg-spin {
     from {
       transform: rotate(0deg);
     }

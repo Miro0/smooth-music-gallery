@@ -28,8 +28,8 @@ Primary entrypoints:
 
 ### 1. Rendering flow
 - Block render callback (`smooth_music_gallery_block_render`) outputs:
-  - `<div class="mg-gallery" data-props="..."></div>`
-- JS frontend (`src/block/view.js`) initializes every `.mg-gallery` on `DOMContentLoaded`.
+  - `<div class="smoothmg-gallery" data-props="..."></div>`
+- JS frontend (`src/block/view.js`) initializes every `.smoothmg-gallery` on `DOMContentLoaded`.
 - Runtime (`src/smooth-music-gallery.js`) builds gallery DOM, initializes Swiper, controls, audio handling, and shared `window.mg[index]` state.
 
 ### 2. Effects system
@@ -47,7 +47,7 @@ Primary entrypoints:
 - Admin page slug: `smooth_music_gallery--builder`.
 - Builder UI reuses block preview + sidebar components.
 - Generated shortcode serializes current attributes, including JSON-stringified option objects (`theme_options`, `overlay_options`, `background_options`).
-- Builder state is cached in `localStorage` under `mg-shortcode-builder`.
+- Builder state is cached in `localStorage` under `smoothmg-shortcode-builder`.
 
 ## Build & Output Layout
 

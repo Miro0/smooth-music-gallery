@@ -4,9 +4,15 @@ import {hexToRgb} from "./block/utils/style";
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-export const initMusicGallery = (container, index) => {
+export const initMusicGallery = (container, index = 0) => {
   const props = JSON.parse(container.dataset.props || '{}');
-  const {photos = [], music, theme = 'default', theme_options = {}, size = 85, slides_duration = 2, background_options} = props;
+
+  console.log({
+    smoothMusicGalleryContainer: container,
+    smoothMusicGalleryProps: props,
+  });
+
+  const {photos = [], music = {}, theme = 'default', theme_options = {}, size = 85, slides_duration = 2, background_options = {}} = props;
   const {background_color = 'transparent'} = background_options;
 
   container.classList.add('visible-controls');
@@ -14,10 +20,10 @@ export const initMusicGallery = (container, index) => {
   const bgMargin = Math.floor((100 - size) / 4);
 
   container.innerHTML = `
-    ${music?.url ? `<div class="mg-bg-layer" style="background:${background_color}"></div>` : ''}
-    <div class="mg-content" style="width:${size}%; height:${size}%;margin-top:${bgMargin}%;margin-bottom:${bgMargin}%">
-      ${music?.url ? `<div class="mg-overlay-layer"></div>` : ''}
-      <div class="mg-image-container">
+    ${music?.url ? `<div class="smoothmg-bg-layer" style="background:${background_color}"></div>` : ''}
+    <div class="smoothmg-content" style="width:${size}%; height:${size}%;margin-top:${bgMargin}%;margin-bottom:${bgMargin}%">
+      ${music?.url ? `<div class="smoothmg-overlay-layer"></div>` : ''}
+      <div class="smoothmg-image-container">
         <div class="swiper-wrapper">
           ${photos
     .map(
@@ -36,67 +42,67 @@ export const initMusicGallery = (container, index) => {
     .join('')}
         </div>
       </div>
-      <div class="mg-controls">
+      <div class="smoothmg-controls">
         <div class="swiper-pagination--wrapper">
           <div class="swiper-pagination"></div>
         </div>
       
-        <div class="mg-music-meta">
-          <div class="mg-music-title">${music?.title || music?.filename || music?.name || 'Select background music'}</div>
+        <div class="smoothmg-music-meta">
+          <div class="smoothmg-music-title">${music?.title || music?.filename || music?.name || 'Select background music'}</div>
         </div>
 
-        <div class="mg-music-progress">
-          <div class="mg-music-progress-bar">
-            <div class="mg-music-progress-fill"></div>
+        <div class="smoothmg-music-progress">
+          <div class="smoothmg-music-progress-bar">
+            <div class="smoothmg-music-progress-fill"></div>
           </div>
-          <div class="mg-music-times">
-            <span class="mg-music-time-current">0:00</span>
-            <span class="mg-music-time-total">0:00</span>
+          <div class="smoothmg-music-times">
+            <span class="smoothmg-music-time-current">0:00</span>
+            <span class="smoothmg-music-time-total">0:00</span>
           </div>
         </div>
         
-        <div class="mg-volume--wrapper">
+        <div class="smoothmg-volume--wrapper">
           <input 
             type="range" 
             min="0" 
             max="1" 
             step="0.01" 
             value="1" 
-            class="mg-volume"
+            class="smoothmg-volume"
             aria-label="Volume"
             title="Volume"
           >
         </div>
-        <div class="mg-btn--wrapper">
-          <button class="mg-btn mg-btn--small mg-prev" aria-label="Previous">
+        <div class="smoothmg-btn--wrapper">
+          <button class="smoothmg-btn smoothmg-btn--small smoothmg-prev" aria-label="Previous">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" /></svg>
           </button>
-          <button class="mg-btn mg-play" aria-label="Play / Pause">
+          <button class="smoothmg-btn smoothmg-play" aria-label="Play / Pause">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
           </button>
-          <button class="mg-btn mg-btn--small mg-next" aria-label="Next">
+          <button class="smoothmg-btn smoothmg-btn--small smoothmg-next" aria-label="Next">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" /></svg>
           </button>
         </div>
-        <button class="mg-btn mg-fullscreen" aria-label="Fullscreen">
-          <svg class="mg-icon--expand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>
-          <svg class="mg-icon--collapse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>
+        <button class="smoothmg-btn smoothmg-fullscreen" aria-label="Fullscreen">
+          <svg class="smoothmg-icon--expand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>
+          <svg class="smoothmg-icon--collapse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>
         </button>
       </div>
     </div>
-    ${music?.url ? `<audio class="mg-audio" preload="auto" crossorigin="anonymous" loop src="${music.url}"></audio>` : ''}
+    ${music?.url ? `<audio class="smoothmg-audio" preload="auto" crossorigin="anonymous" loop src="${music.url}"></audio>` : ''}
   `;
 
   const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');
   const themeFrameRGB = hexToRgb(theme_options?.frame_color ?? '#111111');
 
   container.style.setProperty('--screen-ratio', window.innerWidth / window.innerHeight);
-  container.style.setProperty('--mg-slides-duration', slides_duration);
-  container.style.setProperty('--mg-theme-accent', theme_options?.accent ?? '#ffffff');
-  container.style.setProperty('--mg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
-  container.style.setProperty('--mg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
-  container.style.setProperty('--mg-theme-frame', theme_options?.frame_color ?? '#111111');
-  container.style.setProperty('--mg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
+  container.style.setProperty('--smoothmg-slides-duration', slides_duration);
+  container.style.setProperty('--smoothmg-theme-accent', theme_options?.accent ?? '#ffffff');
+  container.style.setProperty('--smoothmg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
+  container.style.setProperty('--smoothmg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
+  container.style.setProperty('--smoothmg-theme-frame', theme_options?.frame_color ?? '#111111');
+  container.style.setProperty('--smoothmg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
 
   if (!window.mg) {
     window.mg = [];
@@ -115,7 +121,7 @@ export const initMusicGallery = (container, index) => {
     window.mg[index].initBackground(container, index);
   }
 
-  window.mg[index].swiper = new Swiper(container.querySelector('.mg-image-container'), {
+  window.mg[index].swiper = new Swiper(container.querySelector('.smoothmg-image-container'), {
     modules: [Pagination, Autoplay, Keyboard],
 
     loop: true,
@@ -202,18 +208,22 @@ export const initMusicGallery = (container, index) => {
   initControls(container, window.mg[index].swiper, slides_duration, index);
 };
 
+if (typeof window !== 'undefined') {
+  window.initMusicGallery = initMusicGallery;
+}
+
 function initControls(container, swiper, slides_duration, index) {
-  const content = container.querySelector('.mg-content');
-  const btnPlay = container.querySelector('.mg-play');
-  const btnPrev = container.querySelector('.mg-prev');
-  const btnNext = container.querySelector('.mg-next');
-  const btnFullscreen = container.querySelector('.mg-fullscreen');
-  const audio = container.querySelector('.mg-audio');
-  const volumeSlider = container.querySelector('.mg-volume');
-  const bar = container.querySelector('.mg-music-progress-bar');
-  const fill = container.querySelector('.mg-music-progress-fill');
-  const current = container.querySelector('.mg-music-time-current');
-  const total = container.querySelector('.mg-music-time-total');
+  const content = container.querySelector('.smoothmg-content');
+  const btnPlay = container.querySelector('.smoothmg-play');
+  const btnPrev = container.querySelector('.smoothmg-prev');
+  const btnNext = container.querySelector('.smoothmg-next');
+  const btnFullscreen = container.querySelector('.smoothmg-fullscreen');
+  const audio = container.querySelector('.smoothmg-audio');
+  const volumeSlider = container.querySelector('.smoothmg-volume');
+  const bar = container.querySelector('.smoothmg-music-progress-bar');
+  const fill = container.querySelector('.smoothmg-music-progress-fill');
+  const current = container.querySelector('.smoothmg-music-time-current');
+  const total = container.querySelector('.smoothmg-music-time-total');
 
   if (audio && volumeSlider) {
     volumeSlider.value = 0.8;
@@ -364,10 +374,10 @@ function initControls(container, swiper, slides_duration, index) {
     btnFullscreen.addEventListener('click', () => {
       if (!document.fullscreenElement) {
         container.requestFullscreen();
-        container.classList.add('mg--fullscreen');
+        container.classList.add('smoothmg--fullscreen');
       } else {
         document.exitFullscreen();
-        container.classList.remove('mg--fullscreen');
+        container.classList.remove('smoothmg--fullscreen');
       }
 
       const activeBullet = container.querySelector('.swiper-pagination-bullet-active');

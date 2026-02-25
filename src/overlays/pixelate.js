@@ -2,7 +2,7 @@ import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .querySelectorAll(".mg-gallery")
+    .querySelectorAll(".smoothmg-gallery")
     .forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
@@ -20,14 +20,14 @@ const attachOverlayAnimation = (container, index) => {
 
   if (overlay !== "pixelate") return;
 
-  const audio = container.querySelector(".mg-audio");
+  const audio = container.querySelector(".smoothmg-audio");
   if (!audio) return;
 
-  const imgs = [...container.querySelectorAll(".mg-image-container img")];
+  const imgs = [...container.querySelectorAll(".smoothmg-image-container img")];
   if (!imgs.length) return;
 
   const items = [];
-  const overlayLayer = container.querySelector(".mg-overlay-layer");
+  const overlayLayer = container.querySelector(".smoothmg-overlay-layer");
 
   let isVisible = true;
   const observer = new IntersectionObserver(

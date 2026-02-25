@@ -2,7 +2,7 @@ import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .querySelectorAll(".mg-gallery")
+    .querySelectorAll(".smoothmg-gallery")
     .forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
@@ -29,8 +29,8 @@ const attachBackgroundAnimation = (container, index) => {
 
     if (background !== "dust_particles") return;
 
-    const audio = container.querySelector(".mg-audio");
-    const layer = container.querySelector(".mg-bg-layer");
+    const audio = container.querySelector(".smoothmg-audio");
+    const layer = container.querySelector(".smoothmg-bg-layer");
     if (!audio || !layer) return;
 
     let isVisible = true;

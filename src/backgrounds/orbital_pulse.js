@@ -2,7 +2,7 @@ import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .querySelectorAll(".mg-gallery")
+    .querySelectorAll(".smoothmg-gallery")
     .forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
@@ -31,8 +31,8 @@ const attachBackgroundAnimation = (container, index) => {
 
     if (background !== "orbital_pulse") return;
 
-    const audio = container.querySelector(".mg-audio");
-    const backgroundLayer = container.querySelector(".mg-bg-layer");
+    const audio = container.querySelector(".smoothmg-audio");
+    const backgroundLayer = container.querySelector(".smoothmg-bg-layer");
 
     if (!backgroundLayer || !audio) return;
 

@@ -2,7 +2,7 @@ import {createAnimationStyle} from "../block/utils/style";
 import {initAudioSource} from "../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
+  document.querySelectorAll('.smoothmg-gallery').forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
 const attachOverlayAnimation = (container, index) => {
@@ -20,8 +20,8 @@ const attachOverlayAnimation = (container, index) => {
     const {accent = '#ffffff', blend_mode = 'multiply'} = overlay_options;
 
     if (overlay === 'color_blend') {
-      const audio = container.querySelector('.mg-audio');
-      const imageLayer = container.querySelector('.mg-image-container');
+      const audio = container.querySelector('.smoothmg-audio');
+      const imageLayer = container.querySelector('.smoothmg-image-container');
 
       if (imageLayer && audio) {
         const imageLayerClass = createAnimationStyle('imageLayer', (c) => `
@@ -32,7 +32,7 @@ const attachOverlayAnimation = (container, index) => {
             overflow: hidden;
           }
           
-          .${c} .mg-overlay--color-blend__layer {
+          .${c} .smoothmg-overlay--color-blend__layer {
             position: absolute;
             inset: 0;
             background: ${accent};
@@ -43,14 +43,14 @@ const attachOverlayAnimation = (container, index) => {
           }
         `);
 
-        if (!imageLayer.querySelector('.mg-overlay--color-blend__layer')) {
+        if (!imageLayer.querySelector('.smoothmg-overlay--color-blend__layer')) {
           const overlayRoot = document.createElement('div');
           overlayRoot.className = imageLayerClass;
-          overlayRoot.innerHTML = `<div class="mg-overlay--color-blend__layer"></div>`;
+          overlayRoot.innerHTML = `<div class="smoothmg-overlay--color-blend__layer"></div>`;
           imageLayer.appendChild(overlayRoot);
         }
 
-        const layer = container.querySelector('.mg-overlay--color-blend__layer');
+        const layer = container.querySelector('.smoothmg-overlay--color-blend__layer');
         if (!layer) return;
 
         const [analyser, ctx, data] = initAudioSource(audio, index);

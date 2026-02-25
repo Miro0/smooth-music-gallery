@@ -63,11 +63,11 @@ export default function Edit(props) {
     const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');
     const themeFrameRGB = hexToRgb(theme_options?.frame_color ?? '#111111');
 
-    containerRef?.current?.style?.setProperty('--mg-theme-accent', theme_options?.accent ?? '#ffffff');
-    containerRef?.current?.style?.setProperty('--mg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
-    containerRef?.current?.style?.setProperty('--mg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
-    containerRef?.current?.style?.setProperty('--mg-theme-frame', theme_options?.frame_color ?? '#111111');
-    containerRef?.current?.style?.setProperty('--mg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
+    containerRef?.current?.style?.setProperty('--smoothmg-theme-accent', theme_options?.accent ?? '#ffffff');
+    containerRef?.current?.style?.setProperty('--smoothmg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
+    containerRef?.current?.style?.setProperty('--smoothmg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
+    containerRef?.current?.style?.setProperty('--smoothmg-theme-frame', theme_options?.frame_color ?? '#111111');
+    containerRef?.current?.style?.setProperty('--smoothmg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
   }, [theme_options]);
 
   return (
@@ -79,9 +79,9 @@ export default function Edit(props) {
       </BlockContext.Provider>
 
       <p {...useBlockProps()}>
-        <div className={`mg-gallery theme-${theme?.replace(/free\/|pro\//, '')} visible-controls`} ref={containerRef}>
+        <div className={`smoothmg-gallery theme-${theme?.replace(/free\/|pro\//, '')} visible-controls`} ref={containerRef}>
           <div
-            className="mg-bg-layer"
+            className="smoothmg-bg-layer"
             style={{
               background: background_color,
             }}
@@ -99,13 +99,13 @@ export default function Edit(props) {
               <OrbitalPulse {...props.attributes?.background_options} />
             }
           </div>
-          <div className="mg-content" style={{
+          <div className="smoothmg-content" style={{
             width: `${size}%`,
             height: `${size}%`,
             marginTop: `${bgMargin}%`,
             marginBottom: `${bgMargin}%`,
           }}>
-            <div className="mg-overlay-layer">
+            <div className="smoothmg-overlay-layer">
               {props.attributes?.overlay === 'audio_pulse' &&
                 <AudioPulse {...props.attributes?.overlay_options} />
               }
@@ -119,7 +119,7 @@ export default function Edit(props) {
                 <WaveLine {...props.attributes?.overlay_options} />
               }
             </div>
-            <div className="mg-image-container swiper">
+            <div className="smoothmg-image-container swiper">
               <div className="swiper-wrapper">
                 {props.attributes?.overlay === 'color_blend' &&
                   <ColorBlend {...props.attributes?.overlay_options} />
@@ -175,7 +175,7 @@ export default function Edit(props) {
               </div>
             </div>
 
-            <div className="mg-controls">
+            <div className="smoothmg-controls">
               <div className="swiper-pagination--wrapper">
                 <div className="swiper-pagination">
                   <span className="swiper-pagination-bullet swiper-pagination-bullet-active">
@@ -187,49 +187,49 @@ export default function Edit(props) {
                 </div>
               </div>
 
-              <div className="mg-music-meta">
-                <div className="mg-music-title">{currentMusic?.title || currentMusic?.filename || currentMusic?.name || ''}</div>
+              <div className="smoothmg-music-meta">
+                <div className="smoothmg-music-title">{currentMusic?.title || currentMusic?.filename || currentMusic?.name || ''}</div>
               </div>
 
-              <div className="mg-music-progress">
-                <div className="mg-music-progress-bar">
-                  <div className="mg-music-progress-fill"></div>
+              <div className="smoothmg-music-progress">
+                <div className="smoothmg-music-progress-bar">
+                  <div className="smoothmg-music-progress-fill"></div>
                 </div>
-                <div className="mg-music-times">
-                  <span className="mg-music-time-current">0:00</span>
-                  <span className="mg-music-time-total">0:00</span>
+                <div className="smoothmg-music-times">
+                  <span className="smoothmg-music-time-current">0:00</span>
+                  <span className="smoothmg-music-time-total">0:00</span>
                 </div>
               </div>
 
-              <div className="mg-volume--wrapper">
+              <div className="smoothmg-volume--wrapper">
                 <input
                   type="range"
                   min="0"
                   max="1"
                   step="0.01"
                   value="1"
-                  className="mg-volume"
+                  className="smoothmg-volume"
                   data-label="Volume"
                 />
               </div>
-              <div className="mg-btn--wrapper">
-                <button className="mg-btn mg-btn--small mg-prev" aria-label="Previous">
+              <div className="smoothmg-btn--wrapper">
+                <button className="smoothmg-btn smoothmg-btn--small smoothmg-prev" aria-label="Previous">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z"/>
                   </svg>
                 </button>
-                <button className="mg-btn mg-play" aria-label="Play / Pause">
+                <button className="smoothmg-btn smoothmg-play" aria-label="Play / Pause">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
                   </svg>
                 </button>
-                <button className="mg-btn mg-btn--small mg-next" aria-label="Next">
+                <button className="smoothmg-btn smoothmg-btn--small smoothmg-next" aria-label="Next">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z"/>
                   </svg>
                 </button>
               </div>
-              <button className="mg-btn mg-fullscreen" aria-label="Fullscreen">
+              <button className="smoothmg-btn smoothmg-fullscreen" aria-label="Fullscreen">
                 <svg viewBox="0 0 24 24">
                   <path d="M7 14h2v3h3v2H7v-5zM14 7h3v3h2V5h-5v2z"/>
                 </svg>

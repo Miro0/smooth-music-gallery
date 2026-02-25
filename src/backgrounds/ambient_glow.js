@@ -2,7 +2,7 @@ import {createAnimationStyle, hexToRgb} from "../block/utils/style";
 import {initAudioSource} from "../block/utils/audio";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
+  document.querySelectorAll('.smoothmg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
 function avgRange(data, start, end) {
@@ -37,15 +37,15 @@ const attachBackgroundAnimation = (container, index) => {
     const {accent = '#ffffff', intensity = 1} = background_options;
 
     if (background === 'ambient_glow') {
-      const audio = container.querySelector('.mg-audio');
-      const backgroundLayer = container.querySelector('.mg-bg-layer');
+      const audio = container.querySelector('.smoothmg-audio');
+      const backgroundLayer = container.querySelector('.smoothmg-bg-layer');
 
       if (backgroundLayer && audio) {
-        const ambientClass = createAnimationStyle('mg-bg--ambient', (c) => `
+        const ambientClass = createAnimationStyle('smoothmg-bg--ambient', (c) => `
           .${c} {
             position:absolute;inset:0;pointer-events:none;z-index:40;
           }
-          .${c} .mg-bg--ambient-light {
+          .${c} .smoothmg-bg--ambient-light {
             position:absolute;
             width:${0.5 * intensity * 100}%;
             height:${0.5 * intensity * 100}%;
@@ -54,22 +54,22 @@ const attachBackgroundAnimation = (container, index) => {
             transition:opacity .12s linear,transform .12s linear;
             background:radial-gradient(circle,var(--glow-color) 0%, transparent 90%);
           }
-          .${c} .mg-bg--ambient-light__tl {top:2.5%;left:-2.5%;}
-          .${c} .mg-bg--ambient-light__tr {top:2.5%;right:-2.5%;}
-          .${c} .mg-bg--ambient-light__bl {bottom:2.5%;left:-2.5%;}
-          .${c} .mg-bg--ambient-light__br {bottom:2.5%;right:-2.5%;}
+          .${c} .smoothmg-bg--ambient-light__tl {top:2.5%;left:-2.5%;}
+          .${c} .smoothmg-bg--ambient-light__tr {top:2.5%;right:-2.5%;}
+          .${c} .smoothmg-bg--ambient-light__bl {bottom:2.5%;left:-2.5%;}
+          .${c} .smoothmg-bg--ambient-light__br {bottom:2.5%;right:-2.5%;}
         `);
 
         backgroundLayer.innerHTML = `
           <div class="${ambientClass}">
-            <div class="mg-bg--ambient-light mg-bg--ambient-light__tl"></div>
-            <div class="mg-bg--ambient-light mg-bg--ambient-light__tr"></div>
-            <div class="mg-bg--ambient-light mg-bg--ambient-light__bl"></div>
-            <div class="mg-bg--ambient-light mg-bg--ambient-light__br"></div>
+            <div class="smoothmg-bg--ambient-light smoothmg-bg--ambient-light__tl"></div>
+            <div class="smoothmg-bg--ambient-light smoothmg-bg--ambient-light__tr"></div>
+            <div class="smoothmg-bg--ambient-light smoothmg-bg--ambient-light__bl"></div>
+            <div class="smoothmg-bg--ambient-light smoothmg-bg--ambient-light__br"></div>
           </div>`;
 
         const ambient = backgroundLayer.querySelector(`.${ambientClass}`);
-        const lights = ambient.querySelectorAll('.mg-bg--ambient-light');
+        const lights = ambient.querySelectorAll('.smoothmg-bg--ambient-light');
 
         const rgb = hexToRgb(accent);
         const baseColor = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
@@ -98,10 +98,10 @@ const attachBackgroundAnimation = (container, index) => {
           smoothMid = smoothMid * (1 - smoothing) + mid * smoothing;
           smoothHigh = smoothHigh * (1 - smoothing) + high * smoothing;
 
-          ambient.querySelector('.mg-bg--ambient-light__tl').style.opacity = 0.2 + smoothMid * intensity;
-          ambient.querySelector('.mg-bg--ambient-light__tr').style.opacity = 0.2 + smoothHigh * intensity;
-          ambient.querySelector('.mg-bg--ambient-light__bl').style.opacity = 0.2 + smoothBass * intensity;
-          ambient.querySelector('.mg-bg--ambient-light__br').style.opacity = 0.2 + smoothHigh * intensity;
+          ambient.querySelector('.smoothmg-bg--ambient-light__tl').style.opacity = 0.2 + smoothMid * intensity;
+          ambient.querySelector('.smoothmg-bg--ambient-light__tr').style.opacity = 0.2 + smoothHigh * intensity;
+          ambient.querySelector('.smoothmg-bg--ambient-light__bl').style.opacity = 0.2 + smoothBass * intensity;
+          ambient.querySelector('.smoothmg-bg--ambient-light__br').style.opacity = 0.2 + smoothHigh * intensity;
 
           animFrame = requestAnimationFrame(animate);
         }

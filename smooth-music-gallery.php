@@ -1,21 +1,22 @@
 <?php
 /*
  * Plugin Name:         Smooth Music Gallery
- * Description:         Powerful Gutenberg block that allows adding photo galleries with music and animations.
+ * Description:         Powerful Gutenberg block for photo galleries with music and animations, plus a built-in Shortcode Builder.
  * Requires at least:   5.6
  * Author:              Smooth CDN
  * Author URI:          https://smoothcdn.com
+ * Plugin URI:          https://smoothcdn.com/music-gallery
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.0.1
+ * Version:             1.0.0
  */
 
 namespace BeedVision\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-const MUSIC_GALLERY_VERSION = '1.0.1';
+const MUSIC_GALLERY_VERSION = '1.0.0';
 
 register_block_type(
         __DIR__ . '/build'
@@ -40,7 +41,7 @@ function smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, 
     $base_url = smooth_music_gallery_get_base_url();
 
     wp_enqueue_script(
-            'mg-view',
+            'smoothmg-view',
             $base_url . 'view.js',
             [],
             MUSIC_GALLERY_VERSION,
@@ -48,7 +49,7 @@ function smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, 
     );
 
     wp_enqueue_style(
-            "mg-theme-$theme",
+            "smoothmg-theme-$theme",
             $base_url . "theme/$theme.css",
             [],
             MUSIC_GALLERY_VERSION
@@ -56,7 +57,7 @@ function smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, 
 
     if ( $overlay_animation ) {
         wp_enqueue_script(
-                "mg-overlay-animation-script-$overlay_animation",
+                "smoothmg-overlay-animation-script-$overlay_animation",
                 $base_url . "overlay/$overlay_animation.js",
                 [],
                 MUSIC_GALLERY_VERSION,
@@ -66,7 +67,7 @@ function smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, 
 
     if ( $background_animation ) {
         wp_enqueue_script(
-                "mg-overlay-animation-script-$background_animation",
+                "smoothmg-overlay-animation-script-$background_animation",
                 $base_url . "background/$background_animation.js",
                 [],
                 MUSIC_GALLERY_VERSION,
@@ -154,7 +155,7 @@ function smooth_music_gallery_block_render( $attributes ) {
         smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation );
     }
 
-    return '<div class="mg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
+    return '<div class="smoothmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
 }
 
 add_action( 'admin_init', function () {
@@ -163,15 +164,15 @@ add_action( 'admin_init', function () {
     $config = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
 
     foreach ( $config['themes'] as $theme ) {
-        wp_register_style( "mg-theme-$theme", $base_url . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
+        wp_register_style( "smoothmg-theme-$theme", $base_url . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
     }
 
     wp_register_style(
-            'mg-editor',
+            'smoothmg-editor',
             $base_url . 'index.css',
             array_merge(
                     array_map( function ( $t ) {
-                        return "mg-theme-$t";
+                        return "smoothmg-theme-$t";
                     }, $config['themes'] ),
             ),
             MUSIC_GALLERY_VERSION
@@ -255,7 +256,7 @@ function smooth_music_gallery_field_show_toolbar() {
 function smooth_music_gallery_render_shortcode_builder_page() {
     ?>
     <div class="wrap">
-        <div id="mg-builder-root"></div>
+        <div id="smoothmg-builder-root"></div>
     </div>
     <?php
 }
@@ -432,19 +433,19 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
     $base   = plugin_dir_url( __FILE__ ) . 'build/';
     $config = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
     foreach ( $config['themes'] as $theme ) {
-        wp_enqueue_style( "mg-theme-$theme", $base . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
+        wp_enqueue_style( "smoothmg-theme-$theme", $base . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
     }
     wp_enqueue_style(
-            'mg-editor',
+            'smoothmg-editor',
             $base . 'index.css',
             array_merge(
                     array_map( function ( $t ) {
-                        return "mg-theme-$t";
+                        return "smoothmg-theme-$t";
                     }, $config['themes'] ),
             ),
             MUSIC_GALLERY_VERSION
     );
-    wp_enqueue_style( 'mg-shortcode-builder', $base . 'admin/shortcode_builder.css', [], MUSIC_GALLERY_VERSION );
+    wp_enqueue_style( 'smoothmg-shortcode-builder', $base . 'admin/shortcode_builder.css', [], MUSIC_GALLERY_VERSION );
 
     smooth_music_gallery_enqueue_editor_support_assets();
 
@@ -483,7 +484,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
             ];
 
     wp_enqueue_script(
-            'mg-sc-builder',
+            'smoothmg-sc-builder',
             plugin_dir_url( __FILE__ ) . 'build/admin/shortcode_builder.js',
             $shortcode_builder_asset['dependencies'],
             $shortcode_builder_asset['version'],

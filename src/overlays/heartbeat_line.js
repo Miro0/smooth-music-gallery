@@ -2,7 +2,7 @@ import { initAudioSource } from "../block/utils/audio";
 
 document.addEventListener("DOMContentLoaded", () => {
   document
-    .querySelectorAll(".mg-gallery")
+    .querySelectorAll(".smoothmg-gallery")
     .forEach((gallery, index) => attachOverlayAnimation(gallery, index));
 });
 
@@ -30,8 +30,8 @@ const attachOverlayAnimation = (container, index) => {
 
   if (overlay !== "heartbeat_line") return;
 
-  const audio = container.querySelector(".mg-audio");
-  const overlayLayer = container.querySelector(".mg-overlay-layer");
+  const audio = container.querySelector(".smoothmg-audio");
+  const overlayLayer = container.querySelector(".smoothmg-overlay-layer");
   if (!overlayLayer || !audio) return;
 
   let isVisible = true;

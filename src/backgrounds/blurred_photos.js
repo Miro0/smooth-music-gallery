@@ -1,7 +1,7 @@
 import {createAnimationStyle} from "../block/utils/style";
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.mg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
+  document.querySelectorAll('.smoothmg-gallery').forEach((gallery, index) => attachBackgroundAnimation(gallery, index));
 });
 
 const attachBackgroundAnimation = (container, index) => {
@@ -19,10 +19,10 @@ const attachBackgroundAnimation = (container, index) => {
     const {blur = 10, zoom = 1.2, opacity = 0.5} = background_options;
 
     if (background === 'blurred_photos') {
-      const backgroundLayer = container.querySelector('.mg-bg-layer');
+      const backgroundLayer = container.querySelector('.smoothmg-bg-layer');
 
       if (backgroundLayer) {
-        const blurredPhotosClass = createAnimationStyle('mg-bg--blurred-photos', (c) => `
+        const blurredPhotosClass = createAnimationStyle('smoothmg-bg--blurred-photos', (c) => `
           .${c} {
             position: absolute;
             inset: 0;
