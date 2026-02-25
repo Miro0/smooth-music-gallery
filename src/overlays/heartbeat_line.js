@@ -1,184 +1,204 @@
-import { initAudioSource } from "../block/utils/audio";
+import { initAudioSource } from '../block/utils/audio';
+import {
+	registerGalleryHook,
+	registerGalleryInitializer,
+} from '../block/utils/runtime';
 
-document.addEventListener("DOMContentLoaded", () => {
-  document
-    .querySelectorAll(".smoothmg-gallery")
-    .forEach((gallery, index) => attachOverlayAnimation(gallery, index));
-});
+const attachOverlayAnimation = ( container, index ) => {
+	const registration = registerGalleryHook(
+		container,
+		index,
+		'initOverlay',
+		attachOverlayAnimation
+	);
+	index = registration.index;
 
-const attachOverlayAnimation = (container, index) => {
+	if ( ! registration.active ) {
+		return;
+	}
 
-  if (!window?.mg) window.mg = [];
+	const props = JSON.parse( container.dataset.props || '{}' );
+	const { overlay, overlay_options = {} } = props;
 
-  if (!window.mg[index]) {
-    window.mg[index] = { initOverlay: attachOverlayAnimation, source: null };
-    return;
-  }
+	const {
+		accent = '#ffffff',
+		opacity = 0.95,
+		intensity = 1,
+		position = 0,
+		line_height = 3,
+		speed = 0.5,
+		smoothness = 0.5,
+	} = overlay_options;
 
-  const props = JSON.parse(container.dataset.props || "{}");
-  const { overlay, overlay_options = {} } = props;
+	if ( overlay !== 'heartbeat_line' ) return;
 
-  const {
-    accent = "#ffffff",
-    opacity = 0.95,
-    intensity = 1,
-    position = 0,
-    line_height = 3,
-    speed = 0.5,
-    smoothness = 0.5,
-  } = overlay_options;
+	const audio = container.querySelector( '.smoothmg-audio' );
+	const overlayLayer = container.querySelector( '.smoothmg-overlay-layer' );
+	if ( ! overlayLayer || ! audio ) return;
 
-  if (overlay !== "heartbeat_line") return;
+	let isVisible = true;
+	const observer = new window.IntersectionObserver(
+		( entries ) => {
+			isVisible = entries[ 0 ]?.isIntersecting ?? true;
+		},
+		{ threshold: 0 }
+	);
+	observer.observe( container );
 
-  const audio = container.querySelector(".smoothmg-audio");
-  const overlayLayer = container.querySelector(".smoothmg-overlay-layer");
-  if (!overlayLayer || !audio) return;
+	const canvas = document.createElement( 'canvas' );
+	canvas.style.position = 'absolute';
+	canvas.style.inset = '0';
+	canvas.style.pointerEvents = 'none';
+	canvas.style.opacity = opacity;
+	overlayLayer.appendChild( canvas );
 
-  let isVisible = true;
-  const observer = new IntersectionObserver(
-    (entries) => {
-      isVisible = entries[0]?.isIntersecting ?? true;
-    },
-    { threshold: 0 }
-  );
-  observer.observe(container);
+	const ctx2 = canvas.getContext( '2d' );
 
-  const canvas = document.createElement("canvas");
-  canvas.style.position = "absolute";
-  canvas.style.inset = "0";
-  canvas.style.pointerEvents = "none";
-  canvas.style.opacity = opacity;
-  overlayLayer.appendChild(canvas);
+	let off = null;
+	let octx = null;
 
-  const ctx2 = canvas.getContext("2d");
+	function setupOffscreen( width, height ) {
+		if ( window.OffscreenCanvas ) {
+			off = new OffscreenCanvas( width, height );
+			octx = off.getContext( '2d', { alpha: true } );
+			octx.imageSmoothingEnabled = true;
+		} else {
+			off = null;
+			octx = null;
+		}
+	}
 
-  let off = null;
-  let octx = null;
+	const width = () => canvas.width;
+	const height = () => canvas.height;
+	const baseOffsetY = () =>
+		height() / 2 + ( position / 50 ) * ( height() / 2 );
 
-  function setupOffscreen(width, height) {
-    if (window.OffscreenCanvas) {
-      off = new OffscreenCanvas(width, height);
-      octx = off.getContext("2d", { alpha: true });
-      octx.imageSmoothingEnabled = true;
-    } else {
-      off = null;
-      octx = null;
-    }
-  }
+	let history = [];
+	let shiftAccumulator = 0;
+	let started = false;
 
-  const width = () => canvas.width;
-  const height = () => canvas.height;
-  const baseOffsetY = () =>
-    height() / 2 + (position / 50) * (height() / 2);
+	function resize() {
+		const rect = overlayLayer.getBoundingClientRect();
+		canvas.width = rect.width;
+		canvas.height = rect.height;
 
-  let history = [];
-  let shiftAccumulator = 0;
-  let started = false;
+		setupOffscreen( rect.width, rect.height );
 
-  function resize() {
-    const rect = overlayLayer.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+		history = new Array( canvas.width ).fill( 0 );
+	}
 
-    setupOffscreen(rect.width, rect.height);
+	resize();
+	window.addEventListener( 'resize', resize );
+	document.addEventListener( 'fullscreenchange', resize );
 
-    history = new Array(canvas.width).fill(0);
-  }
+	const [ analyser, audioCtx, data ] = initAudioSource( audio, index );
 
-  resize();
-  window.addEventListener("resize", resize);
-  document.addEventListener("fullscreenchange", resize);
+	let animFrame = null;
 
-  const [analyser, audioCtx, data] = initAudioSource(audio, index);
+	function animate() {
+		if ( ! isVisible ) {
+			animFrame = window.requestAnimationFrame( animate );
+			return;
+		}
 
-  function animate() {
-    if (!isVisible) {
-      requestAnimationFrame(animate);
-      return;
-    }
+		let currentAmp = 0;
 
-    let currentAmp = 0;
+		if ( ! audio.paused ) {
+			analyser.getByteFrequencyData( data );
 
-    if (!audio.paused) {
-      analyser.getByteFrequencyData(data);
+			let sum = 0;
+			let count = 0;
+			for ( let i = 10; i < 50 && i < data.length; i++ ) {
+				sum += data[ i ];
+				count++;
+			}
 
-      let sum = 0, count = 0;
-      for (let i = 10; i < 50 && i < data.length; i++) {
-        sum += data[i];
-        count++;
-      }
+			const avg = count ? sum / count : 0;
+			currentAmp = ( avg / 255 ) * 100 * intensity;
+		}
 
-      const avg = count ? sum / count : 0;
-      currentAmp = (avg / 255) * 100 * intensity;
-    }
+		const lastAmp = history[ history.length - 1 ] ?? 0;
+		const smoothedAmp = lastAmp + ( currentAmp - lastAmp ) * smoothness;
 
-    const lastAmp = history[history.length - 1] ?? 0;
-    const smoothedAmp =
-      lastAmp + (currentAmp - lastAmp) * smoothness;
+		shiftAccumulator += speed;
+		const shift = Math.floor( shiftAccumulator );
+		shiftAccumulator -= shift;
 
-    shiftAccumulator += speed;
-    const shift = Math.floor(shiftAccumulator);
-    shiftAccumulator -= shift;
+		if ( shift > 0 ) {
+			const W = width();
+			const newHist = new Array( W );
 
-    if (shift > 0) {
-      const W = width();
-      const newHist = new Array(W);
+			for ( let x = 0; x < W - shift; x++ ) {
+				newHist[ x ] = history[ x + shift ];
+			}
 
-      for (let x = 0; x < W - shift; x++) {
-        newHist[x] = history[x + shift];
-      }
+			const last = history[ W - 1 - shift ] ?? 0;
 
-      const last = history[W - 1 - shift] ?? 0;
+			for ( let x = W - shift; x < W; x++ ) {
+				newHist[ x ] = last;
+			}
 
-      for (let x = W - shift; x < W; x++) {
-        newHist[x] = last;
-      }
+			history = newHist;
+		}
 
-      history = newHist;
-    }
+		history[ history.length - 1 ] = smoothedAmp;
 
-    history[history.length - 1] = smoothedAmp;
+		const targetCtx = octx || ctx2;
+		targetCtx.clearRect( 0, 0, width(), height() );
 
-    const targetCtx = octx || ctx2;
-    targetCtx.clearRect(0, 0, width(), height());
+		const baseY = baseOffsetY();
 
-    const baseY = baseOffsetY();
+		function drawLine( color, shadowBlur, shadowColor ) {
+			targetCtx.lineWidth = line_height;
+			targetCtx.lineCap = 'round';
+			targetCtx.lineJoin = 'round';
+			targetCtx.strokeStyle = color;
+			targetCtx.shadowBlur = shadowBlur;
+			targetCtx.shadowColor = shadowColor;
 
-    function drawLine(color, shadowBlur, shadowColor) {
-      targetCtx.lineWidth = line_height;
-      targetCtx.lineCap = "round";
-      targetCtx.lineJoin = "round";
-      targetCtx.strokeStyle = color;
-      targetCtx.shadowBlur = shadowBlur;
-      targetCtx.shadowColor = shadowColor;
+			targetCtx.beginPath();
+			for ( let x = 0; x < history.length; x++ ) {
+				const y = baseY - history[ x ];
+				if ( x === 0 ) targetCtx.moveTo( x, y );
+				else targetCtx.lineTo( x, y );
+			}
+			targetCtx.stroke();
+		}
 
-      targetCtx.beginPath();
-      for (let x = 0; x < history.length; x++) {
-        const y = baseY - history[x];
-        if (x === 0) targetCtx.moveTo(x, y);
-        else targetCtx.lineTo(x, y);
-      }
-      targetCtx.stroke();
-    }
+		drawLine( accent, 0, 'transparent' );
+		drawLine( accent, line_height * 0.8, accent );
+		drawLine( accent + '99', line_height * 2, accent );
 
-    drawLine(accent, 0, "transparent");
-    drawLine(accent, line_height * 0.8, accent);
-    drawLine(accent + "99", line_height * 2, accent);
+		if ( off && octx ) {
+			ctx2.clearRect( 0, 0, width(), height() );
+			ctx2.drawImage( off, 0, 0 );
+		}
 
-    if (off && octx) {
-      ctx2.clearRect(0, 0, width(), height());
-      ctx2.drawImage(off, 0, 0);
-    }
+		animFrame = window.requestAnimationFrame( animate );
+	}
 
-    requestAnimationFrame(animate);
-  }
+	animFrame = window.requestAnimationFrame( animate );
 
-  requestAnimationFrame(animate);
+	const onPlay = () => {
+		if ( ! started ) {
+			started = true;
+			audioCtx.resume();
+		}
+	};
 
-  audio.addEventListener("play", () => {
-    if (!started) {
-      started = true;
-      audioCtx.resume();
-    }
-  });
+	audio.addEventListener( 'play', onPlay );
+
+	registration.setCleanup( () => {
+		window.cancelAnimationFrame( animFrame );
+		observer.disconnect();
+		window.removeEventListener( 'resize', resize );
+		document.removeEventListener( 'fullscreenchange', resize );
+		audio.removeEventListener( 'play', onPlay );
+
+		if ( canvas.parentNode ) {
+			canvas.parentNode.removeChild( canvas );
+		}
+	} );
 };
+
+registerGalleryInitializer( attachOverlayAnimation );

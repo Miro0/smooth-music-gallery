@@ -1,54 +1,95 @@
 import Swiper from 'swiper';
-import {Pagination, Autoplay, Keyboard} from 'swiper/modules';
-import {hexToRgb} from "./block/utils/style";
+import { Pagination, Autoplay, Keyboard } from 'swiper/modules';
+import { hexToRgb } from './block/utils/style';
+import {
+	ensureGalleryInstance,
+	runInstanceCleanup,
+} from './block/utils/runtime';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-export const initMusicGallery = (container, index = 0) => {
-  const props = JSON.parse(container.dataset.props || '{}');
+export const initMusicGallery = ( container, index = 0 ) => {
+	const { index: galleryIndex, instance } = ensureGalleryInstance(
+		container,
+		index
+	);
+	index = galleryIndex;
 
-  console.log({
-    smoothMusicGalleryContainer: container,
-    smoothMusicGalleryProps: props,
-  });
+	runInstanceCleanup( instance );
 
-  const {photos = [], music = {}, theme = 'default', theme_options = {}, size = 85, slides_duration = 2, background_options = {}} = props;
-  const {background_color = 'transparent'} = background_options;
+	if ( instance.swiper && typeof instance.swiper.destroy === 'function' ) {
+		try {
+			instance.swiper.destroy( true, true );
+		} catch ( error ) {
+			// noop
+		}
+	}
 
-  container.classList.add('visible-controls');
-  container.classList.add(`theme-${theme.replace(/free\/|pro\//, '')}`);
-  const bgMargin = Math.floor((100 - size) / 4);
+	instance.swiper = null;
+	instance.pause = null;
+	instance.onSlideChange = null;
 
-  container.innerHTML = `
-    ${music?.url ? `<div class="smoothmg-bg-layer" style="background:${background_color}"></div>` : ''}
-    <div class="smoothmg-content" style="width:${size}%; height:${size}%;margin-top:${bgMargin}%;margin-bottom:${bgMargin}%">
-      ${music?.url ? `<div class="smoothmg-overlay-layer"></div>` : ''}
+	const props = JSON.parse( container.dataset.props || '{}' );
+
+	console.log( {
+		smoothMusicGalleryContainer: container,
+		smoothMusicGalleryProps: props,
+	} );
+
+	const {
+		photos = [],
+		music = {},
+		theme = 'default',
+		theme_options = {},
+		size = 85,
+		slides_duration = 2,
+		background_options = {},
+	} = props;
+	const { background_color = 'transparent' } = background_options;
+
+	container.classList.add( 'visible-controls' );
+	container.classList.add( `theme-${ theme.replace( /free\/|pro\//, '' ) }` );
+	const bgMargin = Math.floor( ( 100 - size ) / 4 );
+
+	container.innerHTML = `
+    ${
+		music?.url
+			? `<div class="smoothmg-bg-layer" style="background:${ background_color }"></div>`
+			: ''
+	}
+    <div class="smoothmg-content" style="width:${ size }%; height:${ size }%;margin-top:${ bgMargin }%;margin-bottom:${ bgMargin }%">
+      ${ music?.url ? `<div class="smoothmg-overlay-layer"></div>` : '' }
       <div class="smoothmg-image-container">
         <div class="swiper-wrapper">
-          ${photos
-    .map(
-      (photo) => `
+          ${ photos
+				.map(
+					( photo ) => `
               <div class="swiper-slide">
-                <img 
-                  src="${photo.url}" 
-                  alt="${photo.alt || ''}" 
-                  loading="lazy" 
-                  decoding="async" 
-                  style="object-fit: cover; width: 100%; height: 100%;" 
+                <img
+                  src="${ photo.url }"
+                  alt="${ photo.alt || '' }"
+                  loading="lazy"
+                  decoding="async"
+                  style="object-fit: cover; width: 100%; height: 100%;"
                 />
               </div>
             `
-    )
-    .join('')}
+				)
+				.join( '' ) }
         </div>
       </div>
       <div class="smoothmg-controls">
         <div class="swiper-pagination--wrapper">
           <div class="swiper-pagination"></div>
         </div>
-      
+
         <div class="smoothmg-music-meta">
-          <div class="smoothmg-music-title">${music?.title || music?.filename || music?.name || 'Select background music'}</div>
+          <div class="smoothmg-music-title">${
+				music?.title ||
+				music?.filename ||
+				music?.name ||
+				'Select background music'
+			}</div>
         </div>
 
         <div class="smoothmg-music-progress">
@@ -60,14 +101,14 @@ export const initMusicGallery = (container, index = 0) => {
             <span class="smoothmg-music-time-total">0:00</span>
           </div>
         </div>
-        
+
         <div class="smoothmg-volume--wrapper">
-          <input 
-            type="range" 
-            min="0" 
-            max="1" 
-            step="0.01" 
-            value="1" 
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
             class="smoothmg-volume"
             aria-label="Volume"
             title="Volume"
@@ -90,315 +131,406 @@ export const initMusicGallery = (container, index = 0) => {
         </button>
       </div>
     </div>
-    ${music?.url ? `<audio class="smoothmg-audio" preload="auto" crossorigin="anonymous" loop src="${music.url}"></audio>` : ''}
+    ${
+		music?.url
+			? `<audio class="smoothmg-audio" preload="auto" crossorigin="anonymous" loop src="${ music.url }"></audio>`
+			: ''
+	}
   `;
 
-  const themeAccentRGB = hexToRgb(theme_options?.accent ?? '#ffffff');
-  const themeFrameRGB = hexToRgb(theme_options?.frame_color ?? '#111111');
+	const themeAccentRGB = hexToRgb( theme_options?.accent ?? '#ffffff' );
+	const themeFrameRGB = hexToRgb( theme_options?.frame_color ?? '#111111' );
 
-  container.style.setProperty('--screen-ratio', window.innerWidth / window.innerHeight);
-  container.style.setProperty('--smoothmg-slides-duration', slides_duration);
-  container.style.setProperty('--smoothmg-theme-accent', theme_options?.accent ?? '#ffffff');
-  container.style.setProperty('--smoothmg-theme-accent--opacity', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.5)`);
-  container.style.setProperty('--smoothmg-theme-accent--opacity-light', `rgba(${themeAccentRGB.r},${themeAccentRGB.g},${themeAccentRGB.b},0.2)`);
-  container.style.setProperty('--smoothmg-theme-frame', theme_options?.frame_color ?? '#111111');
-  container.style.setProperty('--smoothmg-theme-frame--opacity', `rgba(${themeFrameRGB.r},${themeFrameRGB.g},${themeFrameRGB.b},0.8)`);
+	container.style.setProperty(
+		'--screen-ratio',
+		window.innerWidth / window.innerHeight
+	);
+	container.style.setProperty(
+		'--smoothmg-slides-duration',
+		slides_duration
+	);
+	container.style.setProperty(
+		'--smoothmg-theme-accent',
+		theme_options?.accent ?? '#ffffff'
+	);
+	container.style.setProperty(
+		'--smoothmg-theme-accent--opacity',
+		`rgba(${ themeAccentRGB.r },${ themeAccentRGB.g },${ themeAccentRGB.b },0.5)`
+	);
+	container.style.setProperty(
+		'--smoothmg-theme-accent--opacity-light',
+		`rgba(${ themeAccentRGB.r },${ themeAccentRGB.g },${ themeAccentRGB.b },0.2)`
+	);
+	container.style.setProperty(
+		'--smoothmg-theme-frame',
+		theme_options?.frame_color ?? '#111111'
+	);
+	container.style.setProperty(
+		'--smoothmg-theme-frame--opacity',
+		`rgba(${ themeFrameRGB.r },${ themeFrameRGB.g },${ themeFrameRGB.b },0.8)`
+	);
 
-  if (!window.mg) {
-    window.mg = [];
-  }
+	instance.initialized = true;
 
-  if (window.mg[index]) {
-    window.mg[index].initialized = true;
-  } else {
-    window.mg[index] = {initialized: true, source: null};
-  }
+	if ( instance.initOverlay ) {
+		instance.initOverlay( container, index );
+	}
+	if ( instance.initBackground ) {
+		instance.initBackground( container, index );
+	}
 
-  if (window.mg[index]?.initOverlay) {
-    window.mg[index].initOverlay(container, index);
-  }
-  if (window.mg[index]?.initBackground) {
-    window.mg[index].initBackground(container, index);
-  }
+	instance.swiper = new Swiper(
+		container.querySelector( '.smoothmg-image-container' ),
+		{
+			modules: [ Pagination, Autoplay, Keyboard ],
 
-  window.mg[index].swiper = new Swiper(container.querySelector('.smoothmg-image-container'), {
-    modules: [Pagination, Autoplay, Keyboard],
+			loop: true,
+			observer: true,
+			observeParents: true,
+			watchSlidesProgress: true,
+			preloadImages: false,
+			speed: 300,
 
-    loop: true,
-    observer: true,
-    observeParents: true,
-    watchSlidesProgress: true,
-    preloadImages: false,
-    speed: 300,
+			keyboard: {
+				enabled: true,
+				onlyInViewport: true,
+			},
 
-    keyboard: {
-      enabled: true,
-      onlyInViewport: true,
-    },
+			pagination: {
+				el: container.querySelector( '.swiper-pagination' ),
+				clickable: true,
+			},
 
-    pagination: {
-      el: container.querySelector('.swiper-pagination'),
-      clickable: true,
-    },
+			autoplay: false,
 
-    autoplay: false,
+			on: {
+				imagesReady() {
+					instance.swiper?.update();
+				},
+				realIndexChange() {
+					const activeIndex = instance.swiper?.realIndex ?? 0;
 
-    on: {
-      imagesReady() {
-        window.mg[index].swiper.update();
-      },
-      realIndexChange() {
-        const activeIndex = window.mg[index].swiper.realIndex;
+					if ( instance.onSlideChange ) {
+						instance.onSlideChange( activeIndex );
+					}
 
-        if (window.mg[index]?.onSlideChange) {
-          window.mg[index]?.onSlideChange(activeIndex);
-        }
+					if ( instance.swiper ) {
+						const bullets = instance.swiper.pagination.bullets;
 
-        if (window.mg[index]?.swiper) {
-          const bullets = window.mg[index].swiper.pagination.bullets;
+						bullets.forEach( ( bullet ) => {
+							bullet.classList.remove(
+								'swiper-pagination-bullet-active'
+							);
+							bullet.classList.remove(
+								'swiper-pagination-bullet-before-active'
+							);
+						} );
 
-          bullets.forEach((bullet) => {
-            bullet.classList.remove('swiper-pagination-bullet-active');
-            bullet.classList.remove('swiper-pagination-bullet-before-active');
-          });
+						window.requestAnimationFrame( () => {
+							bullets.forEach( ( bullet, bulletIndex ) => {
+								if ( bulletIndex < activeIndex ) {
+									bullet.classList.add(
+										'swiper-pagination-bullet-before-active'
+									);
+								} else if ( bulletIndex === activeIndex ) {
+									bullet.classList.add(
+										'swiper-pagination-bullet-active'
+									);
+								}
+							} );
+						} );
 
-          requestAnimationFrame(() => {
-            bullets.forEach((bullet, index) => {
-              if (index < activeIndex) {
-                bullet.classList.add('swiper-pagination-bullet-before-active');
-              } else if (index === activeIndex) {
-                bullet.classList.add('swiper-pagination-bullet-active');
-              }
-            });
-          });
+						if ( theme === 'playlist' ) {
+							const pagination =
+								container.querySelector( '.swiper-pagination' );
+							if ( pagination && bullets[ 0 ] ) {
+								pagination.scrollTop =
+									bullets[ 0 ].clientHeight * activeIndex;
+							}
+						}
+					}
+				},
+			},
+		}
+	);
 
-          if (theme === 'playlist') {
-            const pagination = container.querySelector('.swiper-pagination');
-            if (pagination) {
-              pagination.scrollTop = bullets[0].clientHeight * activeIndex;
-            }
-          }
-        }
-      }
-    },
-  });
+	if ( theme === 'playlist' ) {
+		const bullets = instance.swiper.pagination.bullets;
+		bullets.forEach( ( bullet, bulletIndex ) => {
+			bullet.innerText = photos[ bulletIndex ].url
+				.split( '/' )
+				.pop()
+				.split( '\\' )
+				.pop()
+				.split( '.' )
+				.slice( 0, -1 )
+				.join( '.' );
+		} );
+	}
 
-  if (theme === 'playlist') {
-    const bullets = window.mg[index].swiper.pagination.bullets;
-    bullets.forEach((bullet, bulletIndex) => {
-      bullet.innerText = photos[bulletIndex].url.split('/').pop().split('\\').pop().split('.').slice(0, -1).join('.');
-    });
-  }
+	const imgs = container.querySelectorAll( 'img[loading="lazy"]' );
+	let loadedCount = 0;
+	imgs.forEach( ( img ) => {
+		img.addEventListener( 'load', () => {
+			loadedCount += 1;
+			if ( loadedCount === imgs.length ) {
+				instance.swiper?.update();
+			}
+		} );
+	} );
 
-  const imgs = container.querySelectorAll('img[loading="lazy"]');
-  let loadedCount = 0;
-  imgs.forEach((img) => {
-    img.addEventListener('load', () => {
-      loadedCount++;
-      if (loadedCount === imgs.length) {
-        window.mg[index].swiper.update();
-      }
-    });
-  });
+	const handleResize = () => {
+		container.style.setProperty(
+			'--screen-ratio',
+			window.innerWidth / window.innerHeight
+		);
+	};
 
-  window.addEventListener('resize', () => {
-    container.style.setProperty('--screen-ratio', window.innerWidth / window.innerHeight);
-  });
+	window.addEventListener( 'resize', handleResize );
 
-  initControls(container, window.mg[index].swiper, slides_duration, index);
+	const controlsCleanup = initControls(
+		container,
+		instance.swiper,
+		slides_duration,
+		index,
+		instance
+	);
+
+	instance.cleanupCore = () => {
+		controlsCleanup?.();
+		window.removeEventListener( 'resize', handleResize );
+
+		if (
+			instance.swiper &&
+			typeof instance.swiper.destroy === 'function'
+		) {
+			try {
+				instance.swiper.destroy( true, true );
+			} catch ( error ) {
+				// noop
+			}
+		}
+
+		instance.swiper = null;
+		instance.pause = null;
+	};
 };
 
-if (typeof window !== 'undefined') {
-  window.initMusicGallery = initMusicGallery;
+if ( typeof window !== 'undefined' ) {
+	window.initMusicGallery = initMusicGallery;
 }
 
-function initControls(container, swiper, slides_duration, index) {
-  const content = container.querySelector('.smoothmg-content');
-  const btnPlay = container.querySelector('.smoothmg-play');
-  const btnPrev = container.querySelector('.smoothmg-prev');
-  const btnNext = container.querySelector('.smoothmg-next');
-  const btnFullscreen = container.querySelector('.smoothmg-fullscreen');
-  const audio = container.querySelector('.smoothmg-audio');
-  const volumeSlider = container.querySelector('.smoothmg-volume');
-  const bar = container.querySelector('.smoothmg-music-progress-bar');
-  const fill = container.querySelector('.smoothmg-music-progress-fill');
-  const current = container.querySelector('.smoothmg-music-time-current');
-  const total = container.querySelector('.smoothmg-music-time-total');
+function initControls( container, swiper, slides_duration, index, instance ) {
+	const content = container.querySelector( '.smoothmg-content' );
+	const btnPlay = container.querySelector( '.smoothmg-play' );
+	const btnPrev = container.querySelector( '.smoothmg-prev' );
+	const btnNext = container.querySelector( '.smoothmg-next' );
+	const btnFullscreen = container.querySelector( '.smoothmg-fullscreen' );
+	const audio = container.querySelector( '.smoothmg-audio' );
+	const volumeSlider = container.querySelector( '.smoothmg-volume' );
+	const bar = container.querySelector( '.smoothmg-music-progress-bar' );
+	const fill = container.querySelector( '.smoothmg-music-progress-fill' );
+	const current = container.querySelector( '.smoothmg-music-time-current' );
+	const total = container.querySelector( '.smoothmg-music-time-total' );
 
-  if (audio && volumeSlider) {
-    volumeSlider.value = 0.8;
-    volumeSlider.addEventListener('input', () => {
-      if (window.mg[index].gain) {
-        window.mg[index].gain.gain.value = parseFloat(volumeSlider.value);
-      }
-    });
-  }
+	if ( audio && volumeSlider ) {
+		volumeSlider.value = 0.8;
+		volumeSlider.addEventListener( 'input', () => {
+			if ( instance.gain ) {
+				instance.gain.gain.value = parseFloat( volumeSlider.value );
+			}
+		} );
+	}
 
-  if (audio && total) {
-    audio.addEventListener('loadedmetadata', () => {
-      total.textContent = format(audio.duration);
-    });
-  }
+	if ( audio && total ) {
+		audio.addEventListener( 'loadedmetadata', () => {
+			total.textContent = format( audio.duration );
+		} );
+	}
 
-  if (audio && fill) {
-    audio.addEventListener('timeupdate', () => {
-      const p = (audio.currentTime / audio.duration) * 100;
-      fill.style.width = `${p}%`;
-      current.textContent = format(audio.currentTime);
-    });
-  }
+	if ( audio && fill && current ) {
+		audio.addEventListener( 'timeupdate', () => {
+			const p = ( audio.currentTime / audio.duration ) * 100;
+			fill.style.width = `${ p }%`;
+			current.textContent = format( audio.currentTime );
+		} );
+	}
 
-  if (bar) {
-    let isSeeking = false;
+	if ( bar && audio && fill && current ) {
+		let isSeeking = false;
 
-    function updateSeek(e) {
-      const rect = bar.getBoundingClientRect();
-      const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width);
-      const pct = x / rect.width;
+		function updateSeek( e ) {
+			const rect = bar.getBoundingClientRect();
+			const x = Math.min(
+				Math.max( e.clientX - rect.left, 0 ),
+				rect.width
+			);
+			const pct = x / rect.width;
 
-      fill.style.width = `${pct * 100}%`;
+			fill.style.width = `${ pct * 100 }%`;
 
-      if (audio.duration && isSeeking) {
-        const newTime = audio.duration * pct;
-        current.textContent = format(newTime);
-        audio.currentTime = newTime;
-      }
-    }
+			if ( audio.duration && isSeeking ) {
+				const newTime = audio.duration * pct;
+				current.textContent = format( newTime );
+				audio.currentTime = newTime;
+			}
+		}
 
-    bar.addEventListener('pointerdown', (e) => {
-      isSeeking = true;
-      bar.setPointerCapture(e.pointerId);
-      updateSeek(e);
-    });
+		bar.addEventListener( 'pointerdown', ( e ) => {
+			isSeeking = true;
+			bar.setPointerCapture( e.pointerId );
+			updateSeek( e );
+		} );
 
-    bar.addEventListener('pointermove', (e) => {
-      if (isSeeking) updateSeek(e);
-    });
+		bar.addEventListener( 'pointermove', ( e ) => {
+			if ( isSeeking ) updateSeek( e );
+		} );
 
-    bar.addEventListener('pointerup', (e) => {
-      isSeeking = false;
-      bar.releasePointerCapture(e.pointerId);
-    });
+		bar.addEventListener( 'pointerup', ( e ) => {
+			isSeeking = false;
+			bar.releasePointerCapture( e.pointerId );
+		} );
 
-    bar.addEventListener('pointerleave', () => {
-      isSeeking = false;
-    });
-  }
+		bar.addEventListener( 'pointerleave', () => {
+			isSeeking = false;
+		} );
+	}
 
-  function format(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s < 10 ? '0' + s : s}`;
-  }
+	function format( seconds ) {
+		const m = Math.floor( seconds / 60 );
+		const s = Math.floor( seconds % 60 );
+		return `${ m }:${ s < 10 ? '0' + s : s }`;
+	}
 
-  let playing = false;
-  let controlsTimeout = null;
-  const pausePlayback = () => {
-    if (!playing) {
-      return;
-    }
+	let playing = false;
+	let controlsTimeout = null;
+	const pausePlayback = () => {
+		if ( ! playing ) {
+			return;
+		}
 
-    playing = false;
-    swiper.autoplay.stop();
-    audio?.pause();
+		playing = false;
+		swiper.autoplay.stop();
+		audio?.pause();
 
-    btnPlay?.classList.remove("is-loading");
-    if (btnPlay) {
-      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
-    }
+		btnPlay?.classList.remove( 'is-loading' );
+		if ( btnPlay ) {
+			btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+		}
 
-    container.classList.remove('is-playing');
-  };
-  const pauseOtherInstances = () => {
-    window.mg?.forEach((instance, instanceIndex) => {
-      if (instanceIndex !== index && typeof instance?.pause === 'function') {
-        instance.pause();
-      }
-    });
-  };
+		container.classList.remove( 'is-playing' );
+	};
+	const pauseOtherInstances = () => {
+		window.mg?.forEach( ( galleryInstance, instanceIndex ) => {
+			if (
+				instanceIndex !== index &&
+				typeof galleryInstance?.pause === 'function'
+			) {
+				galleryInstance.pause();
+			}
+		} );
+	};
 
-  window.mg[index].pause = pausePlayback;
+	instance.pause = pausePlayback;
 
-  window.addEventListener('pointermove', (event) => {
-    if (container.classList.contains('visible-controls')) return;
+	const onPointerMove = ( event ) => {
+		if ( container.classList.contains( 'visible-controls' ) || ! content )
+			return;
 
-    const rect = content.getBoundingClientRect();
+		const rect = content.getBoundingClientRect();
 
-    if (
-      event.clientX >= rect.left &&
-      event.clientX <= rect.right &&
-      event.clientY >= rect.top &&
-      event.clientY <= rect.bottom
-    ) {
-      clearTimeout(controlsTimeout);
-      container.classList.add('visible-controls');
-      controlsTimeout = setTimeout(() => {
-        container.classList.remove('visible-controls');
-      }, 3000);
-    }
-  }, {passive: true});
+		if (
+			event.clientX >= rect.left &&
+			event.clientX <= rect.right &&
+			event.clientY >= rect.top &&
+			event.clientY <= rect.bottom
+		) {
+			clearTimeout( controlsTimeout );
+			container.classList.add( 'visible-controls' );
+			controlsTimeout = setTimeout( () => {
+				container.classList.remove( 'visible-controls' );
+			}, 3000 );
+		}
+	};
 
-  if (btnPlay) {
-    btnPlay.addEventListener('click', async () => {
-      if (playing) {
-        pausePlayback();
-        return;
-      }
+	window.addEventListener( 'pointermove', onPointerMove, { passive: true } );
 
-      pauseOtherInstances();
-      playing = true;
+	if ( btnPlay ) {
+		btnPlay.addEventListener( 'click', async () => {
+			if ( playing ) {
+				pausePlayback();
+				return;
+			}
 
-      container.classList.add('is-playing');
-      btnPlay.classList.add("is-loading");
+			pauseOtherInstances();
+			playing = true;
 
-      swiper.params.autoplay = {
-        delay: slides_duration * 1000,
-        disableOnInteraction: false,
-      };
+			container.classList.add( 'is-playing' );
+			btnPlay.classList.add( 'is-loading' );
 
-      swiper.autoplay.start();
-      audio?.play();
+			swiper.params.autoplay = {
+				delay: slides_duration * 1000,
+				disableOnInteraction: false,
+			};
 
-      btnPlay.classList.remove("is-loading");
+			swiper.autoplay.start();
+			audio?.play();
 
-      btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+			btnPlay.classList.remove( 'is-loading' );
 
-      container.classList.add('visible-controls');
-      controlsTimeout = setTimeout(() => {
-        container.classList.remove('visible-controls');
-      }, 1000);
-    });
-  }
+			btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
 
-  if (btnFullscreen) {
-    btnFullscreen.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        container.requestFullscreen();
-        container.classList.add('smoothmg--fullscreen');
-      } else {
-        document.exitFullscreen();
-        container.classList.remove('smoothmg--fullscreen');
-      }
+			container.classList.add( 'visible-controls' );
+			controlsTimeout = setTimeout( () => {
+				container.classList.remove( 'visible-controls' );
+			}, 1000 );
+		} );
+	}
 
-      const activeBullet = container.querySelector('.swiper-pagination-bullet-active');
-      if (activeBullet) {
-        activeBullet.classList.remove('swiper-pagination-bullet-active');
-        requestAnimationFrame(() => {
-          activeBullet.classList.add('swiper-pagination-bullet-active');
-        });
-      }
-    });
-  }
+	if ( btnFullscreen ) {
+		btnFullscreen.addEventListener( 'click', () => {
+			if ( ! document.fullscreenElement ) {
+				container.requestFullscreen();
+				container.classList.add( 'smoothmg--fullscreen' );
+			} else {
+				document.exitFullscreen();
+				container.classList.remove( 'smoothmg--fullscreen' );
+			}
 
-  if (btnPrev) {
-    btnPrev.addEventListener('click', () => {
-      swiper?.slidePrev();
-    });
-  }
+			const activeBullet = container.querySelector(
+				'.swiper-pagination-bullet-active'
+			);
+			if ( activeBullet ) {
+				activeBullet.classList.remove(
+					'swiper-pagination-bullet-active'
+				);
+				window.requestAnimationFrame( () => {
+					activeBullet.classList.add(
+						'swiper-pagination-bullet-active'
+					);
+				} );
+			}
+		} );
+	}
 
-  if (btnNext) {
-    btnNext.addEventListener('click', () => {
-      swiper?.slideNext();
-    });
-  }
+	if ( btnPrev ) {
+		btnPrev.addEventListener( 'click', () => {
+			swiper?.slidePrev();
+		} );
+	}
+
+	if ( btnNext ) {
+		btnNext.addEventListener( 'click', () => {
+			swiper?.slideNext();
+		} );
+	}
+
+	return () => {
+		clearTimeout( controlsTimeout );
+		window.removeEventListener( 'pointermove', onPointerMove );
+
+		if ( instance.pause === pausePlayback ) {
+			instance.pause = null;
+		}
+	};
 }

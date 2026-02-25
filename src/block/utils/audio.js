@@ -1,32 +1,62 @@
-export const initAudioSource = (audio, index) => {
-  if (!window?.mg[index]?.ctx) {
-    window.mg[index].ctx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  const ctx = window.mg[index].ctx;
+export const initAudioSource = ( audio, index ) => {
+	if ( ! window?.mg ) {
+		window.mg = [];
+	}
 
-  if (!window?.mg[index]?.source) {
-    window.mg[index].source = ctx.createMediaElementSource(audio);
-  }
-  const source = window.mg[index].source;
+	if ( ! window.mg[ index ] ) {
+		window.mg[ index ] = { source: null };
+	}
 
-  if (!window?.mg[index]?.gain) {
-    window.mg[index].gain = ctx.createGain();
-  }
-  const gain = window.mg[index].gain;
-  gain.gain.value = 0.8;
+	const instance = window.mg[ index ];
 
-  const analyser = ctx.createAnalyser();
-  analyser.fftSize = 256;
+	if ( ! instance.ctx ) {
+		instance.ctx = new ( window.AudioContext ||
+			window.webkitAudioContext )();
+	}
+	const ctx = instance.ctx;
 
-  const data = new Uint8Array(analyser.frequencyBinCount);
+	if ( instance.audioElement && instance.audioElement !== audio ) {
+		try {
+			instance.source?.disconnect();
+		} catch ( error ) {
+			// noop
+		}
 
-  source.connect(analyser);
+		try {
+			instance.gain?.disconnect();
+		} catch ( error ) {
+			// noop
+		}
 
-  if (!window?.mg[index].audioConnected) {
-    source.connect(gain);
-    gain.connect(ctx.destination);
-    window.mg[index].audioConnected = true;
-  }
+		instance.source = null;
+		instance.gain = null;
+		instance.audioConnected = false;
+	}
 
-  return [analyser, ctx, data];
-}
+	if ( ! instance.source ) {
+		instance.source = ctx.createMediaElementSource( audio );
+		instance.audioElement = audio;
+	}
+	const source = instance.source;
+
+	if ( ! instance.gain ) {
+		instance.gain = ctx.createGain();
+	}
+	const gain = instance.gain;
+	gain.gain.value = 0.8;
+
+	const analyser = ctx.createAnalyser();
+	analyser.fftSize = 256;
+
+	const data = new Uint8Array( analyser.frequencyBinCount );
+
+	source.connect( analyser );
+
+	if ( ! instance.audioConnected ) {
+		source.connect( gain );
+		gain.connect( ctx.destination );
+		instance.audioConnected = true;
+	}
+
+	return [ analyser, ctx, data ];
+};

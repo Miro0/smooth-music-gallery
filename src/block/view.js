@@ -1,5 +1,13 @@
-import {initMusicGallery} from "../smooth-music-gallery";
+import { initMusicGallery } from '../smooth-music-gallery';
+import { registerGalleryInitializer } from './utils/runtime';
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.smoothmg-gallery').forEach((gallery, index) => initMusicGallery(gallery, index));
-});
+registerGalleryInitializer( ( gallery, index ) => {
+	if (
+		window?.mg?.[ index ]?.initialized &&
+		window?.mg?.[ index ]?.container === gallery
+	) {
+		return;
+	}
+
+	initMusicGallery( gallery, index );
+} );
