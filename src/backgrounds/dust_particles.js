@@ -1,5 +1,9 @@
 import { initAudioSource } from '../block/utils/audio';
 import {
+	createAudioReactiveAnimator,
+	isMobileViewport,
+} from '../block/utils/performance';
+import {
 	registerGalleryHook,
 	registerGalleryInitializer,
 } from '../block/utils/runtime';
@@ -34,9 +38,11 @@ const attachBackgroundAnimation = ( container, index ) => {
 	if ( ! audio || ! layer ) return;
 
 	let isVisible = true;
+	let animator = null;
 	const observer = new window.IntersectionObserver(
 		( entries ) => {
 			isVisible = entries[ 0 ]?.isIntersecting ?? true;
+			animator?.sync();
 		},
 		{ threshold: 0 }
 	);
@@ -113,7 +119,8 @@ const attachBackgroundAnimation = ( container, index ) => {
 	}
 
 	const rect = layer.getBoundingClientRect();
-	const count = Math.floor( 240 * density );
+	const baseCount = isMobileViewport() ? 120 : 240;
+	const count = Math.floor( baseCount * density );
 
 	particles = new Array( count ).fill( 0 ).map( () => {
 		const size = min_size + Math.random() * ( max_size - min_size );
@@ -148,8 +155,6 @@ const attachBackgroundAnimation = ( container, index ) => {
 		return cnt ? sum / cnt : 0;
 	};
 
-	let animFrame = null;
-
 	function drawGroup( arr, bandVal, scaleMul, baseOpacity, gainOpacity ) {
 		const W = canvas.width;
 		const H = canvas.height;
@@ -177,12 +182,7 @@ const attachBackgroundAnimation = ( container, index ) => {
 		} );
 	}
 
-	function animate() {
-		if ( ! isVisible ) {
-			animFrame = window.requestAnimationFrame( animate );
-			return;
-		}
-
+	const renderFrame = () => {
 		analyser.getByteFrequencyData( data );
 
 		const low = avgRange( data, 0, 10 ) / 255;
@@ -194,25 +194,26 @@ const attachBackgroundAnimation = ( container, index ) => {
 		drawGroup( lowP, low, 1.3, 0.25, 0.9 );
 		drawGroup( midP, mid, 0.8, 0.25, 0.7 );
 		drawGroup( highP, high, 0.4, 0.3, 0.5 );
-
-		animFrame = window.requestAnimationFrame( animate );
-	}
-
-	animate();
-
-	const onPlay = () => {
-		audioCtx.resume().catch( () => {} );
 	};
 
-	audio.addEventListener( 'play', onPlay );
+	animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: () => isVisible,
+		render: renderFrame,
+		onStart: () => {
+			audioCtx.resume().catch( () => {} );
+		},
+		mobileFps: 24,
+		desktopFps: 60,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
-		window.cancelAnimationFrame( animFrame );
+		animator?.dispose();
 		observer.disconnect();
 		window.removeEventListener( 'resize', resize );
 		document.removeEventListener( 'fullscreenchange', resize );
 		resizeObserver?.disconnect();
-		audio.removeEventListener( 'play', onPlay );
 
 		if ( canvas.parentNode ) {
 			canvas.parentNode.removeChild( canvas );

@@ -1,5 +1,6 @@
 import { createAnimationStyle, hexToRgb } from '../block/utils/style';
 import { initAudioSource } from '../block/utils/audio';
+import { createAudioReactiveAnimator } from '../block/utils/performance';
 import {
 	registerGalleryHook,
 	registerGalleryInitializer,
@@ -100,9 +101,7 @@ const attachBackgroundAnimation = ( container, index ) => {
 	let smoothHigh = 0;
 	const smoothing = 0.12;
 
-	let animFrame = null;
-
-	function animate() {
+	const renderFrame = () => {
 		analyser.getByteFrequencyData( data );
 
 		const bass = avgRange( data, 0, 40 ) / 255;
@@ -125,24 +124,22 @@ const attachBackgroundAnimation = ( container, index ) => {
 		ambient.querySelector(
 			'.smoothmg-bg--ambient-light__br'
 		).style.opacity = 0.2 + smoothHigh * intensity;
-
-		animFrame = window.requestAnimationFrame( animate );
-	}
-
-	const onPlay = () => {
-		ctx.resume().then( () => {
-			if ( ! animFrame ) {
-				animate();
-			}
-		} );
 	};
 
-	audio.addEventListener( 'play', onPlay );
+	const animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: true,
+		render: renderFrame,
+		onStart: () => {
+			ctx.resume();
+		},
+		mobileFps: 24,
+		desktopFps: 60,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
-		window.cancelAnimationFrame( animFrame );
-		animFrame = null;
-		audio.removeEventListener( 'play', onPlay );
+		animator.dispose();
 	} );
 };
 

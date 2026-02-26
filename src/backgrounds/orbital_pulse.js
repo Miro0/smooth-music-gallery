@@ -1,5 +1,9 @@
 import { initAudioSource } from '../block/utils/audio';
 import {
+	createAudioReactiveAnimator,
+	isMobileViewport,
+} from '../block/utils/performance';
+import {
 	registerGalleryHook,
 	registerGalleryInitializer,
 } from '../block/utils/runtime';
@@ -38,9 +42,11 @@ const attachBackgroundAnimation = ( container, index ) => {
 	if ( ! backgroundLayer || ! audio ) return;
 
 	let isVisible = true;
+	let animator = null;
 	const observer = new window.IntersectionObserver(
 		( entries ) => {
 			isVisible = entries[ 0 ]?.isIntersecting ?? true;
+			animator?.sync();
 		},
 		{ threshold: 0 }
 	);
@@ -81,8 +87,8 @@ const attachBackgroundAnimation = ( container, index ) => {
 	let aspectY = 1;
 	let baseRadius = 0;
 
-	const particlesCount = Math.floor( 240 * density );
-
+	const baseCount = isMobileViewport() ? 120 : 240;
+	const particlesCount = Math.floor( baseCount * density );
 	const particles = [];
 
 	function initParticles() {
@@ -126,17 +132,11 @@ const attachBackgroundAnimation = ( container, index ) => {
 	window.addEventListener( 'resize', resize );
 	document.addEventListener( 'fullscreenchange', resize );
 
-	const [ analyser, , data ] = initAudioSource( audio, index );
+	const [ analyser, audioCtx, data ] = initAudioSource( audio, index );
 
-	let animFrame = null;
 	let frame = 0;
 
-	function animate() {
-		if ( ! isVisible ) {
-			animFrame = window.requestAnimationFrame( animate );
-			return;
-		}
-
+	const renderFrame = () => {
 		analyser.getByteFrequencyData( data );
 		frame++;
 
@@ -199,14 +199,22 @@ const attachBackgroundAnimation = ( container, index ) => {
 			ctx2.clearRect( 0, 0, W, H );
 			ctx2.drawImage( off, 0, 0 );
 		}
+	};
 
-		animFrame = window.requestAnimationFrame( animate );
-	}
-
-	animate();
+	animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: () => isVisible,
+		render: renderFrame,
+		onStart: () => {
+			audioCtx.resume().catch( () => {} );
+		},
+		mobileFps: 24,
+		desktopFps: 60,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
-		window.cancelAnimationFrame( animFrame );
+		animator?.dispose();
 		observer.disconnect();
 		window.removeEventListener( 'resize', resize );
 		document.removeEventListener( 'fullscreenchange', resize );

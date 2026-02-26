@@ -1,5 +1,9 @@
 import { initAudioSource } from '../block/utils/audio';
 import {
+	createAudioReactiveAnimator,
+	isMobileViewport,
+} from '../block/utils/performance';
+import {
 	registerGalleryHook,
 	registerGalleryInitializer,
 } from '../block/utils/runtime';
@@ -37,9 +41,11 @@ const attachOverlayAnimation = ( container, index ) => {
 	if ( ! overlayLayer || ! audio ) return;
 
 	let isVisible = true;
+	let animator = null;
 	const observer = new window.IntersectionObserver(
 		( entries ) => {
 			isVisible = entries[ 0 ]?.isIntersecting ?? true;
+			animator?.sync();
 		},
 		{ threshold: 0 }
 	);
@@ -75,14 +81,18 @@ const attachOverlayAnimation = ( container, index ) => {
 
 	let history = [];
 	let shiftAccumulator = 0;
-	let started = false;
+	let renderScale = isMobileViewport() ? 0.75 : 1;
 
 	function resize() {
-		const rect = overlayLayer.getBoundingClientRect();
-		canvas.width = rect.width;
-		canvas.height = rect.height;
+		renderScale = isMobileViewport() ? 0.75 : 1;
 
-		setupOffscreen( rect.width, rect.height );
+		const rect = overlayLayer.getBoundingClientRect();
+		canvas.width = Math.max( 1, Math.floor( rect.width * renderScale ) );
+		canvas.height = Math.max( 1, Math.floor( rect.height * renderScale ) );
+		canvas.style.width = rect.width + 'px';
+		canvas.style.height = rect.height + 'px';
+
+		setupOffscreen( canvas.width, canvas.height );
 
 		history = new Array( canvas.width ).fill( 0 );
 	}
@@ -93,29 +103,18 @@ const attachOverlayAnimation = ( container, index ) => {
 
 	const [ analyser, audioCtx, data ] = initAudioSource( audio, index );
 
-	let animFrame = null;
+	const renderFrame = () => {
+		analyser.getByteFrequencyData( data );
 
-	function animate() {
-		if ( ! isVisible ) {
-			animFrame = window.requestAnimationFrame( animate );
-			return;
+		let sum = 0;
+		let count = 0;
+		for ( let i = 10; i < 50 && i < data.length; i++ ) {
+			sum += data[ i ];
+			count++;
 		}
 
-		let currentAmp = 0;
-
-		if ( ! audio.paused ) {
-			analyser.getByteFrequencyData( data );
-
-			let sum = 0;
-			let count = 0;
-			for ( let i = 10; i < 50 && i < data.length; i++ ) {
-				sum += data[ i ];
-				count++;
-			}
-
-			const avg = count ? sum / count : 0;
-			currentAmp = ( avg / 255 ) * 100 * intensity;
-		}
+		const avg = count ? sum / count : 0;
+		const currentAmp = ( avg / 255 ) * 100 * intensity;
 
 		const lastAmp = history[ history.length - 1 ] ?? 0;
 		const smoothedAmp = lastAmp + ( currentAmp - lastAmp ) * smoothness;
@@ -159,8 +158,11 @@ const attachOverlayAnimation = ( container, index ) => {
 			targetCtx.beginPath();
 			for ( let x = 0; x < history.length; x++ ) {
 				const y = baseY - history[ x ];
-				if ( x === 0 ) targetCtx.moveTo( x, y );
-				else targetCtx.lineTo( x, y );
+				if ( x === 0 ) {
+					targetCtx.moveTo( x, y );
+				} else {
+					targetCtx.lineTo( x, y );
+				}
 			}
 			targetCtx.stroke();
 		}
@@ -173,27 +175,25 @@ const attachOverlayAnimation = ( container, index ) => {
 			ctx2.clearRect( 0, 0, width(), height() );
 			ctx2.drawImage( off, 0, 0 );
 		}
-
-		animFrame = window.requestAnimationFrame( animate );
-	}
-
-	animFrame = window.requestAnimationFrame( animate );
-
-	const onPlay = () => {
-		if ( ! started ) {
-			started = true;
-			audioCtx.resume();
-		}
 	};
 
-	audio.addEventListener( 'play', onPlay );
+	animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: () => isVisible,
+		render: renderFrame,
+		onStart: () => {
+			audioCtx.resume();
+		},
+		mobileFps: 30,
+		desktopFps: 60,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
-		window.cancelAnimationFrame( animFrame );
+		animator?.dispose();
 		observer.disconnect();
 		window.removeEventListener( 'resize', resize );
 		document.removeEventListener( 'fullscreenchange', resize );
-		audio.removeEventListener( 'play', onPlay );
 
 		if ( canvas.parentNode ) {
 			canvas.parentNode.removeChild( canvas );

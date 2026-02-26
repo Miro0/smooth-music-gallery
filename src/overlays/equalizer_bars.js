@@ -1,5 +1,6 @@
 import { createAnimationStyle } from '../block/utils/style';
 import { initAudioSource } from '../block/utils/audio';
+import { createAudioReactiveAnimator } from '../block/utils/performance';
 import {
 	registerGalleryHook,
 	registerGalleryInitializer,
@@ -89,9 +90,7 @@ const attachOverlayAnimation = ( container, index ) => {
 
 	const [ analyser, ctx, data ] = initAudioSource( audio, index );
 
-	let animFrame = null;
-
-	function animate() {
+	const renderFrame = () => {
 		analyser.getByteFrequencyData( data );
 
 		const slice = Math.floor( data.length / barNodes.length );
@@ -117,24 +116,22 @@ const attachOverlayAnimation = ( container, index ) => {
 
 			bar.style.transform = `scaleY(${ barHeights[ i ] })`;
 		} );
-
-		animFrame = window.requestAnimationFrame( animate );
-	}
-
-	const onPlay = () => {
-		ctx.resume().then( () => {
-			if ( ! animFrame ) {
-				animate();
-			}
-		} );
 	};
 
-	audio.addEventListener( 'play', onPlay );
+	const animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: true,
+		render: renderFrame,
+		onStart: () => {
+			ctx.resume();
+		},
+		mobileFps: 30,
+		desktopFps: 60,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
-		window.cancelAnimationFrame( animFrame );
-		animFrame = null;
-		audio.removeEventListener( 'play', onPlay );
+		animator.dispose();
 	} );
 };
 

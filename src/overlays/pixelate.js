@@ -1,5 +1,9 @@
 import { initAudioSource } from '../block/utils/audio';
 import {
+	createAudioReactiveAnimator,
+	getEffectiveDpr,
+} from '../block/utils/performance';
+import {
 	registerGalleryHook,
 	registerGalleryInitializer,
 } from '../block/utils/runtime';
@@ -36,19 +40,24 @@ const attachOverlayAnimation = ( container, index ) => {
 	const overlayLayer = container.querySelector( '.smoothmg-overlay-layer' );
 
 	let isVisible = true;
+	let animator = null;
 	const observer = new window.IntersectionObserver(
 		( entries ) => {
 			isVisible = entries[ 0 ].isIntersecting;
+			animator?.sync();
 		},
 		{ threshold: 0.1 }
 	);
 	observer.observe( container );
 
+	const currentDpr = () =>
+		getEffectiveDpr( { mobileMax: 1, desktopMax: 1.5 } );
+
 	const syncItemSize = ( item ) => {
 		const rect = item.parent.getBoundingClientRect();
 		const w = rect.width;
 		const h = rect.height;
-		const dpr = window.devicePixelRatio || 1;
+		const dpr = currentDpr();
 
 		if ( ! w || ! h ) return;
 
@@ -93,7 +102,7 @@ const attachOverlayAnimation = ( container, index ) => {
 				return;
 			}
 
-			const dpr = window.devicePixelRatio || 1;
+			const dpr = currentDpr();
 
 			let off = null;
 			let octx = null;
@@ -118,6 +127,7 @@ const attachOverlayAnimation = ( container, index ) => {
 			canvas.style.left = '0';
 			canvas.style.pointerEvents = 'none';
 			canvas.style.zIndex = '10';
+			canvas.style.display = 'none';
 
 			const ctx = canvas.getContext( '2d' );
 			ctx.imageSmoothingEnabled = false;
@@ -126,9 +136,15 @@ const attachOverlayAnimation = ( container, index ) => {
 			parent.style.position = 'relative';
 			parent.appendChild( canvas );
 
+			const slideIndex = Number.parseInt(
+				parent?.dataset?.swiperSlideIndex,
+				10
+			);
+
 			items.push( {
 				img,
 				parent,
+				slideIndex: Number.isInteger( slideIndex ) ? slideIndex : null,
 				canvas,
 				ctx,
 				off,
@@ -161,8 +177,6 @@ const attachOverlayAnimation = ( container, index ) => {
 		overlayLayer &&
 		new window.ResizeObserver( () => syncAllCanvasSizes() );
 	resizeObserver?.observe( overlayLayer );
-
-	let animFrame = null;
 
 	function drawPixel( item, pixelSize ) {
 		const { img, parent, ctx, off, octx } = item;
@@ -207,7 +221,6 @@ const attachOverlayAnimation = ( container, index ) => {
 		tctx.drawImage( img, sx, sy, sWidth, sHeight, 0, 0, smallW, smallH );
 
 		ctx.clearRect( 0, 0, w, h );
-
 		ctx.drawImage( tmp, 0, 0, smallW, smallH, 0, 0, w, h );
 
 		if ( off && octx ) {
@@ -218,12 +231,7 @@ const attachOverlayAnimation = ( container, index ) => {
 		}
 	}
 
-	function animate() {
-		if ( ! isVisible ) {
-			animFrame = window.requestAnimationFrame( animate );
-			return;
-		}
-
+	const renderFrame = () => {
 		analyser.getByteFrequencyData( data );
 		let sum = 0;
 		for ( let i = 10; i < 40; i++ ) sum += data[ i ];
@@ -237,51 +245,42 @@ const attachOverlayAnimation = ( container, index ) => {
 			0;
 
 		items.forEach( ( item ) => {
-			if (
-				item?.parent?.dataset?.swiperSlideIndex !== undefined &&
-				parseInt( activeIndex ) ===
-					parseInt( item?.parent?.dataset?.swiperSlideIndex )
-			) {
+			if ( item.slideIndex !== null && item.slideIndex === activeIndex ) {
 				drawPixel( item, pixelSize );
 			}
 		} );
+	};
 
-		animFrame = window.requestAnimationFrame( animate );
-	}
-
-	const onPlay = () => {
-		audioCtx.resume().then( () => {
-			items.forEach( ( item ) => {
-				item.canvas.style.display = 'block';
+	animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: () => isVisible,
+		render: renderFrame,
+		onStart: () => {
+			audioCtx.resume().then( () => {
+				items.forEach( ( item ) => {
+					item.canvas.style.display = 'block';
+				} );
 			} );
-
-			if ( ! animFrame ) {
-				animate();
-			}
-		} );
-	};
-
-	const onPause = () => {
-		items.forEach( ( item ) => {
-			item.canvas.style.display = 'none';
-		} );
-	};
-
-	audio.addEventListener( 'play', onPlay );
-	audio.addEventListener( 'pause', onPause );
+		},
+		onStop: () => {
+			items.forEach( ( item ) => {
+				item.canvas.style.display = 'none';
+			} );
+		},
+		mobileFps: 20,
+		desktopFps: 45,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
-		window.cancelAnimationFrame( animFrame );
-		animFrame = null;
+		animator?.dispose();
 		observer.disconnect();
 		window.removeEventListener( 'resize', syncAllCanvasSizes );
 		document.removeEventListener( 'fullscreenchange', syncAllCanvasSizes );
 		resizeObserver?.disconnect();
-		audio.removeEventListener( 'play', onPlay );
-		audio.removeEventListener( 'pause', onPause );
 
-		imageLoadHandlers.forEach( ( [ img, setup ] ) => {
-			img.removeEventListener( 'load', setup );
+		imageLoadHandlers.forEach( ( [ image, setup ] ) => {
+			image.removeEventListener( 'load', setup );
 		} );
 
 		items.forEach( ( item ) => {

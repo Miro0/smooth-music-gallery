@@ -1,5 +1,6 @@
 import { createAnimationStyle } from '../block/utils/style';
 import { initAudioSource } from '../block/utils/audio';
+import { createAudioReactiveAnimator } from '../block/utils/performance';
 import {
 	registerGalleryHook,
 	registerGalleryInitializer,
@@ -71,9 +72,7 @@ const attachOverlayAnimation = ( container, index ) => {
 
 	const [ analyser, ctx, data ] = initAudioSource( audio, index );
 
-	let animFrame = null;
-
-	function animate() {
+	const renderFrame = () => {
 		analyser.getByteFrequencyData( data );
 
 		let avg = 0;
@@ -81,32 +80,26 @@ const attachOverlayAnimation = ( container, index ) => {
 		avg = avg / data.length / 255;
 
 		const reactiveOpacity = Math.min( 0.85, avg * 1.8 );
-
 		layer.style.opacity = reactiveOpacity.toFixed( 3 );
-
-		animFrame = window.requestAnimationFrame( animate );
-	}
-
-	const onPlay = () => {
-		ctx.resume().then( () => {
-			if ( ! animFrame ) {
-				animate();
-			}
-		} );
 	};
 
-	const onPause = () => {
-		layer.style.opacity = 0.1;
-	};
-
-	audio.addEventListener( 'play', onPlay );
-	audio.addEventListener( 'pause', onPause );
+	const animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: true,
+		render: renderFrame,
+		onStart: () => {
+			ctx.resume();
+		},
+		onStop: () => {
+			layer.style.opacity = 0.1;
+		},
+		mobileFps: 30,
+		desktopFps: 60,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
-		window.cancelAnimationFrame( animFrame );
-		animFrame = null;
-		audio.removeEventListener( 'play', onPlay );
-		audio.removeEventListener( 'pause', onPause );
+		animator.dispose();
 
 		if ( overlayRoot && overlayRoot.parentNode ) {
 			overlayRoot.parentNode.removeChild( overlayRoot );

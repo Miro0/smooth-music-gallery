@@ -1,5 +1,10 @@
 import { initAudioSource } from '../block/utils/audio';
 import {
+	createAudioReactiveAnimator,
+	getEffectiveDpr,
+	isMobileViewport,
+} from '../block/utils/performance';
+import {
 	registerGalleryHook,
 	registerGalleryInitializer,
 } from '../block/utils/runtime';
@@ -53,7 +58,9 @@ const attachOverlayAnimation = ( container, index ) => {
 	let baseY = 0;
 	let gradient = null;
 
-	const dpr = window.devicePixelRatio || 1;
+	let isVisible = true;
+	let animator = null;
+	let dpr = getEffectiveDpr( { mobileMax: 1.2, desktopMax: 1.75 } );
 
 	const makeGradient = ( context ) => {
 		const g = context.createLinearGradient( 0, 0, 0, line_height );
@@ -65,21 +72,22 @@ const attachOverlayAnimation = ( container, index ) => {
 	};
 
 	function resize() {
+		dpr = getEffectiveDpr( { mobileMax: 1.2, desktopMax: 1.75 } );
 		const rect = overlayLayer.getBoundingClientRect();
 		cssW = rect.width;
 		cssH = rect.height;
 
 		if ( ! cssW || ! cssH ) return;
 
-		canvas.width = cssW * dpr;
-		canvas.height = cssH * dpr;
+		canvas.width = Math.max( 1, Math.floor( cssW * dpr ) );
+		canvas.height = Math.max( 1, Math.floor( cssH * dpr ) );
 		canvas.style.width = cssW + 'px';
 		canvas.style.height = cssH + 'px';
 
 		ctx.setTransform( dpr, 0, 0, dpr, 0, 0 );
 
 		if ( window.OffscreenCanvas ) {
-			off = new OffscreenCanvas( cssW * dpr, cssH * dpr );
+			off = new OffscreenCanvas( canvas.width, canvas.height );
 			octx = off.getContext( '2d' );
 			octx.setTransform( dpr, 0, 0, dpr, 0, 0 );
 			octx.imageSmoothingEnabled = true;
@@ -88,7 +96,12 @@ const attachOverlayAnimation = ( container, index ) => {
 			octx = null;
 		}
 
-		segments = Math.max( 4, Math.floor( cssW / 4 ) );
+		const segmentDivisor = isMobileViewport() ? 8 : 4;
+		const maxSegments = isMobileViewport() ? 128 : 240;
+		segments = Math.min(
+			maxSegments,
+			Math.max( 4, Math.floor( cssW / segmentDivisor ) )
+		);
 		segmentWidth = cssW / segments;
 
 		baseY = cssH * 0.25 + ( cssH * position ) / 200;
@@ -101,24 +114,23 @@ const attachOverlayAnimation = ( container, index ) => {
 	window.addEventListener( 'resize', resize );
 	document.addEventListener( 'fullscreenchange', resize );
 
-	const [ analyser, , data ] = initAudioSource( audio, index );
-
-	let animFrame = null;
-	let isVisible = true;
+	const [ analyser, audioCtx, data ] = initAudioSource( audio, index );
 
 	const observer = new window.IntersectionObserver(
 		( entries ) => {
 			isVisible = entries[ 0 ]?.isIntersecting ?? true;
+			animator?.sync();
 		},
 		{ threshold: 0.1 }
 	);
 	observer.observe( container );
 
-	function drawFrame( time ) {
-		if ( ! cssW || ! cssH ) return;
+	const renderFrame = ( time ) => {
+		if ( ! cssW || ! cssH ) {
+			return;
+		}
 
 		const targetCtx = octx || ctx;
-
 		targetCtx.clearRect( 0, 0, cssW, cssH );
 
 		analyser.getByteFrequencyData( data );
@@ -145,7 +157,6 @@ const attachOverlayAnimation = ( container, index ) => {
 			targetCtx.translate( x, y - line_height / 2 );
 
 			targetCtx.fillStyle = gradient;
-
 			targetCtx.shadowColor = accent + '66';
 			targetCtx.shadowBlur = 14;
 			targetCtx.fillRect( 0, 0, segmentWidth, line_height );
@@ -161,21 +172,23 @@ const attachOverlayAnimation = ( container, index ) => {
 			ctx.clearRect( 0, 0, cssW, cssH );
 			ctx.drawImage( off, 0, 0 );
 		}
-	}
+	};
 
-	function loop( time ) {
-		if ( isVisible ) {
-			drawFrame( time );
-		}
-		animFrame = window.requestAnimationFrame( loop );
-	}
-
-	animFrame = window.requestAnimationFrame( loop );
+	animator = createAudioReactiveAnimator( {
+		audio,
+		isVisible: () => isVisible,
+		render: renderFrame,
+		onStart: () => {
+			audioCtx.resume();
+		},
+		mobileFps: 30,
+		desktopFps: 60,
+	} );
+	animator.sync();
 
 	registration.setCleanup( () => {
 		observer.disconnect();
-		window.cancelAnimationFrame( animFrame );
-		animFrame = null;
+		animator?.dispose();
 		window.removeEventListener( 'resize', resize );
 		document.removeEventListener( 'fullscreenchange', resize );
 		canvas.remove();
