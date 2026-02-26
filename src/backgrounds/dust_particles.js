@@ -8,6 +8,8 @@ import {
 	registerGalleryInitializer,
 } from '../block/utils/runtime';
 
+const clamp = ( value, min, max ) => Math.min( max, Math.max( min, value ) );
+
 const attachBackgroundAnimation = ( container, index ) => {
 	const registration = registerGalleryHook(
 		container,
@@ -33,6 +35,22 @@ const attachBackgroundAnimation = ( container, index ) => {
 
 	if ( background !== 'dust_particles' ) return;
 
+	const normalizedOpacity = clamp( Number( opacity ) || 0.5, 0, 1 );
+	const normalizedDensity = clamp( Number( density ) || 0.5, 0.05, 1 );
+	const rawMinSize = Number( min_size ) || 8;
+	const rawMaxSize = Number( max_size ) || 16;
+	const normalizedMinSize = Math.max(
+		1,
+		Math.min( rawMinSize, rawMaxSize )
+	);
+	const normalizedMaxSize = Math.max(
+		normalizedMinSize,
+		Math.max( rawMinSize, rawMaxSize )
+	);
+	const mobile = isMobileViewport();
+	const resolutionScale = mobile ? 0.75 : 1;
+	const textureStep = mobile ? 1 : 0.5;
+
 	const audio = container.querySelector( '.smoothmg-audio' );
 	const layer = container.querySelector( '.smoothmg-bg-layer' );
 	if ( ! audio || ! layer ) return;
@@ -51,16 +69,20 @@ const attachBackgroundAnimation = ( container, index ) => {
 	const canvas = document.createElement( 'canvas' );
 	canvas.style.position = 'absolute';
 	canvas.style.inset = 0;
+	canvas.style.width = '100%';
+	canvas.style.height = '100%';
 	canvas.style.pointerEvents = 'none';
-	canvas.style.opacity = opacity;
+	canvas.style.opacity = normalizedOpacity;
 	layer.innerHTML = '';
 	layer.appendChild( canvas );
 
 	const ctx2 = canvas.getContext( '2d' );
 
 	let particles = [];
+	let textureCache = new Map();
 	let lastWidth = 0;
 	let lastHeight = 0;
+
 	function resize() {
 		const r = layer.getBoundingClientRect();
 		if ( ! r.width || ! r.height ) {
@@ -68,19 +90,29 @@ const attachBackgroundAnimation = ( container, index ) => {
 			return;
 		}
 
+		const nextWidth = Math.max(
+			1,
+			Math.floor( r.width * resolutionScale )
+		);
+		const nextHeight = Math.max(
+			1,
+			Math.floor( r.height * resolutionScale )
+		);
+
 		if ( lastWidth && lastHeight ) {
-			const scaleX = r.width / lastWidth;
-			const scaleY = r.height / lastHeight;
-			particles.forEach( ( p ) => {
+			const scaleX = nextWidth / lastWidth;
+			const scaleY = nextHeight / lastHeight;
+			for ( let i = 0; i < particles.length; i++ ) {
+				const p = particles[ i ];
 				p.x *= scaleX;
 				p.y *= scaleY;
-			} );
+			}
 		}
 
-		canvas.width = r.width;
-		canvas.height = r.height;
-		lastWidth = r.width;
-		lastHeight = r.height;
+		canvas.width = nextWidth;
+		canvas.height = nextHeight;
+		lastWidth = nextWidth;
+		lastHeight = nextHeight;
 	}
 	resize();
 	window.addEventListener( 'resize', resize );
@@ -89,8 +121,18 @@ const attachBackgroundAnimation = ( container, index ) => {
 		window.ResizeObserver && new window.ResizeObserver( () => resize() );
 	resizeObserver?.observe( layer );
 
-	function makeTextureForSize( size ) {
-		const texSize = size * 4;
+	function getTextureForSize( size ) {
+		const snappedSize = Math.max(
+			1,
+			Math.round( size / textureStep ) * textureStep
+		);
+		const textureKey = snappedSize.toFixed( 2 );
+
+		if ( textureCache.has( textureKey ) ) {
+			return textureCache.get( textureKey );
+		}
+
+		const texSize = Math.max( 2, Math.ceil( snappedSize * 4 ) );
 		let off;
 		let octx;
 
@@ -115,20 +157,31 @@ const attachBackgroundAnimation = ( container, index ) => {
 		octx.arc( r, r, r * 0.4, 0, Math.PI * 2 );
 		octx.fill();
 
+		textureCache.set( textureKey, off );
 		return off;
 	}
 
 	const rect = layer.getBoundingClientRect();
-	const baseCount = isMobileViewport() ? 120 : 240;
-	const count = Math.floor( baseCount * density );
+	const spawnWidth = Math.max(
+		1,
+		Math.floor( ( rect.width || 1 ) * resolutionScale )
+	);
+	const spawnHeight = Math.max(
+		1,
+		Math.floor( ( rect.height || 1 ) * resolutionScale )
+	);
+	const baseCount = mobile ? 96 : 220;
+	const count = Math.max( 8, Math.floor( baseCount * normalizedDensity ) );
 
 	particles = new Array( count ).fill( 0 ).map( () => {
-		const size = min_size + Math.random() * ( max_size - min_size );
+		const size =
+			normalizedMinSize +
+			Math.random() * ( normalizedMaxSize - normalizedMinSize );
 		return {
-			x: Math.random() * ( rect.width || 1 ),
-			y: Math.random() * ( rect.height || 1 ),
+			x: Math.random() * spawnWidth,
+			y: Math.random() * spawnHeight,
 			size,
-			tex: makeTextureForSize( size ),
+			tex: getTextureForSize( size ),
 			driftX: ( Math.random() - 0.5 ) * 0.15,
 			driftY: ( Math.random() - 0.5 ) * 0.15,
 		};
@@ -158,28 +211,29 @@ const attachBackgroundAnimation = ( container, index ) => {
 	function drawGroup( arr, bandVal, scaleMul, baseOpacity, gainOpacity ) {
 		const W = canvas.width;
 		const H = canvas.height;
-		const scaleFactor = scaleMul * bandVal;
-		const opacityVal = ( v ) =>
-			Math.max( 0, Math.min( 1, baseOpacity + v * gainOpacity ) );
+		if ( ! W || ! H || ! arr.length ) return;
 
-		arr.forEach( ( p ) => {
+		const scale = 1 + scaleMul * bandVal;
+		const alpha = clamp( baseOpacity + bandVal * gainOpacity, 0, 1 );
+		const margin = 50 * resolutionScale;
+		if ( alpha <= 0.01 ) return;
+
+		ctx2.globalAlpha = alpha;
+
+		for ( let i = 0; i < arr.length; i++ ) {
+			const p = arr[ i ];
 			p.x += p.driftX;
 			p.y += p.driftY;
 
-			const margin = 50;
 			if ( p.x < -margin ) p.x = W + margin;
 			if ( p.x > W + margin ) p.x = -margin;
 			if ( p.y < -margin ) p.y = H + margin;
 			if ( p.y > H + margin ) p.y = -margin;
 
-			const scale = 1 + scaleFactor;
 			const s = p.size * scale;
 
-			const alpha = opacityVal( bandVal );
-
-			ctx2.globalAlpha = alpha;
 			ctx2.drawImage( p.tex, p.x - s / 2, p.y - s / 2, s, s );
-		} );
+		}
 	}
 
 	const renderFrame = () => {
@@ -194,6 +248,7 @@ const attachBackgroundAnimation = ( container, index ) => {
 		drawGroup( lowP, low, 1.3, 0.25, 0.9 );
 		drawGroup( midP, mid, 0.8, 0.25, 0.7 );
 		drawGroup( highP, high, 0.4, 0.3, 0.5 );
+		ctx2.globalAlpha = 1;
 	};
 
 	animator = createAudioReactiveAnimator( {
@@ -203,8 +258,8 @@ const attachBackgroundAnimation = ( container, index ) => {
 		onStart: () => {
 			audioCtx.resume().catch( () => {} );
 		},
-		mobileFps: 24,
-		desktopFps: 60,
+		mobileFps: 20,
+		desktopFps: 50,
 	} );
 	animator.sync();
 
@@ -214,6 +269,9 @@ const attachBackgroundAnimation = ( container, index ) => {
 		window.removeEventListener( 'resize', resize );
 		document.removeEventListener( 'fullscreenchange', resize );
 		resizeObserver?.disconnect();
+		textureCache.clear();
+		textureCache = new Map();
+		particles = [];
 
 		if ( canvas.parentNode ) {
 			canvas.parentNode.removeChild( canvas );
