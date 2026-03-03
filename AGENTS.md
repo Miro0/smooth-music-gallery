@@ -4,7 +4,7 @@
 
 This repository contains a WordPress plugin named **Smooth Music Gallery**.  
 It delivers:
-- a Gutenberg block (`beedvision/smooth-music-gallery`) for music-enabled photo galleries,
+- a Gutenberg block (`smoothcdn/smooth-music-gallery`) for music-enabled photo galleries,
 - a separate admin **Shortcode Builder** view for users working outside Gutenberg.
 
 Core capabilities:
