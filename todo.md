@@ -15,7 +15,7 @@
 - [x] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
 - [x] pickery obrazków oraz music - nie pokazują wybranych elementów
 - [x] pickery kierujące na Smooth CDN
-- [ ] dodać jakieś assety - obrazki oraz pliku muzyczne - do projektu Assets
+- [x] dodać jakieś assety - obrazki oraz pliku muzyczne - do projektu Assets
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
 
 
