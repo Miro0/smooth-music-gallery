@@ -26,7 +26,15 @@ register_block_type(
 );
 
 function smooth_music_gallery_get_base_url() {
-    return plugin_dir_url( __FILE__ ) . 'build/';
+    $opts          = smooth_music_gallery_get_options();
+    $serve_via_cdn = $opts['serve_via_cdn'];
+    if ( $serve_via_cdn ) {
+        $base_url = ( 'https://music-gallery.smoothcdn.com/' . MUSIC_GALLERY_VERSION . '/' );
+    } else {
+        $base_url = ( plugin_dir_url( __FILE__ ) . 'build/' );
+    }
+
+    return $base_url;
 }
 
 function smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation ) {
@@ -177,10 +185,12 @@ add_action( 'admin_init', function () {
                     'type'              => 'array',
                     'sanitize_callback' => function ( $input ) {
                         return [
+                                'serve_via_cdn'        => ! empty( $input['serve_via_cdn'] ),
                                 'show_toolbar_builder' => ! empty( $input['show_toolbar_builder'] ),
                         ];
                     },
                     'default'           => [
+                            'serve_via_cdn'        => false,
                             'show_toolbar_builder' => true,
                     ],
             ]
@@ -191,6 +201,14 @@ add_action( 'admin_init', function () {
             __( 'Plugin Settings', 'smooth-music-gallery' ),
             '__return_null',
             'smooth_music_gallery'
+    );
+
+    add_settings_field(
+            'serve_via_cdn',
+            __( 'Serve gallery assets via Smooth CDN', 'smooth-music-gallery' ),
+            __NAMESPACE__ . '\\smooth_music_gallery_field_serve_via_cdn',
+            'smooth_music_gallery',
+            'smooth_music_gallery_main'
     );
 
     add_settings_field(
@@ -206,9 +224,21 @@ function smooth_music_gallery_get_options() {
     return wp_parse_args(
             get_option( 'smooth_music_gallery_options', [] ),
             [
+                    'serve_via_cdn'        => false,
                     'show_toolbar_builder' => true,
             ]
     );
+}
+
+function smooth_music_gallery_field_serve_via_cdn() {
+    $opts = smooth_music_gallery_get_options();
+    ?>
+    <label>
+        <input type="checkbox" name="smooth_music_gallery_options[serve_via_cdn]"
+               value="1" <?php checked( $opts['serve_via_cdn'] ); ?> />
+        <?php esc_html_e( 'Enable Smooth CDN delivery for frontend gallery scripts and styles.', 'smooth-music-gallery' ); ?>
+    </label>
+    <?php
 }
 
 function smooth_music_gallery_field_show_toolbar() {
@@ -427,9 +457,11 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
     wp_enqueue_script( 'wp-i18n' );
     wp_enqueue_script( 'wp-block-editor' );
     wp_enqueue_script( 'wp-editor' );
+    wp_enqueue_script( 'wp-dom-ready' );
     wp_enqueue_script( 'wp-hooks' );
 
     wp_enqueue_style( 'wp-components' );
+    wp_enqueue_style( 'wp-edit-blocks' );
     wp_enqueue_style( 'wp-edit-post' );
 
     $shortcode_builder_asset_path = __DIR__ . '/build/admin/shortcode_builder.asset.php';

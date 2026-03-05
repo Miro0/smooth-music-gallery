@@ -27,6 +27,7 @@ Main features:
 * Add background effects.
 * Configure gallery size and slide timing.
 * Generate shortcode from a visual builder.
+* Optional gallery asset delivery via Smooth CDN.
 
 == Installation ==
 
@@ -47,6 +48,10 @@ Yes. You can select images and audio directly from the Media Library.
 = Can I use Smooth CDN assets? =
 
 Yes. The plugin includes Smooth CDN asset selection in the editor.
+
+= Can I serve frontend gallery scripts and styles from Smooth CDN? =
+
+Yes. In plugin settings you can enable **Serve gallery assets via Smooth CDN**. This is optional and disabled by default.
 
 == Source Code ==
 
@@ -72,6 +77,10 @@ Smooth Music Gallery can optionally connect to Smooth CDN to let administrators 
 * Trigger: Requests are sent only when an administrator selects the **Smooth CDN assets** source and opens the picker dialog.
 * Data sent: Standard browser request data (IP address, user agent, referrer) and picker query parameters (for example file type, project slug, version).
 * Frontend behavior: If a gallery uses external Smooth CDN URLs, visitor browsers request those media files directly from Smooth CDN.
+* Service: Smooth CDN Gallery Asset Delivery (`https://music-gallery.smoothcdn.com`)
+* Purpose: Optional delivery of this plugin's frontend gallery scripts/styles.
+* Trigger: Requests are sent only when an administrator enables **Serve gallery assets via Smooth CDN** in plugin settings.
+* Data sent: Standard browser request data (IP address, user agent, referrer) when the frontend gallery loads those assets.
 * Terms of Service: `https://smoothcdn.com/terms`
 * Privacy Policy: `https://smoothcdn.com/privacy`
 
