@@ -27,7 +27,6 @@ Main features:
 * Add background effects.
 * Configure gallery size and slide timing.
 * Generate shortcode from a visual builder.
-* Optional asset delivery via Smooth CDN.
 
 == Installation ==
 
@@ -49,6 +48,35 @@ Yes. You can select images and audio directly from the Media Library.
 
 Yes. The plugin includes Smooth CDN asset selection in the editor.
 
+== Source Code ==
+
+This plugin package includes both production files and human-readable source code:
+
+* Production build files: `build/`
+* Source code files: `src/`
+* Build configuration: `package.json`
+
+To rebuild assets locally:
+
+1. `npm install`
+2. `npm run build`
+
+Equivalent Yarn commands are also supported (`yarn install` and `yarn build`).
+
+== External Services ==
+
+Smooth Music Gallery can optionally connect to Smooth CDN to let administrators browse sample assets in the editor.
+
+* Service: Smooth CDN Asset Picker (`https://cdn.smoothcdn.com`)
+* Purpose: Browse and select optional sample image/audio files.
+* Trigger: Requests are sent only when an administrator selects the **Smooth CDN assets** source and opens the picker dialog.
+* Data sent: Standard browser request data (IP address, user agent, referrer) and picker query parameters (for example file type, project slug, version).
+* Frontend behavior: If a gallery uses external Smooth CDN URLs, visitor browsers request those media files directly from Smooth CDN.
+* Terms of Service: `https://smoothcdn.com/terms`
+* Privacy Policy: `https://smoothcdn.com/privacy`
+
+The external service is optional. The plugin works without it by using only the WordPress Media Library.
+
 == Screenshots ==
 
 1. Gutenberg editor sidebar with gallery controls.
@@ -64,7 +92,6 @@ Yes. The plugin includes Smooth CDN asset selection in the editor.
 * Gutenberg block with image, music, theme, overlay, and background controls.
 * Shortcode Builder for non-block workflows.
 * Frontend gallery runtime with audio controls and animations.
-* Optional Smooth CDN asset delivery option.
 
 == Upgrade Notice ==
 
