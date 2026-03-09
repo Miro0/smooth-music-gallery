@@ -55,18 +55,24 @@ Yes. In plugin settings you can enable **Serve gallery assets via Smooth CDN**. 
 
 == Source Code ==
 
-This plugin package includes both production files and human-readable source code:
+This plugin includes compiled JavaScript and CSS files inside the `build/` directory.
 
-* Production build files: `build/`
-* Source code files: `src/`
-* Build configuration: `package.json`
+Human-readable source files are included in the `src/` directory.
 
-To rebuild assets locally:
+Examples:
 
-1. `npm install`
-2. `npm run build`
+* `build/background/*.js` → generated from `src/backgrounds/*.js`
+* `build/overlay/*.js` → generated from `src/overlays/*.js`
+* `build/theme/*.css` → generated from `src/themes/*.scss`
 
-Equivalent Yarn commands are also supported (`yarn install` and `yarn build`).
+The plugin uses an npm build process to compile these assets.
+
+To rebuild the assets locally:
+
+1. npm install
+2. npm run build
+
+The repository also includes the build configuration (`package.json`).
 
 == External Services ==
 
