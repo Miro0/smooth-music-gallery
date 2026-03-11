@@ -28,5 +28,5 @@
 - [x] Przesunięcie slideów o pixel z powodu ułamkowych wielkości szerokości - występuje nadal w video player / music player motywach.
 
 # 1.1
-- [ ] Poprawić mobilny widok motywi playlist
+- [ ] Poprawić mobilny widok motywu playlist
 - [ ] Włączyć z powrotem poprawiony motyw

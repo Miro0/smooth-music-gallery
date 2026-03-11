@@ -55,24 +55,18 @@ Yes. In plugin settings you can enable **Serve gallery assets via Smooth CDN**. 
 
 == Source Code ==
 
-This plugin includes compiled JavaScript and CSS files inside the `build/` directory.
+This plugin contains compiled JavaScript and CSS files located in the `build/` directory.
 
-Human-readable source files are included in the `src/` directory.
+The original human-readable source code and build configuration are publicly available in the repository:
 
-Examples:
+https://github.com/Miro0/smooth-music-gallery
 
-* `build/background/*.js` → generated from `src/backgrounds/*.js`
-* `build/overlay/*.js` → generated from `src/overlays/*.js`
-* `build/theme/*.css` → generated from `src/themes/*.scss`
-
-The plugin uses an npm build process to compile these assets.
+The plugin assets are built using `@wordpress/scripts`.
 
 To rebuild the assets locally:
 
 1. npm install
 2. npm run build
-
-The repository also includes the build configuration (`package.json`).
 
 == External Services ==
 
