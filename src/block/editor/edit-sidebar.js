@@ -64,10 +64,10 @@ export default function EditSidebar({attributes, setAttributes, config}) {
   const {
     photos,
     photos_cdn = [],
-    photos_source = 'wp',
+    photos_source = 'core',
     music,
     music_cdn = {},
-    music_source = 'wp',
+    music_source = 'core',
     theme = 'default',
     theme_options = {},
     size,
@@ -77,6 +77,8 @@ export default function EditSidebar({attributes, setAttributes, config}) {
     overlay,
     overlay_options,
   } = attributes;
+  const resolvedPhotosSource = photos_source === 'smoothcdn' ? 'smoothcdn' : 'core';
+  const resolvedMusicSource = music_source === 'smoothcdn' ? 'smoothcdn' : 'core';
 
   return (
     <>
@@ -89,9 +91,9 @@ export default function EditSidebar({attributes, setAttributes, config}) {
       >
         <Select
           name="photos_source"
-          value={photos_source}
+          value={resolvedPhotosSource}
           options={[
-            {label: __('Media Library', 'smooth-music-gallery'), value: 'wp'},
+            {label: __('Media Library', 'smooth-music-gallery'), value: 'core'},
             {label: __('Smooth CDN assets', 'smooth-music-gallery'), value: 'smoothcdn'},
           ]}
           label={__('Images source', 'smooth-music-gallery')}
@@ -99,25 +101,25 @@ export default function EditSidebar({attributes, setAttributes, config}) {
         />
 
         <MediaUpload
-          name={photos_source === 'smoothcdn' ? 'photos_cdn' : 'photos'}
-          value={photos_source === 'smoothcdn' ? photos_cdn : photos}
+          name={resolvedPhotosSource === 'smoothcdn' ? 'photos_cdn' : 'photos'}
+          value={resolvedPhotosSource === 'smoothcdn' ? photos_cdn : photos}
           label={__('Images', 'smooth-music-gallery')}
           help={
-            photos_source === 'smoothcdn' ?
+            resolvedPhotosSource === 'smoothcdn' ?
               __('Select images from a collection of sample assets licensed under CC0', 'smooth-music-gallery') :
               __('Select images to be used in gallery. Hold SHIFT to select multiple images', 'smooth-music-gallery')
           }
           multiple={true}
-          source={photos_source === 'smoothcdn' ? 'smoothcdn' : 'wp'}
+          source={resolvedPhotosSource === 'smoothcdn' ? 'smoothcdn' : 'core'}
         />
 
         <hr/>
 
         <Select
           name="music_source"
-          value={music_source}
+          value={resolvedMusicSource}
           options={[
-            {label: __('Media Library', 'smooth-music-gallery'), value: 'wp'},
+            {label: __('Media Library', 'smooth-music-gallery'), value: 'core'},
             {label: __('Smooth CDN assets', 'smooth-music-gallery'), value: 'smoothcdn'},
           ]}
           label={__('Music source', 'smooth-music-gallery')}
@@ -125,16 +127,16 @@ export default function EditSidebar({attributes, setAttributes, config}) {
         />
 
         <MediaUpload
-          name={music_source === 'smoothcdn' ? 'music_cdn' : 'music'}
-          value={music_source === 'smoothcdn' ? music_cdn : music}
+          name={resolvedMusicSource === 'smoothcdn' ? 'music_cdn' : 'music'}
+          value={resolvedMusicSource === 'smoothcdn' ? music_cdn : music}
           label={__('Background music', 'smooth-music-gallery')}
           help={
-          music_source === 'smoothcdn' ?
+          resolvedMusicSource === 'smoothcdn' ?
             __('Select music to be played as a background in gallery from a collection of sample assets licensed under CC0', 'smooth-music-gallery') :
             __('Select music to be played as a background in gallery', 'smooth-music-gallery')
           }
           allowedTypes={['audio']}
-          source={music_source === 'smoothcdn' ? 'smoothcdn' : 'wp'}
+          source={resolvedMusicSource === 'smoothcdn' ? 'smoothcdn' : 'core'}
         />
 
         <hr/>

@@ -12,7 +12,7 @@
  * Version:             1.0.0
  */
 
-namespace BeedVision\MusicGallery;
+namespace SmoothCDN\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -115,8 +115,8 @@ function smooth_music_gallery_block_render( $attributes ) {
     $theme                = $attributes['theme'] ?? 'default';
     $overlay_animation    = $attributes['overlay'] ?? '';
     $background_animation = $attributes['background'] ?? '';
-    $photos_source        = $attributes['photos_source'] ?? 'wp';
-    $music_source         = $attributes['music_source'] ?? 'wp';
+    $photos_source        = $attributes['photos_source'] ?? 'core';
+    $music_source         = $attributes['music_source'] ?? 'core';
     $photos               = ( $photos_source === 'smoothcdn' ) ? ( $attributes['photos_cdn'] ?? [] ) : ( $attributes['photos'] ?? [] );
     $music                = ( $music_source === 'smoothcdn' ) ? ( $attributes['music_cdn'] ?? [] ) : ( $attributes['music'] ?? [] );
     if ( empty( $photos ) ) {
@@ -449,37 +449,11 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 
     smooth_music_gallery_enqueue_editor_support_assets();
 
-    wp_enqueue_style( 'wp-color-picker' );
-    wp_enqueue_script( 'wp-color-picker' );
-
-    wp_enqueue_script( 'wp-element' );
-    wp_enqueue_script( 'wp-components' );
-    wp_enqueue_script( 'wp-i18n' );
-    wp_enqueue_script( 'wp-block-editor' );
-    wp_enqueue_script( 'wp-editor' );
-    wp_enqueue_script( 'wp-dom-ready' );
-    wp_enqueue_script( 'wp-hooks' );
-
-    wp_enqueue_style( 'wp-components' );
-    wp_enqueue_style( 'wp-edit-blocks' );
-    wp_enqueue_style( 'wp-edit-post' );
-
     $shortcode_builder_asset_path = __DIR__ . '/build/admin/shortcode_builder.asset.php';
     $shortcode_builder_asset      = file_exists( $shortcode_builder_asset_path )
             ? include $shortcode_builder_asset_path
             : [
-                    'dependencies' => [
-                            'react',
-                            'react-dom',
-                            'react-jsx-runtime',
-                            'wp-element',
-                            'wp-components',
-                            'wp-i18n',
-                            'wp-block-editor',
-                            'wp-editor',
-                            'wp-color-picker',
-                            'media-views',
-                    ],
+                    'dependencies' => [],
                     'version'      => MUSIC_GALLERY_VERSION,
             ];
 
@@ -501,10 +475,10 @@ add_shortcode( 'smooth-music-gallery', function ( $attributes ) {
             [
                     'photos'             => '',
                     'photos_cdn'         => '',
-                    'photos_source'      => 'wp',
+                    'photos_source'      => 'core',
                     'music'              => '',
                     'music_cdn'          => '',
-                    'music_source'       => 'wp',
+                    'music_source'       => 'core',
                     'theme'              => 'default',
                     'theme_options'      => '',
                     'size'               => 85,

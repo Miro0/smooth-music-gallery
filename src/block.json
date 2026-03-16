@@ -21,11 +21,11 @@
 		},
 		"photos_source": {
 			"type": "string",
-			"default": "wp"
+			"default": "core"
 		},
 		"music_source": {
 			"type": "string",
-			"default": "wp"
+			"default": "core"
 		},
 		"theme": {
 			"type": "string",

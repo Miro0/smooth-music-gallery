@@ -15,11 +15,17 @@ import EditSidebar from "./editor/edit-sidebar";
 import config from "../../config.json";
 import './shortcode_builder.scss';
 
+function normalizeMediaSource(source) {
+  return source === 'smoothcdn' ? 'smoothcdn' : 'core';
+}
+
 function createShortcode(attributes) {
   try {
     if (attributes) {
-      const selectedPhotos = attributes?.photos_source === 'smoothcdn' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
-      const currentMusic = attributes?.music_source === 'smoothcdn' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
+      const photosSource = normalizeMediaSource(attributes?.photos_source);
+      const musicSource = normalizeMediaSource(attributes?.music_source);
+      const selectedPhotos = photosSource === 'smoothcdn' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
+      const currentMusic = musicSource === 'smoothcdn' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
       const parts = ['[smooth-music-gallery'];
 
       Object.entries(attributes).forEach(([key, value]) => {
@@ -69,10 +75,10 @@ const App = () => {
   const [attributes, setAttributes] = useState({
     photos: [],
     photos_cdn: [],
-    photos_source: 'wp',
+    photos_source: 'core',
     music: {},
     music_cdn: {},
-    music_source: 'wp',
+    music_source: 'core',
     slides_duration: 2,
     size: 85,
     theme: 'default',
@@ -93,7 +99,13 @@ const App = () => {
 
     const storageCache = localStorage.getItem('smoothmg-shortcode-builder');
     if (storageCache) {
-      setAttributes(JSON.parse(storageCache));
+      const parsedAttributes = JSON.parse(storageCache);
+
+      setAttributes({
+        ...parsedAttributes,
+        photos_source: normalizeMediaSource(parsedAttributes?.photos_source),
+        music_source: normalizeMediaSource(parsedAttributes?.music_source),
+      });
     }
   }, []);
 
@@ -170,10 +182,10 @@ const App = () => {
               setAttributes({
                 photos: [],
                 photos_cdn: [],
-                photos_source: 'wp',
+                photos_source: 'core',
                 music: {},
                 music_cdn: {},
-                music_source: 'wp',
+                music_source: 'core',
                 slides_duration: 2,
                 size: 85,
                 theme: 'default',

@@ -28,17 +28,19 @@ export default function Edit(props) {
   const {
     photos = [],
     photos_cdn = [],
-    photos_source = 'wp',
+    photos_source = 'core',
     music = {},
     music_cdn = {},
-    music_source = 'wp',
+    music_source = 'core',
     theme = 'default',
     theme_options = {},
     size = 85,
     background_options = {},
   } = attributes;
-  const selectedPhotos = photos_source === 'smoothcdn' ? photos_cdn : photos;
-  const currentMusic = music_source === 'smoothcdn' ? music_cdn : music;
+  const resolvedPhotosSource = photos_source === 'smoothcdn' ? 'smoothcdn' : 'core';
+  const resolvedMusicSource = music_source === 'smoothcdn' ? 'smoothcdn' : 'core';
+  const selectedPhotos = resolvedPhotosSource === 'smoothcdn' ? photos_cdn : photos;
+  const currentMusic = resolvedMusicSource === 'smoothcdn' ? music_cdn : music;
 
   const {background_color = 'transparent'} = background_options;
   const bgMargin = Math.floor((100 - size) / 4);

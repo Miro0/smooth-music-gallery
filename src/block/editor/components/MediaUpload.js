@@ -17,14 +17,15 @@ const MediaUpload = (
     help,
     allowedTypes = ['image'],
     multiple = false,
-    source = 'wp',
+    source = 'core',
   }
 ) => {
   const {changeAttribute} = useBlockContext();
   const [smoothCdnOpen, setSmoothCdnOpen] = useState(false);
   const [smoothCdnAssets, setSmoothCdnAssets] = useState([]);
   const [selectedAssetPaths, setSelectedAssetPaths] = useState([]);
-  const supportsSmoothCdn = source === 'smoothcdn' && (allowedTypes.includes('image') || allowedTypes.includes('audio'));
+  const resolvedSource = source === 'smoothcdn' ? 'smoothcdn' : 'core';
+  const supportsSmoothCdn = resolvedSource === 'smoothcdn' && (allowedTypes.includes('image') || allowedTypes.includes('audio'));
   const selectedUrls = useMemo(() => {
     if (multiple) {
       return Array.isArray(value)
@@ -46,7 +47,7 @@ const MediaUpload = (
   };
 
   const openMedia = () => {
-    if (source !== 'wp') {
+    if (resolvedSource !== 'core') {
       return;
     }
 
@@ -84,7 +85,7 @@ const MediaUpload = (
     frame.open();
   };
   const openSmoothCdnMedia = () => {
-    if (source !== 'smoothcdn') {
+    if (resolvedSource !== 'smoothcdn') {
       return;
     }
 
@@ -125,12 +126,12 @@ const MediaUpload = (
 
   const hasValue = multiple
     ? Array.isArray(value) && value.length > 0
-    : source === 'smoothcdn' ? !!value?.url : !!value?.id;
+    : resolvedSource === 'smoothcdn' ? !!value?.url : !!value?.id;
 
   return (
     <BaseControl label={label} help={help} __nextHasNoMarginBottom>
       <div style={{display: 'flex', gap: '8px'}}>
-        {source === 'wp' && (
+        {resolvedSource === 'core' && (
           <Button onClick={openMedia} variant="secondary">
             {renderLabel()}
           </Button>
