@@ -18,12 +18,41 @@ defined( 'ABSPATH' ) || exit;
 
 const MUSIC_GALLERY_VERSION = '1.0.0';
 
-register_block_type(
-        __DIR__ . '/build'
-        , [
-                'render_callback' => __NAMESPACE__ . '\\smooth_music_gallery_block_render',
-        ]
-);
+function smooth_music_gallery_register_editor_styles() {
+    $base_url = smooth_music_gallery_get_base_url();
+    $config   = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
+
+    foreach ( $config['themes'] as $theme ) {
+        wp_register_style( "smoothmg-theme-$theme", $base_url . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
+    }
+
+    wp_register_style(
+            'smoothmg-editor',
+            $base_url . 'index.css',
+            array_merge(
+                    array_map( function ( $t ) {
+                        return "smoothmg-theme-$t";
+                    }, $config['themes'] ),
+            ),
+            MUSIC_GALLERY_VERSION
+    );
+}
+
+function smooth_music_gallery_register_block() {
+    if ( ! file_exists( __DIR__ . '/build/block.json' ) || ! file_exists( __DIR__ . '/build/index.js' ) ) {
+        return;
+    }
+
+    register_block_type(
+            __DIR__ . '/build'
+            , [
+                    'render_callback' => __NAMESPACE__ . '\\smooth_music_gallery_block_render',
+            ]
+    );
+}
+
+add_action( 'init', __NAMESPACE__ . '\\smooth_music_gallery_register_editor_styles', 9 );
+add_action( 'init', __NAMESPACE__ . '\\smooth_music_gallery_register_block', 10 );
 
 function smooth_music_gallery_get_base_url() {
     $opts          = smooth_music_gallery_get_options();
@@ -159,25 +188,6 @@ function smooth_music_gallery_block_render( $attributes ) {
 }
 
 add_action( 'admin_init', function () {
-    $base_url = smooth_music_gallery_get_base_url();
-
-    $config = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
-
-    foreach ( $config['themes'] as $theme ) {
-        wp_register_style( "smoothmg-theme-$theme", $base_url . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
-    }
-
-    wp_register_style(
-            'smoothmg-editor',
-            $base_url . 'index.css',
-            array_merge(
-                    array_map( function ( $t ) {
-                        return "smoothmg-theme-$t";
-                    }, $config['themes'] ),
-            ),
-            MUSIC_GALLERY_VERSION
-    );
-
     register_setting(
             'smooth_music_gallery_settings',
             'smooth_music_gallery_options',
