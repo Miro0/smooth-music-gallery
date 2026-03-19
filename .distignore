@@ -1,0 +1,9 @@
+.git/
+.gitignore
+.github/
+node_modules/
+src/
+scripts/
+.distignore
+package.json
+yarn.lock
