@@ -13,12 +13,14 @@ const Color = (
 
   return (
     <BaseControl
+      className="smoothmg-color-control"
       label={label}
       help={help}
       __nextHasNoMarginBottom
     >
       <div style={{marginTop: 10}}>
         <ColorPicker
+          className="smoothmg-color-control__picker"
           color={value}
           onChangeComplete={(color) => changeAttribute(name, color.hex)}
           disableAlpha={false}

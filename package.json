@@ -12,6 +12,7 @@
     "build": "yarn build:app && yarn build:core && yarn build:backgrounds && yarn build:overlays && yarn build:themes && yarn build:shortcode_builder",
     "zip:prod": "yarn build && bash scripts/create-prod-zip.sh",
     "zip:prod:only": "bash scripts/create-prod-zip.sh",
+    "release:prepare": "bash scripts/prepare-release.sh",
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",

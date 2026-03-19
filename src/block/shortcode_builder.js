@@ -13,6 +13,7 @@ import {BlockContext} from "./editor/context";
 import Edit from '../block/edit';
 import EditSidebar from "./editor/edit-sidebar";
 import config from "../../config.json";
+import './editor-controls.scss';
 import './shortcode_builder.scss';
 
 function normalizeMediaSource(source) {

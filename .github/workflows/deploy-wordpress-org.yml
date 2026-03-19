@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      WPORG_PLUGIN_SLUG: ${{ vars.WPORG_PLUGIN_SLUG }}
+      WPORG_PLUGIN_SLUG: ${{ vars.WPORG_PLUGIN_SLUG || secrets.WPORG_PLUGIN_SLUG }}
       WPORG_USERNAME: ${{ secrets.WPORG_USERNAME }}
       WPORG_PASSWORD: ${{ secrets.WPORG_PASSWORD }}
 
@@ -90,6 +90,12 @@ jobs:
           svn checkout --depth immediates "https://plugins.svn.wordpress.org/${WPORG_PLUGIN_SLUG}" svn
           svn update --set-depth infinity svn/trunk
 
+          if svn ls "https://plugins.svn.wordpress.org/${WPORG_PLUGIN_SLUG}/assets" >/dev/null 2>&1; then
+            svn update --set-depth infinity svn/assets
+          else
+            mkdir -p svn/assets
+          fi
+
       - name: Ensure release tag does not already exist in SVN
         shell: bash
         run: |
@@ -108,6 +114,10 @@ jobs:
           set -euo pipefail
 
           rsync -rc --delete release/smooth-music-gallery/ svn/trunk/
+
+          if [[ -d assets ]]; then
+            rsync -rc --delete --exclude '.DS_Store' assets/ svn/assets/
+          fi
 
           svn status svn | awk '/^!/ {print $2}' | xargs -r svn delete
           svn status svn | awk '/^\?/ {print $2}' | xargs -r svn add --force
