@@ -9,14 +9,14 @@
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.0.0
+ * Version:             1.0.1
  */
 
 namespace SmoothCDN\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-const MUSIC_GALLERY_VERSION = '1.0.0';
+const MUSIC_GALLERY_VERSION = '1.0.1';
 
 function smooth_music_gallery_register_editor_styles() {
     $base_url = smooth_music_gallery_get_base_url();

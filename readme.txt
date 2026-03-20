@@ -4,31 +4,36 @@ Tags: gallery, music, audio, gutenberg, shortcode
 Requires at least: 5.6
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Donate link: https://smoothcdn.com/pricing
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create modern photo galleries with background music, visual themes, and audio-reactive effects in Gutenberg or with shortcodes.
+Create immersive photo galleries with music, stylish visual effects, and Smooth CDN integration for Gutenberg and shortcodes.
 
 == Description ==
 
-Smooth Music Gallery lets you build immersive photo galleries enhanced with background music and animated visual effects.
+Smooth Music Gallery helps you turn ordinary image galleries into rich, interactive experiences with background music, animated effects, and modern presentation styles.
 
-You can use it in two ways:
+Whether you are building a landing page, an artist portfolio, a wedding gallery, a travel story, or a product showcase, the plugin gives you an easy way to make galleries feel more alive and memorable.
+
+You can use it in two simple ways:
 
 * Gutenberg block for native block editor workflows.
 * Shortcode Builder for classic editors and third-party page builders.
 
-Main features:
+What you can do with Smooth Music Gallery:
 
-* Add multiple images and background music.
-* Choose gallery themes.
-* Add overlay effects.
-* Add background effects.
-* Configure gallery size and slide timing.
-* Generate shortcode from a visual builder.
-* Optional gallery asset delivery via Smooth CDN.
+* Add your own images and background music in a few clicks.
+* Choose from ready-made gallery themes to match different styles and moods.
+* Add animated overlay effects and dynamic background effects for a more engaging look.
+* Create audio-reactive visuals that move with the music.
+* Adjust gallery size and slide timing to fit your layout.
+* Build galleries visually and generate a shortcode for any page or builder.
+* Use media from the WordPress Media Library or optional Smooth CDN assets.
+* Optionally serve gallery frontend assets through Smooth CDN.
+
+Perfect for creators, photographers, musicians, agencies, event sites, and anyone who wants a gallery that feels more premium than a standard slider.
 
 == Installation ==
 
@@ -56,18 +61,9 @@ Yes. In plugin settings you can enable **Serve gallery assets via Smooth CDN**. 
 
 == Source Code ==
 
-This plugin contains compiled JavaScript and CSS files located in the `build/` directory.
-
-The original human-readable source code and build configuration are publicly available in the repository:
+The source code for this plugin is publicly available in the repository:
 
 https://github.com/Miro0/smooth-music-gallery
-
-The plugin assets are built using `@wordpress/scripts`.
-
-To rebuild the assets locally:
-
-1. npm install
-2. npm run build
 
 == External Services ==
 
@@ -96,6 +92,12 @@ The external service is optional. The plugin works without it by using only the 
 
 == Changelog ==
 
+= 1.0.1 =
+
+* Improved plugin readme and public release metadata.
+* Added plugin asset support for WordPress.org screenshots and icons.
+* Improved WordPress.org release workflow and packaging.
+
 = 1.0.0 =
 
 * Initial public release.
@@ -104,6 +106,10 @@ The external service is optional. The plugin works without it by using only the 
 * Frontend gallery runtime with audio controls and animations.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+
+Recommended update with improved WordPress.org release metadata and packaging.
 
 = 1.0.0 =
 
