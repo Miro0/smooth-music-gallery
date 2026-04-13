@@ -1,7 +1,7 @@
 {
   "project": "Music Gallery",
   "projectSlug": "music-gallery",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "blockBots": false,
   "blockHeadless": false,
   "sources": [
@@ -20,6 +20,6 @@
   ],
   "protected": [],
   "userSlug": "smoothcdn",
-  "plan": 2,
+  "plan": 3,
   "projectId": "a72f0f39-85c6-40bd-b077-4c4b59db27ea"
 }

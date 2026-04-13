@@ -4,7 +4,7 @@ Tags: gallery, music, audio, gutenberg, shortcode
 Requires at least: 5.6
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Donate link: https://smoothcdn.com/pricing
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -92,6 +92,10 @@ The external service is optional. The plugin works without it by using only the 
 
 == Changelog ==
 
+= 1.0.2 =
+
+* Added support for focus point.
+
 = 1.0.1 =
 
 * Improved plugin readme and public release metadata.
@@ -106,6 +110,10 @@ The external service is optional. The plugin works without it by using only the 
 * Frontend gallery runtime with audio controls and animations.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+
+Update plugin to add focus point support.
 
 = 1.0.1 =
 
