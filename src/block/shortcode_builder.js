@@ -37,10 +37,13 @@ function createShortcode(attributes) {
         if (value !== '') {
           if (key === 'photos') {
             if (selectedPhotos.length > 0) {
-              const photos = selectedPhotos
-                .map((item) => item?.id || item?.url)
-                .filter(Boolean)
-                .join(',');
+              const shouldSerializeAsJson = selectedPhotos.some((item) => item?.focus);
+              const photos = shouldSerializeAsJson
+                ? JSON.stringify(selectedPhotos)
+                : selectedPhotos
+                    .map((item) => item?.id || item?.url)
+                    .filter(Boolean)
+                    .join(',');
 
               if (photos) {
                 parts.push(`${key}='${photos}'`);
