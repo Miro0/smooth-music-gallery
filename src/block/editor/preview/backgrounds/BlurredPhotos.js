@@ -1,3 +1,5 @@
+import {getObjectPositionValue} from "../../../utils/media";
+
 const BlurredPhotos = ({photo, blur = 10, zoom = 1.2, opacity = 0.5}) => {
   if (photo) {
     return (
@@ -18,6 +20,7 @@ const BlurredPhotos = ({photo, blur = 10, zoom = 1.2, opacity = 0.5}) => {
           decoding="async"
           style={{
             objectFit: 'cover',
+            objectPosition: getObjectPositionValue(photo?.focus),
             width: '100%',
             height: '100%',
             filter: `blur(${blur}px)`,

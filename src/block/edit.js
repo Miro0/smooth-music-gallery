@@ -19,6 +19,7 @@ import WaveLine from "./editor/preview/overlays/WaveLine";
 
 import config from '../../config.json';
 import {hexToRgb} from "./utils/style";
+import {getObjectPositionValue} from "./utils/media";
 
 export default function Edit(props) {
   const {attributes, setAttributes} = props;
@@ -134,7 +135,12 @@ export default function Edit(props) {
                         src={selectedPhotos[0].url}
                         loading="lazy"
                         decoding="async"
-                        style={{objectFit: 'cover', width: '100%', height: '100%'}}
+                        style={{
+                          objectFit: 'cover',
+                          objectPosition: getObjectPositionValue(selectedPhotos[0]?.focus),
+                          width: '100%',
+                          height: '100%',
+                        }}
                       />
                       {props.attributes?.overlay === 'pixelate' &&
                         <Pixelate {...props.attributes?.overlay_options} photo={selectedPhotos[0]}/>

@@ -9,14 +9,14 @@
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.0.1
+ * Version:             1.0.2
  */
 
 namespace SmoothCDN\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-const MUSIC_GALLERY_VERSION = '1.0.1';
+const MUSIC_GALLERY_VERSION = '1.0.2';
 
 function smooth_music_gallery_register_editor_styles() {
     $base_url = smooth_music_gallery_get_base_url();
@@ -140,6 +140,108 @@ function smooth_music_gallery_should_enqueue_front_assets() {
     return true;
 }
 
+function smooth_music_gallery_normalize_focus_value( $value ) {
+    if ( ! is_numeric( $value ) ) {
+        return null;
+    }
+
+    return min( 100, max( 0, (float) $value ) );
+}
+
+function smooth_music_gallery_normalize_focus( $focus ) {
+    if ( ! is_array( $focus ) ) {
+        return null;
+    }
+
+    $x = smooth_music_gallery_normalize_focus_value( $focus['x'] ?? null );
+    $y = smooth_music_gallery_normalize_focus_value( $focus['y'] ?? null );
+
+    if ( null === $x && null === $y ) {
+        return null;
+    }
+
+    return [
+            'x' => null === $x ? 50 : $x,
+            'y' => null === $y ? 50 : $y,
+    ];
+}
+
+function smooth_music_gallery_prepare_photo( $photo ) {
+    if ( is_string( $photo ) ) {
+        $photo = [
+                'url' => $photo,
+        ];
+    }
+
+    if ( ! is_array( $photo ) ) {
+        return null;
+    }
+
+    $photo_url = $photo['url'] ?? '';
+    if ( empty( $photo_url ) && ! empty( $photo['id'] ) ) {
+        $photo_url = wp_get_attachment_image_url( $photo['id'], 'full' );
+    }
+
+    if ( empty( $photo_url ) ) {
+        return null;
+    }
+
+    $prepared_photo = [
+            'url' => $photo_url,
+    ];
+
+    if ( ! empty( $photo['alt'] ) && is_string( $photo['alt'] ) ) {
+        $prepared_photo['alt'] = sanitize_text_field( $photo['alt'] );
+    }
+
+    $focus = smooth_music_gallery_normalize_focus( $photo['focus'] ?? null );
+    if ( null !== $focus ) {
+        $prepared_photo['focus'] = $focus;
+    }
+
+    return $prepared_photo;
+}
+
+function smooth_music_gallery_parse_shortcode_photos( $photo_attribute ) {
+    $decoded_photos = json_decode( wp_unslash( $photo_attribute ), true );
+
+    if ( JSON_ERROR_NONE === json_last_error() && is_array( $decoded_photos ) ) {
+        $formatted_photos = [];
+
+        foreach ( $decoded_photos as $photo ) {
+            $prepared_photo = smooth_music_gallery_prepare_photo( $photo );
+
+            if ( null !== $prepared_photo ) {
+                $formatted_photos[] = $prepared_photo;
+            }
+        }
+
+        return $formatted_photos;
+    }
+
+    $photo_values     = explode( ',', $photo_attribute );
+    $formatted_photos = [];
+
+    foreach ( $photo_values as $photo_value ) {
+        $photo_value = trim( $photo_value );
+        if ( empty( $photo_value ) ) {
+            continue;
+        }
+
+        $prepared_photo = smooth_music_gallery_prepare_photo(
+                is_numeric( $photo_value )
+                        ? [ 'id' => $photo_value ]
+                        : [ 'url' => esc_url_raw( $photo_value ) ]
+        );
+
+        if ( null !== $prepared_photo ) {
+            $formatted_photos[] = $prepared_photo;
+        }
+    }
+
+    return $formatted_photos;
+}
+
 function smooth_music_gallery_block_render( $attributes ) {
     $theme                = $attributes['theme'] ?? 'default';
     $overlay_animation    = $attributes['overlay'] ?? '';
@@ -156,17 +258,17 @@ function smooth_music_gallery_block_render( $attributes ) {
     }
 
     if ( ! empty( $photos ) && count( $photos ) > 0 ) {
-        foreach ( $photos as $photo_key => $photo ) {
-            $photo_url = $photo['url'] ?? '';
-            if ( empty( $photo_url ) && ! empty( $photo['id'] ) ) {
-                $photo_url = wp_get_attachment_image_url( $photo['id'], 'full' );
-            }
+        $prepared_photos = [];
 
-            $photos[ $photo_key ] = [
-                    'url' => $photo_url,
-            ];
+        foreach ( $photos as $photo ) {
+            $prepared_photo = smooth_music_gallery_prepare_photo( $photo );
+
+            if ( null !== $prepared_photo ) {
+                $prepared_photos[] = $prepared_photo;
+            }
         }
-        $attributes['photos'] = $photos;
+
+        $attributes['photos'] = $prepared_photos;
     }
 
     if ( ! empty( $music ) ) {
@@ -182,6 +284,15 @@ function smooth_music_gallery_block_render( $attributes ) {
 
     if ( smooth_music_gallery_should_enqueue_front_assets() ) {
         smooth_music_gallery_enqueue_front_assets( $theme, $overlay_animation, $background_animation );
+    }
+
+    unset( $attributes['photos_source'] );
+    unset( $attributes['music_source'] );
+    if ( $attributes['photos_cdn'] ) {
+        unset( $attributes['photos_cdn'] );
+    }
+    if ( $attributes['music_cdn'] ) {
+        unset( $attributes['music_cdn'] );
     }
 
     return '<div class="smoothmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
@@ -503,46 +614,10 @@ add_shortcode( 'smooth-music-gallery', function ( $attributes ) {
     );
 
     if ( ! empty( $attributes['photos'] ) ) {
-        $photo_values     = explode( ',', $attributes['photos'] );
-        $formatted_photos = [];
-        foreach ( $photo_values as $photo_value ) {
-            $photo_value = trim( $photo_value );
-            if ( empty( $photo_value ) ) {
-                continue;
-            }
-
-            if ( is_numeric( $photo_value ) ) {
-                $formatted_photos[] = [
-                        'id' => $photo_value,
-                ];
-            } else {
-                $formatted_photos[] = [
-                        'url' => esc_url_raw( $photo_value ),
-                ];
-            }
-        }
-        $attributes['photos'] = $formatted_photos;
+        $attributes['photos'] = smooth_music_gallery_parse_shortcode_photos( $attributes['photos'] );
     }
     if ( ! empty( $attributes['photos_cdn'] ) ) {
-        $photo_values     = explode( ',', $attributes['photos_cdn'] );
-        $formatted_photos = [];
-        foreach ( $photo_values as $photo_value ) {
-            $photo_value = trim( $photo_value );
-            if ( empty( $photo_value ) ) {
-                continue;
-            }
-
-            if ( is_numeric( $photo_value ) ) {
-                $formatted_photos[] = [
-                        'id' => $photo_value,
-                ];
-            } else {
-                $formatted_photos[] = [
-                        'url' => esc_url_raw( $photo_value ),
-                ];
-            }
-        }
-        $attributes['photos_cdn'] = $formatted_photos;
+        $attributes['photos_cdn'] = smooth_music_gallery_parse_shortcode_photos( $attributes['photos_cdn'] );
     }
     if ( ! empty( $attributes['music'] ) ) {
         if ( is_numeric( $attributes['music'] ) ) {

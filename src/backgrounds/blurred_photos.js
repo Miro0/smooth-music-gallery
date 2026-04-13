@@ -1,4 +1,5 @@
 import { createAnimationStyle } from '../block/utils/style';
+import { getObjectPositionValue } from '../block/utils/media';
 import {
 	registerGalleryHook,
 	registerGalleryInitializer,
@@ -71,7 +72,9 @@ const attachBackgroundAnimation = ( container, index ) => {
           src="${ photo.url }"
           loading="lazy"
           decoding="async"
-          style="filter: blur(${ blur }px); transform: scale(${ zoom });"
+          style="object-position: ${ getObjectPositionValue(
+				photo?.focus
+			) }; filter: blur(${ blur }px); transform: scale(${ zoom });"
         />
       `
 			)

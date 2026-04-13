@@ -1,4 +1,5 @@
 import { initAudioSource } from '../block/utils/audio';
+import { getCoverCropRect } from '../block/utils/media';
 import {
 	createAudioReactiveAnimator,
 	getEffectiveDpr,
@@ -143,6 +144,10 @@ const attachOverlayAnimation = ( container, index ) => {
 
 			items.push( {
 				img,
+				focus: {
+					x: img.dataset.focusX,
+					y: img.dataset.focusY,
+				},
 				parent,
 				slideIndex: Number.isInteger( slideIndex ) ? slideIndex : null,
 				canvas,
@@ -192,24 +197,15 @@ const attachOverlayAnimation = ( container, index ) => {
 		const sh = img.naturalHeight;
 		if ( ! sw || ! sh ) return;
 
-		const dstRatio = w / h;
-		const srcRatio = sw / sh;
-
-		let sx;
-		let sy;
-		let sWidth;
-		let sHeight;
-		if ( srcRatio > dstRatio ) {
-			sHeight = sh;
-			sWidth = sHeight * dstRatio;
-			sx = ( sw - sWidth ) / 2;
-			sy = 0;
-		} else {
-			sWidth = sw;
-			sHeight = sw / dstRatio;
-			sx = 0;
-			sy = ( sh - sHeight ) / 2;
-		}
+		const cropRect = getCoverCropRect( {
+			naturalWidth: sw,
+			naturalHeight: sh,
+			width: w,
+			height: h,
+			focus: item.focus,
+		} );
+		if ( ! cropRect ) return;
+		const { sx, sy, sWidth, sHeight } = cropRect;
 
 		const smallW = Math.max( 1, Math.floor( w / pixelSize ) );
 		const smallH = Math.max( 1, Math.floor( h / pixelSize ) );

@@ -2,6 +2,10 @@ import Swiper from 'swiper';
 import { Pagination, Autoplay, Keyboard } from 'swiper/modules';
 import { hexToRgb } from './block/utils/style';
 import {
+	getObjectPositionValue,
+	normalizeFocusPoint,
+} from './block/utils/media';
+import {
 	ensureGalleryInstance,
 	runInstanceCleanup,
 } from './block/utils/runtime';
@@ -62,19 +66,27 @@ export const initMusicGallery = ( container, index = 0 ) => {
       <div class="smoothmg-image-container">
         <div class="swiper-wrapper">
           ${ photos
-				.map(
-					( photo ) => `
+				.map( ( photo ) => {
+					const focus = normalizeFocusPoint( photo?.focus );
+					const focusAttributes = focus
+						? `data-focus-x="${ focus.x }" data-focus-y="${ focus.y }"`
+						: '';
+
+					return `
               <div class="swiper-slide">
                 <img
                   src="${ photo.url }"
                   alt="${ photo.alt || '' }"
                   loading="lazy"
                   decoding="async"
-                  style="object-fit: cover; width: 100%; height: 100%;"
+                  ${ focusAttributes }
+                  style="object-fit: cover; object-position: ${ getObjectPositionValue(
+						focus
+					) }; width: 100%; height: 100%;"
                 />
               </div>
             `
-				)
+				} )
 				.join( '' ) }
         </div>
       </div>
