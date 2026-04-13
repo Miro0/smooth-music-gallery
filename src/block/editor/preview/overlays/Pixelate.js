@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from "@wordpress/element";
+import {getCoverCropRect} from "../../../utils/media";
 
 const Pixelate = ({max_size = 20, photo}) => {
   const canvasRef = useRef(null);
@@ -66,22 +67,19 @@ const Pixelate = ({max_size = 20, photo}) => {
         const sw = img.naturalWidth;
         const sh = img.naturalHeight;
 
-        const dst = w / h;
-        const src = sw / sh;
+        const cropRect = getCoverCropRect({
+          naturalWidth: sw,
+          naturalHeight: sh,
+          width: w,
+          height: h,
+          focus: photo?.focus,
+        });
 
-        let sx, sy, sWidth, sHeight;
-
-        if (src > dst) {
-          sHeight = sh;
-          sWidth = sh * dst;
-          sx = (sw - sWidth) / 2;
-          sy = 0;
-        } else {
-          sWidth = sw;
-          sHeight = sw / dst;
-          sx = 0;
-          sy = (sh - sHeight) / 2;
+        if (!cropRect) {
+          return;
         }
+
+        const {sx, sy, sWidth, sHeight} = cropRect;
 
         const t = performance.now() / 300;
         const pixelSize = 1 + (Math.sin(t) * 0.5 + 0.5) * max_size;

@@ -2,6 +2,7 @@ import {Button, PanelBody} from '@wordpress/components';
 import {__} from '@wordpress/i18n';
 
 import Color from './components/Color';
+import FocusPointControl from './components/FocusPointControl';
 import MediaUpload from './components/MediaUpload';
 import Select from "./components/Select";
 import Range from "./components/Range";
@@ -113,7 +114,25 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           source={resolvedPhotosSource === 'smoothcdn' ? 'smoothcdn' : 'core'}
         />
 
-        <hr/>
+        {resolvedPhotosSource === 'core' && Array.isArray(photos) && photos.length > 0 && (
+          <>
+            <div style={{marginTop: '12px'}}>
+              <FocusPointControl
+                name="photos"
+                value={photos}
+                setAttributes={setAttributes}
+                label={__('Image focus point', 'smooth-music-gallery')}
+                help={__('Choose which part of each image should stay visible when the gallery crops it with cover.', 'smooth-music-gallery')}
+              />
+            </div>
+
+            <hr/>
+          </>
+        )}
+
+        {!(resolvedPhotosSource === 'core' && Array.isArray(photos) && photos.length > 0) && (
+          <hr/>
+        )}
 
         <Select
           name="music_source"
