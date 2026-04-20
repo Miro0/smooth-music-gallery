@@ -400,7 +400,7 @@ function smooth_music_gallery_render_main_page() {
     ?>
     <div class="wrap smooth-music-gallery-admin">
         <img
-            src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'assets/baner-1544x500.svg' ); ?>"
+            src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . 'assets/banner-1544x500.svg' ); ?>"
             alt="Smooth Music Gallery banner"
             loading="lazy"
             decoding="async"
