@@ -37,10 +37,12 @@ cleanup() {
 trap cleanup EXIT
 
 mkdir -p "$STAGE_DIR"
+mkdir -p "$STAGE_DIR/assets"
 
 cp "$PLUGIN_MAIN_FILE" "$STAGE_DIR/"
 cp "$ROOT_DIR/readme.txt" "$STAGE_DIR/"
 cp "$ROOT_DIR/config.json" "$STAGE_DIR/"
+cp "$ROOT_DIR/assets/banner-1544x500.svg" "$STAGE_DIR/assets"
 cp -R "$ROOT_DIR/build" "$STAGE_DIR/"
 
 if [[ -d "$ROOT_DIR/languages" ]]; then
