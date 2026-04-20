@@ -9,7 +9,7 @@
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.0.2
+ * Version:             1.0.3
  */
 
 namespace SmoothCDN\MusicGallery;
