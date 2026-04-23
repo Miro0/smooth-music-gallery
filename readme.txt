@@ -92,6 +92,11 @@ The external service is optional. The plugin works without it by using only the 
 
 == Changelog ==
 
+= 1.0.5 =
+
+* PHP warnings fixed.
+* Menu icon changed to custom one.
+
 = 1.0.4 =
 
 * Minor bug fixed.
@@ -118,6 +123,10 @@ The external service is optional. The plugin works without it by using only the 
 * Frontend gallery runtime with audio controls and animations.
 
 == Upgrade Notice ==
+
+= 1.0.5 =
+
+Maintenance update.
 
 = 1.0.4 =
 

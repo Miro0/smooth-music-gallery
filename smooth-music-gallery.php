@@ -21,8 +21,9 @@ const MUSIC_GALLERY_VERSION = '1.0.2';
 function smooth_music_gallery_register_editor_styles() {
     $base_url = smooth_music_gallery_get_base_url();
     $config   = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
+    $themes   = is_array( $config ) ? ( $config['themes'] ?? [] ) : [];
 
-    foreach ( $config['themes'] as $theme ) {
+    foreach ( $themes as $theme ) {
         wp_register_style( "smoothmg-theme-$theme", $base_url . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
     }
 
@@ -32,7 +33,7 @@ function smooth_music_gallery_register_editor_styles() {
             array_merge(
                     array_map( function ( $t ) {
                         return "smoothmg-theme-$t";
-                    }, $config['themes'] ),
+                    }, $themes ),
             ),
             MUSIC_GALLERY_VERSION
     );
@@ -288,10 +289,10 @@ function smooth_music_gallery_block_render( $attributes ) {
 
     unset( $attributes['photos_source'] );
     unset( $attributes['music_source'] );
-    if ( $attributes['photos_cdn'] ) {
+    if ( ! empty( $attributes['photos_cdn'] ) ) {
         unset( $attributes['photos_cdn'] );
     }
-    if ( $attributes['music_cdn'] ) {
+    if ( ! empty( $attributes['music_cdn'] ) ) {
         unset( $attributes['music_cdn'] );
     }
 
@@ -500,7 +501,7 @@ add_action( 'admin_menu', function () {
             'manage_options',
             'smooth_music_gallery',
             __NAMESPACE__ . '\\smooth_music_gallery_render_main_page',
-            'dashicons-format-audio',
+            plugin_dir_url( __FILE__ ) . 'assets/menu-logo.svg',
             58
     );
 
@@ -553,7 +554,8 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 
     $base   = plugin_dir_url( __FILE__ ) . 'build/';
     $config = json_decode( file_get_contents( __DIR__ . '/config.json' ), true );
-    foreach ( $config['themes'] as $theme ) {
+    $themes = is_array( $config ) ? ( $config['themes'] ?? [] ) : [];
+    foreach ( $themes as $theme ) {
         wp_enqueue_style( "smoothmg-theme-$theme", $base . "theme/$theme.css", [], MUSIC_GALLERY_VERSION );
     }
     wp_enqueue_style(
@@ -562,7 +564,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
             array_merge(
                     array_map( function ( $t ) {
                         return "smoothmg-theme-$t";
-                    }, $config['themes'] ),
+                    }, $themes ),
             ),
             MUSIC_GALLERY_VERSION
     );

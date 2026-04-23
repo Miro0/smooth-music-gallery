@@ -1,7 +1,7 @@
 {
   "project": "Music Gallery",
   "projectSlug": "music-gallery",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "blockBots": false,
   "blockHeadless": false,
   "sources": [
