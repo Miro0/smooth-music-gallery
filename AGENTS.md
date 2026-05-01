@@ -85,3 +85,5 @@ When adding or changing features:
 - verify both entry surfaces:
   - Gutenberg block editor flow,
   - Shortcode Builder flow.
+
+@RTK.md
