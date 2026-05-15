@@ -18,6 +18,10 @@
   "excludes": [
     "./build/theme/*-rtl.css"
   ],
+  "replacePath": {
+    "/build/": "/",
+    "/assets/": "/"
+  },
   "protected": [],
   "userSlug": "smoothcdn",
   "plan": 3,
