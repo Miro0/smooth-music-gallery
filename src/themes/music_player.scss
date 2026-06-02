@@ -46,7 +46,11 @@
     max-height: calc(100% - 170px);
     box-sizing: border-box;
     aspect-ratio: 16 / 9;
-    width: round(up, 100%, 1px);
+    width: 100%;
+
+    @supports (width: round(up, 100%, 1px)) {
+      width: round(up, 100%, 1px);
+    }
 
     @media screen and (max-width: 768px) {
       aspect-ratio: var(--screen-ratio);

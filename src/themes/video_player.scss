@@ -45,9 +45,14 @@
   }
 
   .smoothmg-image-container {
-    width: round(up, 100%, 1px);
-    height: round(up, 100%, 1px);
+    width: 100%;
+    height: 100%;
     position: relative;
+
+    @supports (width: round(up, 100%, 1px)) {
+      width: round(up, 100%, 1px);
+      height: round(up, 100%, 1px);
+    }
   }
 
   .swiper-wrapper {
@@ -172,6 +177,7 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.3);
+      pointer-events: none;
     }
   }
 
@@ -228,6 +234,7 @@
       height: 100%;
       background: linear-gradient(#4a4a4a, #2e2e2e);
       opacity: 0.3;
+      pointer-events: none;
     }
 
     svg {

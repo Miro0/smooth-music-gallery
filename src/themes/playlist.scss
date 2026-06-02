@@ -44,12 +44,17 @@
   }
 
   .smoothmg-image-container {
-    width: round(down, calc(100% - 24px), 1px);
-    height: round(down, calc(100% - 24px), 1px);
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
     position: relative;
     margin: 12px;
     overflow: hidden;
     border-radius: 12px;
+
+    @supports (width: round(down, calc(100% - 24px), 1px)) {
+      width: round(down, calc(100% - 24px), 1px);
+      height: round(down, calc(100% - 24px), 1px);
+    }
   }
 
   .swiper-wrapper {

@@ -1,0 +1,32 @@
+.smoothmg-gallery {
+  .smoothmg-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    color: var(--smoothmg-theme-accent);
+    pointer-events: auto;
+    touch-action: manipulation;
+    user-select: none;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      max-width: 70%;
+      max-height: 70%;
+      display: block;
+      flex: 0 0 auto;
+      fill: currentColor;
+      pointer-events: none;
+    }
+
+    path {
+      fill: currentColor;
+    }
+  }
+
+  .smoothmg-controls,
+  .smoothmg-btn--wrapper,
+  .swiper-pagination--wrapper,
+  .smoothmg-volume--wrapper {
+    pointer-events: auto;
+  }
+}

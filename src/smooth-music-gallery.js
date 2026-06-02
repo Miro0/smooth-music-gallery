@@ -346,12 +346,19 @@ function initControls( container, swiper, slides_duration, index, instance ) {
 	const total = container.querySelector( '.smoothmg-music-time-total' );
 
 	if ( audio && volumeSlider ) {
-		volumeSlider.value = 0.8;
-		volumeSlider.addEventListener( 'input', () => {
+		const updateVolume = () => {
+			const volume = parseFloat( volumeSlider.value );
+			audio.volume = Number.isNaN( volume ) ? 0.8 : volume;
+
 			if ( instance.gain ) {
-				instance.gain.gain.value = parseFloat( volumeSlider.value );
+				instance.gain.gain.value = audio.volume;
 			}
-		} );
+		};
+
+		volumeSlider.value = 0.8;
+		updateVolume();
+		volumeSlider.addEventListener( 'input', updateVolume );
+		volumeSlider.addEventListener( 'change', updateVolume );
 	}
 
 	if ( audio && total ) {
@@ -416,6 +423,13 @@ function initControls( container, swiper, slides_duration, index, instance ) {
 
 	let playing = false;
 	let controlsTimeout = null;
+	const showControls = ( timeout = 3000 ) => {
+		clearTimeout( controlsTimeout );
+		container.classList.add( 'visible-controls' );
+		controlsTimeout = setTimeout( () => {
+			container.classList.remove( 'visible-controls' );
+		}, timeout );
+	};
 	const pausePlayback = () => {
 		if ( ! playing ) {
 			return;
@@ -457,15 +471,13 @@ function initControls( container, swiper, slides_duration, index, instance ) {
 			event.clientY >= rect.top &&
 			event.clientY <= rect.bottom
 		) {
-			clearTimeout( controlsTimeout );
-			container.classList.add( 'visible-controls' );
-			controlsTimeout = setTimeout( () => {
-				container.classList.remove( 'visible-controls' );
-			}, 3000 );
+			showControls();
 		}
 	};
 
 	window.addEventListener( 'pointermove', onPointerMove, { passive: true } );
+	const onTouchStart = () => showControls();
+	content?.addEventListener( 'touchstart', onTouchStart, { passive: true } );
 
 	if ( btnPlay ) {
 		btnPlay.addEventListener( 'click', async () => {
@@ -492,10 +504,7 @@ function initControls( container, swiper, slides_duration, index, instance ) {
 
 			btnPlay.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
 
-			container.classList.add( 'visible-controls' );
-			controlsTimeout = setTimeout( () => {
-				container.classList.remove( 'visible-controls' );
-			}, 1000 );
+			showControls( 1000 );
 		} );
 	}
 
@@ -540,6 +549,7 @@ function initControls( container, swiper, slides_duration, index, instance ) {
 	return () => {
 		clearTimeout( controlsTimeout );
 		window.removeEventListener( 'pointermove', onPointerMove );
+		content?.removeEventListener( 'touchstart', onTouchStart );
 
 		if ( instance.pause === pausePlayback ) {
 			instance.pause = null;

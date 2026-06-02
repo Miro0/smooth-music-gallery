@@ -37,9 +37,14 @@
   }
 
   .smoothmg-image-container {
-    width: round(up, 100%, 1px);
-    height: round(up, 100%, 1px);
+    width: 100%;
+    height: 100%;
     position: relative;
+
+    @supports (width: round(up, 100%, 1px)) {
+      width: round(up, 100%, 1px);
+      height: round(up, 100%, 1px);
+    }
   }
 
   .swiper-wrapper {
@@ -191,7 +196,7 @@
       .swiper-pagination-bullet,
       .smoothmg-btn,
       .smoothmg-volume {
-        pointer-events: all;
+        pointer-events: auto;
       }
     }
   }
