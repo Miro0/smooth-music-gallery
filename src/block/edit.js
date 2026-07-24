@@ -38,10 +38,10 @@ export default function Edit(props) {
     size = 85,
     background_options = {},
   } = attributes;
-  const resolvedPhotosSource = photos_source === 'smoothcdn' ? 'smoothcdn' : 'core';
-  const resolvedMusicSource = music_source === 'smoothcdn' ? 'smoothcdn' : 'core';
-  const selectedPhotos = resolvedPhotosSource === 'smoothcdn' ? photos_cdn : photos;
-  const currentMusic = resolvedMusicSource === 'smoothcdn' ? music_cdn : music;
+  const resolvedPhotosSource = photos_source === 'smoothbundle' ? 'smoothbundle' : 'core';
+  const resolvedMusicSource = music_source === 'smoothbundle' ? 'smoothbundle' : 'core';
+  const selectedPhotos = resolvedPhotosSource === 'smoothbundle' ? photos_cdn : photos;
+  const currentMusic = resolvedMusicSource === 'smoothbundle' ? music_cdn : music;
 
   const {background_color = 'transparent'} = background_options;
   const bgMargin = Math.floor((100 - size) / 4);

@@ -1,15 +1,15 @@
 === Smooth Music Gallery ===
-Contributors: smoothcdn
+Contributors: smoothbundle
 Tags: gallery, music, audio, gutenberg, shortcode
 Requires at least: 5.6
 Tested up to: 7.0.2
 Requires PHP: 7.4
-Stable tag: 1.0.7
-Donate link: https://smoothcdn.com/pricing
+Stable tag: 1.1.0
+Donate link: https://smoothbundle.com/pricing
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Create immersive photo galleries with music, stylish visual effects, and Smooth CDN integration for Gutenberg and shortcodes.
+Create immersive photo galleries with music, stylish visual effects, and Smooth Bundle integration for Gutenberg and shortcodes.
 
 == Description ==
 
@@ -30,8 +30,8 @@ What you can do with Smooth Music Gallery:
 * Create audio-reactive visuals that move with the music.
 * Adjust gallery size and slide timing to fit your layout.
 * Build galleries visually and generate a shortcode for any page or builder.
-* Use media from the WordPress Media Library or optional Smooth CDN assets.
-* Optionally serve gallery frontend assets through Smooth CDN.
+* Use media from the WordPress Media Library or optional Smooth Bundle assets.
+* Optionally serve gallery frontend assets through Smooth Bundle.
 
 Perfect for creators, photographers, musicians, agencies, event sites, and anyone who wants a gallery that feels more premium than a standard slider.
 
@@ -51,13 +51,13 @@ Yes. Use the Shortcode Builder in wp-admin to generate a shortcode and paste it 
 
 Yes. You can select images and audio directly from the Media Library.
 
-= Can I use Smooth CDN assets? =
+= Can I use Smooth Bundle assets? =
 
-Yes. The plugin includes Smooth CDN asset selection in the editor.
+Yes. The plugin includes Smooth Bundle asset selection in the editor.
 
-= Can I serve frontend gallery scripts and styles from Smooth CDN? =
+= Can I serve frontend gallery scripts and styles from Smooth Bundle? =
 
-Yes. In plugin settings you can enable **Serve gallery assets via Smooth CDN**. This is optional and disabled by default.
+Yes. In plugin settings you can enable **Serve gallery assets via Smooth Bundle**. This is optional and disabled by default.
 
 == Source Code ==
 
@@ -67,19 +67,19 @@ https://github.com/Miro0/smooth-music-gallery
 
 == External Services ==
 
-Smooth Music Gallery can optionally connect to Smooth CDN to let administrators browse sample assets in the editor.
+Smooth Music Gallery can optionally connect to Smooth Bundle to let administrators browse sample assets in the editor.
 
-* Service: Smooth CDN Asset Picker (`https://cdn.smoothcdn.com`)
+* Service: Smooth Bundle Asset Picker (`https://cdn.smoothbundle.com`)
 * Purpose: Browse and select optional sample image/audio files.
-* Trigger: Requests are sent only when an administrator selects the **Smooth CDN assets** source and opens the picker dialog.
+* Trigger: Requests are sent only when an administrator selects the **Smooth Bundle assets** source and opens the picker dialog.
 * Data sent: Standard browser request data (IP address, user agent, referrer) and picker query parameters (for example file type, project slug, version).
-* Frontend behavior: If a gallery uses external Smooth CDN URLs, visitor browsers request those media files directly from Smooth CDN.
-* Service: Smooth CDN Gallery Asset Delivery (`https://music-gallery.smoothcdn.com`)
+* Frontend behavior: If a gallery uses external Smooth Bundle URLs, visitor browsers request those media files directly from Smooth Bundle.
+* Service: Smooth Bundle Gallery Asset Delivery (`https://music-gallery.smoothbundle.com`)
 * Purpose: Optional delivery of this plugin's frontend gallery scripts/styles.
-* Trigger: Requests are sent only when an administrator enables **Serve gallery assets via Smooth CDN** in plugin settings.
+* Trigger: Requests are sent only when an administrator enables **Serve gallery assets via Smooth Bundle** in plugin settings.
 * Data sent: Standard browser request data (IP address, user agent, referrer) when the frontend gallery loads those assets.
-* Terms of Service: `https://smoothcdn.com/terms`
-* Privacy Policy: `https://smoothcdn.com/privacy`
+* Terms of Service: `https://smoothbundle.com/terms`
+* Privacy Policy: `https://smoothbundle.com/privacy`
 
 The external service is optional. The plugin works without it by using only the WordPress Media Library.
 
@@ -91,6 +91,10 @@ The external service is optional. The plugin works without it by using only the 
 4. Generated shortcode ready to paste into pages.
 
 == Changelog ==
+
+= 1.1.0 =
+
+* Rebranded from Smooth CDN to Smooth Bundle.
 
 = 1.0.7 =
 
@@ -131,6 +135,10 @@ The external service is optional. The plugin works without it by using only the 
 * Frontend gallery runtime with audio controls and animations.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+
+Rebranded from Smooth CDN to Smooth Bundle.
 
 = 1.0.7 =
 

@@ -78,13 +78,13 @@ export default function EditSidebar({attributes, setAttributes, config}) {
     overlay,
     overlay_options,
   } = attributes;
-  const resolvedPhotosSource = photos_source === 'smoothcdn' ? 'smoothcdn' : 'core';
-  const resolvedMusicSource = music_source === 'smoothcdn' ? 'smoothcdn' : 'core';
+  const resolvedPhotosSource = photos_source === 'smoothbundle' ? 'smoothbundle' : 'core';
+  const resolvedMusicSource = music_source === 'smoothbundle' ? 'smoothbundle' : 'core';
 
   return (
     <>
       <p style={{paddingRight: '16px', paddingLeft: '52px', paddingBottom: '12px'}}>Powered by <a
-        style={{color: '#0ea5e9'}} href="https://smoothcdn.com" target="_blank">Smooth CDN</a></p>
+        style={{color: '#0ea5e9'}} href="https://smoothbundle.com" target="_blank">Smooth Bundle</a></p>
 
       <PanelBody
         title={__('Gallery', 'smooth-music-gallery')}
@@ -95,23 +95,23 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           value={resolvedPhotosSource}
           options={[
             {label: __('Media Library', 'smooth-music-gallery'), value: 'core'},
-            {label: __('Smooth CDN assets', 'smooth-music-gallery'), value: 'smoothcdn'},
+            {label: __('Smooth Bundle assets', 'smooth-music-gallery'), value: 'smoothbundle'},
           ]}
           label={__('Images source', 'smooth-music-gallery')}
           help={__('Choose where images should be selected from', 'smooth-music-gallery')}
         />
 
         <MediaUpload
-          name={resolvedPhotosSource === 'smoothcdn' ? 'photos_cdn' : 'photos'}
-          value={resolvedPhotosSource === 'smoothcdn' ? photos_cdn : photos}
+          name={resolvedPhotosSource === 'smoothbundle' ? 'photos_cdn' : 'photos'}
+          value={resolvedPhotosSource === 'smoothbundle' ? photos_cdn : photos}
           label={__('Images', 'smooth-music-gallery')}
           help={
-            resolvedPhotosSource === 'smoothcdn' ?
+            resolvedPhotosSource === 'smoothbundle' ?
               __('Select images from a collection of sample assets licensed under CC0', 'smooth-music-gallery') :
               __('Select images to be used in gallery. Hold SHIFT to select multiple images', 'smooth-music-gallery')
           }
           multiple={true}
-          source={resolvedPhotosSource === 'smoothcdn' ? 'smoothcdn' : 'core'}
+          source={resolvedPhotosSource === 'smoothbundle' ? 'smoothbundle' : 'core'}
         />
 
         {resolvedPhotosSource === 'core' && Array.isArray(photos) && photos.length > 0 && (
@@ -139,23 +139,23 @@ export default function EditSidebar({attributes, setAttributes, config}) {
           value={resolvedMusicSource}
           options={[
             {label: __('Media Library', 'smooth-music-gallery'), value: 'core'},
-            {label: __('Smooth CDN assets', 'smooth-music-gallery'), value: 'smoothcdn'},
+            {label: __('Smooth Bundle assets', 'smooth-music-gallery'), value: 'smoothbundle'},
           ]}
           label={__('Music source', 'smooth-music-gallery')}
           help={__('Choose where background music should be selected from', 'smooth-music-gallery')}
         />
 
         <MediaUpload
-          name={resolvedMusicSource === 'smoothcdn' ? 'music_cdn' : 'music'}
-          value={resolvedMusicSource === 'smoothcdn' ? music_cdn : music}
+          name={resolvedMusicSource === 'smoothbundle' ? 'music_cdn' : 'music'}
+          value={resolvedMusicSource === 'smoothbundle' ? music_cdn : music}
           label={__('Background music', 'smooth-music-gallery')}
           help={
-          resolvedMusicSource === 'smoothcdn' ?
+          resolvedMusicSource === 'smoothbundle' ?
             __('Select music to be played as a background in gallery from a collection of sample assets licensed under CC0', 'smooth-music-gallery') :
             __('Select music to be played as a background in gallery', 'smooth-music-gallery')
           }
           allowedTypes={['audio']}
-          source={resolvedMusicSource === 'smoothcdn' ? 'smoothcdn' : 'core'}
+          source={resolvedMusicSource === 'smoothbundle' ? 'smoothbundle' : 'core'}
         />
 
         <hr/>

@@ -17,7 +17,7 @@ import './editor-controls.scss';
 import './shortcode_builder.scss';
 
 function normalizeMediaSource(source) {
-  return source === 'smoothcdn' ? 'smoothcdn' : 'core';
+  return source === 'smoothbundle' ? 'smoothbundle' : 'core';
 }
 
 function createShortcode(attributes) {
@@ -25,8 +25,8 @@ function createShortcode(attributes) {
     if (attributes) {
       const photosSource = normalizeMediaSource(attributes?.photos_source);
       const musicSource = normalizeMediaSource(attributes?.music_source);
-      const selectedPhotos = photosSource === 'smoothcdn' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
-      const currentMusic = musicSource === 'smoothcdn' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
+      const selectedPhotos = photosSource === 'smoothbundle' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
+      const currentMusic = musicSource === 'smoothbundle' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
       const parts = ['[smooth-music-gallery'];
 
       Object.entries(attributes).forEach(([key, value]) => {

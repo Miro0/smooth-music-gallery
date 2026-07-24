@@ -1,4 +1,4 @@
-name: Upload assets to Smooth CDN
+name: Upload assets to Smooth Bundle
 
 on:
   push:
@@ -18,8 +18,8 @@ jobs:
           node-version: 22
           cache: "yarn"
 
-      - name: Install Smooth CDN CLI
-        run: yarn global add @smoothcdn/cli
+      - name: Install Smooth Bundle CLI
+        run: yarn global add @smoothbundle/cli
 
       - name: Install dependencies
         run: yarn
@@ -27,10 +27,10 @@ jobs:
       - name: Build assets
         run: yarn build
 
-      - name: Upload assets to Smooth CDN
+      - name: Upload assets to Smooth Bundle
         env:
-          SCDN_TOKEN: ${{ secrets.SCDN_TOKEN }}
+          SBUNDLE_TOKEN: ${{ secrets.SCDN_TOKEN }}
         run: |
-          scdn create-version
-          scdn push
-          scdn publish-version
+          sbundle create-version
+          sbundle push
+          sbundle publish-version

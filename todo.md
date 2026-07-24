@@ -6,15 +6,15 @@
 - [x] Dodać pozostałe motywy.
 - [x] Może jakiś stop animacji jeśli jest offscreen i start jak wraca z powrotem?
 - [x] Dodać ten builder shortcode - dopracować obsługę działania aktualizowania propsów / aktualizacji podglądu / dodać zapisywanie stanu do session storage / shortcode ze skróconymi media items / resolve po stronie render_callback.
-- [x] Podmienić ładowanie assetów przez Smooth CDN - sprawdzić w ogóle ten flow, bo motywy to się chyba wszystkie ładują przez Edytor.
+- [x] Podmienić ładowanie assetów przez Smooth Bundle - sprawdzić w ogóle ten flow, bo motywy to się chyba wszystkie ładują przez Edytor.
 - [x] Strony w menu? Dodać jakąś stronę główną i osobno Shortcode Builder. Dodać Shortcode Builder do Admin TopBar pod "+ Utwórz".
-- [x] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth CDN" oraz "Pokaz przycisk w top toolbar"
-- [x] Strona główna w Smooth Music Gallery. Jakieś info o Smooth CDN?
+- [x] Może dodać jakieś globalne ustawienia - tam można dać sekcję "Laduj przez Smooth Bundle" oraz "Pokaz przycisk w top toolbar"
+- [x] Strona główna w Smooth Music Gallery. Jakieś info o Smooth Bundle?
 - [x] odtwarzanie jednej galerii powinno automatycznie stopować inne instancje - mała funkcja, ale przydatna przy wielu galeriach
 - [x] Resize nie działa na Pixelate oraz Dust Particles
 - [x] Color Blend - podgląd jest słaby oraz nie działa slider (pokazuje tylko pierwsze zdjęcie)
 - [x] pickery obrazków oraz music - nie pokazują wybranych elementów
-- [x] pickery kierujące na Smooth CDN
+- [x] pickery kierujące na Smooth Bundle
 - [x] dodać jakieś assety - obrazki oraz pliku muzyczne - do projektu Assets
 - [ ] Wpiąć WP plugin category deployment jak tylko dostanę approve na wtyczunię.
 

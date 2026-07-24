@@ -3,20 +3,20 @@
  * Plugin Name:         Smooth Music Gallery
  * Description:         Powerful Gutenberg block for photo galleries with music and animations, plus a built-in Shortcode Builder.
  * Requires at least:   5.6
- * Author:              Smooth CDN
- * Author URI:          https://smoothcdn.com
- * Plugin URI:          https://smoothcdn.com/music-gallery
+ * Author:              Smooth Bundle
+ * Author URI:          https://smoothbundle.com
+ * Plugin URI:          https://smoothbundle.com/music-gallery
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.0.7
+ * Version:             1.1.0
  */
 
 namespace SmoothCDN\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-const MUSIC_GALLERY_VERSION = '1.0.6';
+const MUSIC_GALLERY_VERSION = '1.1.0';
 
 function smooth_music_gallery_register_editor_styles() {
     $base_url = smooth_music_gallery_get_base_url();
@@ -59,7 +59,7 @@ function smooth_music_gallery_get_base_url() {
     $opts          = smooth_music_gallery_get_options();
     $serve_via_cdn = $opts['serve_via_cdn'];
     if ( $serve_via_cdn ) {
-        $base_url = ( 'https://music-gallery.smoothcdn.com/' . MUSIC_GALLERY_VERSION . '/' );
+        $base_url = ( 'https://music-gallery.smoothbundle.com/' . MUSIC_GALLERY_VERSION . '/' );
     } else {
         $base_url = ( plugin_dir_url( __FILE__ ) . 'build/' );
     }
@@ -249,13 +249,13 @@ function smooth_music_gallery_block_render( $attributes ) {
     $background_animation = $attributes['background'] ?? '';
     $photos_source        = $attributes['photos_source'] ?? 'core';
     $music_source         = $attributes['music_source'] ?? 'core';
-    $photos               = ( $photos_source === 'smoothcdn' ) ? ( $attributes['photos_cdn'] ?? [] ) : ( $attributes['photos'] ?? [] );
-    $music                = ( $music_source === 'smoothcdn' ) ? ( $attributes['music_cdn'] ?? [] ) : ( $attributes['music'] ?? [] );
+    $photos               = ( $photos_source === 'smoothbundle' ) ? ( $attributes['photos_cdn'] ?? [] ) : ( $attributes['photos'] ?? [] );
+    $music                = ( $music_source === 'smoothbundle' ) ? ( $attributes['music_cdn'] ?? [] ) : ( $attributes['music'] ?? [] );
     if ( empty( $photos ) ) {
-        $photos = ( $photos_source === 'smoothcdn' ) ? ( $attributes['photos'] ?? [] ) : ( $attributes['photos_cdn'] ?? [] );
+        $photos = ( $photos_source === 'smoothbundle' ) ? ( $attributes['photos'] ?? [] ) : ( $attributes['photos_cdn'] ?? [] );
     }
     if ( empty( $music ) ) {
-        $music = ( $music_source === 'smoothcdn' ) ? ( $attributes['music'] ?? [] ) : ( $attributes['music_cdn'] ?? [] );
+        $music = ( $music_source === 'smoothbundle' ) ? ( $attributes['music'] ?? [] ) : ( $attributes['music_cdn'] ?? [] );
     }
 
     if ( ! empty( $photos ) && count( $photos ) > 0 ) {
@@ -327,7 +327,7 @@ add_action( 'admin_init', function () {
 
     add_settings_field(
             'serve_via_cdn',
-            __( 'Serve gallery assets via Smooth CDN', 'smooth-music-gallery' ),
+            __( 'Serve gallery assets via Smooth Bundle', 'smooth-music-gallery' ),
             __NAMESPACE__ . '\\smooth_music_gallery_field_serve_via_cdn',
             'smooth_music_gallery',
             'smooth_music_gallery_main'
@@ -358,7 +358,7 @@ function smooth_music_gallery_field_serve_via_cdn() {
     <label>
         <input type="checkbox" name="smooth_music_gallery_options[serve_via_cdn]"
                value="1" <?php checked( $opts['serve_via_cdn'] ); ?> />
-        <?php esc_html_e( 'Enable Smooth CDN delivery for frontend gallery scripts and styles.', 'smooth-music-gallery' ); ?>
+        <?php esc_html_e( 'Enable Smooth Bundle delivery for frontend gallery scripts and styles.', 'smooth-music-gallery' ); ?>
     </label>
     <?php
 }
@@ -422,7 +422,7 @@ function smooth_music_gallery_render_main_page() {
 
             <p>
                 Optimised for performance and fully compatible with
-                <strong>Smooth CDN</strong> for fast, global asset delivery.
+                <strong>Smooth Bundle</strong> for fast, global asset delivery.
             </p>
 
             <p style="margin-top:16px;">
@@ -462,18 +462,18 @@ function smooth_music_gallery_render_main_page() {
                 <h2>Flexible Asset Sources</h2>
                 <p>
                     Choose assets from the WordPress Media Library
-                    or from optional Smooth CDN sample collections.
+                    or from optional Smooth Bundle sample collections.
                 </p>
             </div>
 
         </div>
 
-        <!-- Smooth CDN Promo -->
+        <!-- Smooth Bundle Promo -->
         <div class="card" style="margin-top:20px; padding-top: 16px; max-width: unset; border-left:6px solid #0086d1;">
-            <h2 style="margin-top:0;">Powered by Smooth CDN</h2>
+            <h2 style="margin-top:0;">Powered by Smooth Bundle</h2>
 
             <p>
-                Smooth CDN is a developer-first asset delivery platform designed for
+                Smooth Bundle is a developer-first asset delivery platform designed for
                 modern WordPress plugins and web applications.
             </p>
 
@@ -483,8 +483,8 @@ function smooth_music_gallery_render_main_page() {
             </p>
 
             <p>
-                <a href="https://smoothcdn.com" target="_blank" class="button button-primary">
-                    Learn more about Smooth CDN
+                <a href="https://smoothbundle.com" target="_blank" class="button button-primary">
+                    Learn more about Smooth Bundle
                 </a>
             </p>
         </div>

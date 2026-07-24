@@ -2,13 +2,13 @@ import {BaseControl, Button} from "@wordpress/components";
 import {__} from "@wordpress/i18n";
 import {useBlockContext} from "../context";
 import {useMemo, useState} from "@wordpress/element";
-import {AssetPickerModal} from "@smoothcdn/asset-picker/react";
+import {AssetPickerModal} from "@smoothbundle/asset-picker/react";
 import {normalizeFocusPoint} from "../../utils/media";
-import '@smoothcdn/asset-picker/styles.css';
+import '@smoothbundle/asset-picker/styles.css';
 
-const SMOOTHCDN_USER_SLUG = 'smoothcdn';
-const SMOOTHCDN_PROJECT_SLUG = 'assets';
-const SMOOTHCDN_VERSION = 'latest';
+const SMOOTHBUNDLE_USER_SLUG = 'smoothbundle';
+const SMOOTHBUNDLE_PROJECT_SLUG = 'assets';
+const SMOOTHBUNDLE_VERSION = 'latest';
 
 const MediaUpload = (
   {
@@ -23,8 +23,8 @@ const MediaUpload = (
 ) => {
   const {changeAttribute} = useBlockContext();
   const [smoothCdnOpen, setSmoothCdnOpen] = useState(false);
-  const resolvedSource = source === 'smoothcdn' ? 'smoothcdn' : 'core';
-  const supportsSmoothCdn = resolvedSource === 'smoothcdn' && (allowedTypes.includes('image') || allowedTypes.includes('audio'));
+  const resolvedSource = source === 'smoothbundle' ? 'smoothbundle' : 'core';
+  const supportsSmoothCdn = resolvedSource === 'smoothbundle' && (allowedTypes.includes('image') || allowedTypes.includes('audio'));
   const selectedUrls = useMemo(() => {
     if (multiple) {
       return Array.isArray(value)
@@ -154,7 +154,7 @@ const MediaUpload = (
   };
 
   const openSmoothCdnMedia = () => {
-    if (resolvedSource !== 'smoothcdn') {
+    if (resolvedSource !== 'smoothbundle') {
       return;
     }
 
@@ -173,7 +173,7 @@ const MediaUpload = (
 
   const hasValue = multiple
     ? Array.isArray(value) && value.length > 0
-    : resolvedSource === 'smoothcdn' ? !!value?.url : !!value?.id;
+    : resolvedSource === 'smoothbundle' ? !!value?.url : !!value?.id;
 
   return (
     <BaseControl label={label} help={help} __nextHasNoMarginBottom>
@@ -206,9 +206,9 @@ const MediaUpload = (
           open={smoothCdnOpen}
           onOpenChange={setSmoothCdnOpen}
           title={__('Select assets', 'smooth-music-gallery')}
-          userSlug={SMOOTHCDN_USER_SLUG}
-          projectSlug={SMOOTHCDN_PROJECT_SLUG}
-          version={SMOOTHCDN_VERSION}
+          userSlug={SMOOTHBUNDLE_USER_SLUG}
+          projectSlug={SMOOTHBUNDLE_PROJECT_SLUG}
+          version={SMOOTHBUNDLE_VERSION}
           fileType={allowedTypes.includes('audio') ? 'audio' : 'image'}
           multiple={multiple}
           selected={selectedUrls}
