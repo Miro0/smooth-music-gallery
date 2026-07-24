@@ -1,5 +1,5 @@
 === Smooth Music Gallery ===
-Contributors: smoothbundle
+Contributors: smoothcdn
 Tags: gallery, music, audio, gutenberg, shortcode
 Requires at least: 5.6
 Tested up to: 7.0.2
