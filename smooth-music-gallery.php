@@ -358,7 +358,7 @@ function smooth_music_gallery_field_serve_via_cdn() {
     <label>
         <input type="checkbox" name="smooth_music_gallery_options[serve_via_cdn]"
                value="1" <?php checked( $opts['serve_via_cdn'] ); ?> />
-        <?php esc_html_e( 'Enable Smooth Bundle delivery for frontend gallery scripts and styles.', 'smooth-music-gallery' ); ?>
+        <?php esc_html_e( 'Enable Smooth Bundle CDN delivery for frontend gallery scripts and styles.', 'smooth-music-gallery' ); ?>
     </label>
     <?php
 }
