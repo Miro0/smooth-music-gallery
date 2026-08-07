@@ -1,6 +1,6 @@
 {
   "name": "smooth-music-gallery",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Powerful Gutenberg block for photo galleries with music and animations, plus a built-in Shortcode Builder.",
   "scripts": {
     "build:app": "wp-scripts build src/block/index.js src/block/view.js --output-path=build",

@@ -9,14 +9,14 @@
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.1.0
+ * Version:             1.1.1
  */
 
 namespace SmoothCDN\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-const MUSIC_GALLERY_VERSION = '1.1.0';
+const MUSIC_GALLERY_VERSION = '1.1.1';
 
 function smooth_music_gallery_register_editor_styles() {
     $base_url = smooth_music_gallery_get_base_url();
@@ -386,13 +386,15 @@ function smooth_music_gallery_render_shortcode_builder_page() {
 function smooth_music_gallery_render_settings_page() {
     ?>
     <div class="wrap">
-        <form method="post" action="options.php">
-            <?php
-            settings_fields( 'smooth_music_gallery_settings' );
-            do_settings_sections( 'smooth_music_gallery' );
-            submit_button();
-            ?>
-        </form>
+        <div class="card" style="max-width: unset">
+            <form method="post" action="options.php">
+                <?php
+                settings_fields( 'smooth_music_gallery_settings' );
+                do_settings_sections( 'smooth_music_gallery' );
+                submit_button();
+                ?>
+            </form>
+        </div>
     </div>
     <?php
 }
