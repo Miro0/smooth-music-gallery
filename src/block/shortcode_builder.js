@@ -13,67 +13,9 @@ import {BlockContext} from "./editor/context";
 import Edit from '../block/edit';
 import EditSidebar from "./editor/edit-sidebar";
 import config from "../../config.json";
+import {createShortcode, normalizeMediaSource} from "./utils/shortcode";
 import './editor-controls.scss';
 import './shortcode_builder.scss';
-
-function normalizeMediaSource(source) {
-  return source === 'smoothbundle' ? 'smoothbundle' : 'core';
-}
-
-function createShortcode(attributes) {
-  try {
-    if (attributes) {
-      const photosSource = normalizeMediaSource(attributes?.photos_source);
-      const musicSource = normalizeMediaSource(attributes?.music_source);
-      const selectedPhotos = photosSource === 'smoothbundle' ? (attributes?.photos_cdn || []) : (attributes?.photos || []);
-      const currentMusic = musicSource === 'smoothbundle' ? (attributes?.music_cdn || {}) : (attributes?.music || {});
-      const parts = ['[smooth-music-gallery'];
-
-      Object.entries(attributes).forEach(([key, value]) => {
-        if (key === 'photos_cdn' || key === 'music_cdn' || key === 'photos_source' || key === 'music_source') {
-          return;
-        }
-
-        if (value !== '') {
-          if (key === 'photos') {
-            if (selectedPhotos.length > 0) {
-              const shouldSerializeAsJson = selectedPhotos.some((item) => item?.focus);
-              const photos = shouldSerializeAsJson
-                ? JSON.stringify(selectedPhotos)
-                : selectedPhotos
-                    .map((item) => item?.id || item?.url)
-                    .filter(Boolean)
-                    .join(',');
-
-              if (photos) {
-                parts.push(`${key}='${photos}'`);
-              }
-            }
-          } else if (key === 'music') {
-            const music = currentMusic?.id || currentMusic?.url;
-            if (music) {
-              parts.push(`${key}='${music}'`);
-            }
-          } else if (typeof value === 'object') {
-            if (Object.keys(value).length > 0) {
-              parts.push(`${key}='${JSON.stringify(value)}'`);
-            }
-          } else {
-            parts.push(`${key}='${value}'`);
-          }
-        }
-      });
-
-      parts.push(']');
-
-      return parts.join(' ');
-    }
-  } catch (e) {
-    // Just omit creating shortcode and debug attributes.
-  }
-
-  return '';
-}
 
 const App = () => {
   const [attributes, setAttributes] = useState({

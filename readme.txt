@@ -4,7 +4,7 @@ Tags: gallery, music, audio, gutenberg, shortcode
 Requires at least: 5.6
 Tested up to: 7.0.3
 Requires PHP: 7.4
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 Donate link: https://smoothbundle.com/pricing
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -92,6 +92,10 @@ The external service is optional. The plugin works without it by using only the 
 
 == Changelog ==
 
+= 1.1.3 =
+
+* Fixed shortcode encoding for photos with focus points and options containing special characters.
+
 = 1.1.2 =
 
 * Maintenance update.
@@ -143,6 +147,10 @@ The external service is optional. The plugin works without it by using only the 
 * Frontend gallery runtime with audio controls and animations.
 
 == Upgrade Notice ==
+
+= 1.1.3 =
+
+Fixes gallery shortcode rendering. Regenerate affected shortcodes in Shortcode Builder and replace the old ones.
 
 = 1.1.2 =
 

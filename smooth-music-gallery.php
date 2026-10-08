@@ -9,14 +9,14 @@
  * License:             GPL v2 or later
  * Text Domain:         smooth-music-gallery
  *
- * Version:             1.1.2
+ * Version:             1.1.3
  */
 
 namespace SmoothCDN\MusicGallery;
 
 defined( 'ABSPATH' ) || exit;
 
-const MUSIC_GALLERY_VERSION = '1.1.2';
+const MUSIC_GALLERY_VERSION = '1.1.3';
 
 function smooth_music_gallery_register_editor_styles() {
     $base_url = smooth_music_gallery_get_base_url();
@@ -204,7 +204,11 @@ function smooth_music_gallery_prepare_photo( $photo ) {
 }
 
 function smooth_music_gallery_parse_shortcode_photos( $photo_attribute ) {
-    $decoded_photos = json_decode( wp_unslash( $photo_attribute ), true );
+    $decoded_photos = json_decode( $photo_attribute, true );
+
+    if ( JSON_ERROR_NONE !== json_last_error() ) {
+        $decoded_photos = json_decode( wp_unslash( $photo_attribute ), true );
+    }
 
     if ( JSON_ERROR_NONE === json_last_error() && is_array( $decoded_photos ) ) {
         $formatted_photos = [];
@@ -296,7 +300,7 @@ function smooth_music_gallery_block_render( $attributes ) {
         unset( $attributes['music_cdn'] );
     }
 
-    return '<div class="smoothmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes ) ) . '"></div>';
+    return '<div class="smoothmg-gallery" data-props="' . esc_attr( wp_json_encode( $attributes, JSON_HEX_AMP ) ) . '"></div>';
 }
 
 add_action( 'admin_init', function () {
@@ -616,6 +620,13 @@ add_shortcode( 'smooth-music-gallery', function ( $attributes ) {
             $attributes,
             'smooth_music_gallery'
     );
+
+    // Decode only after WordPress has parsed the shortcode and its attributes.
+    foreach ( $attributes as $key => $value ) {
+        if ( is_string( $value ) && 0 === strpos( $value, 'encoded:' ) ) {
+            $attributes[ $key ] = rawurldecode( substr( $value, strlen( 'encoded:' ) ) );
+        }
+    }
 
     if ( ! empty( $attributes['photos'] ) ) {
         $attributes['photos'] = smooth_music_gallery_parse_shortcode_photos( $attributes['photos'] );
